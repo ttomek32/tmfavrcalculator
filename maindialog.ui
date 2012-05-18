@@ -6,13 +6,280 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>685</width>
-    <height>576</height>
+    <width>601</width>
+    <height>513</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>TMFAVRCalculator</string>
   </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
+     <widget class="QWidget" name="MainTab">
+      <attribute name="title">
+       <string>Programowanie</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="EEPROMBox">
+         <property name="title">
+          <string>EEPROM</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="3">
+           <widget class="QCheckBox" name="AutoEEPBtn">
+            <property name="text">
+             <string>Automatycznie odczytaj plik EEP</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QCheckBox" name="EaseEEPRONBtn">
+            <property name="text">
+             <string>Kasuj EEPROM przed programowaniem</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3">
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>EEPROM:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="EEPROMFile"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="EEPROMOpenBtn">
+              <property name="text">
+               <string>Otwórz</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="3" column="3">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QPushButton" name="EEPROMReadBtn">
+              <property name="text">
+               <string>Odczytaj</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="EEPROMVerifyBtn">
+              <property name="text">
+               <string>Weryfikuj</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="EEPROMWriteBtn">
+              <property name="text">
+               <string>Programuj</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="FLASHBox">
+         <property name="title">
+          <string>FLASH</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>FLASH:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="FLASHFile"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="FLASHOpenFile">
+              <property name="text">
+               <string>&amp;Otwórz</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QPushButton" name="FLASHReadBtn">
+              <property name="text">
+               <string>Odczytaj</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="FLASHVerifyBtn">
+              <property name="text">
+               <string>Weryfikuj</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="FLASHProgrammBtn">
+              <property name="text">
+               <string>Programuj</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="EraseBox">
+            <property name="text">
+             <string>Kasuj przed programowaniem</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QCheckBox" name="VerifyBox">
+            <property name="text">
+             <string>Weryfikuj po programowaniu</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="FuseTab">
+      <attribute name="title">
+       <string>Fusebity</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QTableWidget" name="FusebitTable">
+           <property name="columnCount">
+            <number>2</number>
+           </property>
+           <column>
+            <property name="text">
+             <string>Fusebit</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Wartość</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QPushButton" name="FuseReadBtn">
+           <property name="text">
+            <string>Odczytaj</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="FuseVerifyBtn">
+           <property name="text">
+            <string>Weryfikuj</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="FuseWriteBtn">
+           <property name="text">
+            <string>Programuj</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="LockTab">
+      <attribute name="title">
+       <string>Lockbity</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <item>
+          <widget class="QTableWidget" name="LockbitTable">
+           <column>
+            <property name="text">
+             <string>Lockbit</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Wartość</string>
+            </property>
+           </column>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="0">
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <widget class="QPushButton" name="LockbitReadBtn">
+           <property name="text">
+            <string>Odczytaj</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="LockbitVerifyBtn">
+           <property name="text">
+            <string>Weryfikuj</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="LockbitWriteBtn">
+           <property name="text">
+            <string>Programuj</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="FusebitWizzardTab">
+      <attribute name="title">
+       <string>Kreator fusebitów</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="LockbitWizzardTab">
+      <attribute name="title">
+       <string>Kreator Lockbitów</string>
+      </attribute>
+     </widget>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
