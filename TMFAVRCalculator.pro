@@ -10,10 +10,14 @@ TARGET = TMFAVRCalculator
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        maindialog.cpp
+SOURCES += \
+    src/maindialog.cpp \
+    src/main.cpp
 
-HEADERS  += maindialog.h
+HEADERS  += \
+    include/maindialog.h
 
-FORMS    += maindialog.ui \
-    mainform.ui
+FORMS    += \
+    forms/maindialog.ui
+
+INCLUDEPATH = include
