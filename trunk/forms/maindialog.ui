@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>5</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -620,5 +620,76 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>AVRDudePathSeBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>AVRDudeSetPath()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>540</x>
+     <y>109</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetAVRDudePath(QString)</signal>
+   <receiver>AVRDudePath</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>314</x>
+     <y>109</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHFileSimpOpenBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>OpenFLASHFileDlg()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>540</x>
+     <y>265</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetFLASHFile(QString)</signal>
+   <receiver>FLASHFileSimp</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>288</x>
+     <y>264</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <signal>SetAVRDudePath(QString)</signal>
+  <signal>SetFLASHFile(QString)</signal>
+  <slot>AVRDudeSetPath()</slot>
+  <slot>OpenFLASHFileDlg()</slot>
+ </slots>
 </ui>
