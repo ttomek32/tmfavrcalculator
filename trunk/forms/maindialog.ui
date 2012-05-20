@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>4</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -586,16 +586,34 @@
        <item row="2" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_18">
          <item>
-          <widget class="QCheckBox" name="AVRDudeShowResultsOnError">
-           <property name="text">
-            <string>Pokaż okienko AVRDude jeśli wystąpi błąd</string>
-           </property>
-          </widget>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <item>
+            <widget class="QCheckBox" name="AVRDudeShowResultsOnError">
+             <property name="text">
+              <string>Pokaż okienko AVRDude jeśli wystąpi błąd</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="AVRDudeShowCMDLine">
+             <property name="text">
+              <string>Pokaż wygenerowane polecenie</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </item>
         </layout>
        </item>
       </layout>
      </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="UsedProcessorLBL">
+     <property name="text">
+      <string>Procesor:</string>
+     </property>
     </widget>
    </item>
   </layout>
