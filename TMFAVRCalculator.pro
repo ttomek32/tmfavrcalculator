@@ -21,3 +21,7 @@ FORMS    += \
     forms/maindialog.ui
 
 INCLUDEPATH = include
+
+OBJECTS_DIR = output/obj
+MOC_DIR = output/moc
+DESTDIR = output
