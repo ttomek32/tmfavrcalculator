@@ -44,7 +44,8 @@ MainDialog::MainDialog(QWidget *parent) :
      if(checkbox==Qt::Checked)
      {
          emit SetAVRDudeCMDLine(true);
-     };
+
+     } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
 
      appsettings.endGroup();
 
@@ -143,6 +144,8 @@ void MainDialog::SetupShowAVRDudeCmd(int state)
      appsettings.beginGroup("MainWindow");
      appsettings.setValue("AVRDudeShowCMDLine", state);   //Zapisz stan przycisku
      appsettings.endGroup();  //Zapisz zmiany
+     if(state==Qt::Checked) ui->AVRDudeCMDLineGroupBox->setVisible(true);  //Ukryj lub poka¿ okienko z lini¹ polecenia AVRDude
+       else ui->AVRDudeCMDLineGroupBox->setVisible(false);
 }
 
 MainDialog::~MainDialog()
