@@ -396,6 +396,13 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QProgressBar" name="SimpProgrammProgressBar">
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
       </layout>
