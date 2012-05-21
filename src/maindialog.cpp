@@ -21,8 +21,32 @@ MainDialog::MainDialog(QWidget *parent) :
     QString path;
      appsettings.beginGroup("MainWindow");
      path=appsettings.value("AVRDudePath").toString();   //Odczytaj œcie¿kê do AVRDude (jeœli jest)
+     emit SetAVRDudePath(path);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
+     path=appsettings.value("FLASHFilePath").toString(); //Odczytaj ostatnio u¿yty plik FLASH
+     emit SetFLASHFile(path);                            //Uzupe³nij pola wyboru pliku FLASH we wszystkich zak³¹dkach
+
+     //Setup tab
+     int checkbox;
+     checkbox=appsettings.value("SimplifiedView").toInt();
+     if(checkbox==Qt::Checked)
+     {
+         HideAdvancedTabs(true);
+         emit SetSimplifierViewChBox(true);
+     } else HideAdvancedTabs(false);
+
+     checkbox=appsettings.value("AVRDudeShowWindowOnError").toInt();
+     if(checkbox==Qt::Checked)
+     {
+         emit SetAVRDudeWindowOnError(true);
+     };
+
+     checkbox=appsettings.value("AVRDudeShowCMDLine").toInt();
+     if(checkbox==Qt::Checked)
+     {
+         emit SetAVRDudeCMDLine(true);
+     };
+
      appsettings.endGroup();
-    emit SetAVRDudePath(path);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
 
 }
 
@@ -81,6 +105,45 @@ void MainDialog::OpenFLASHFileDlg()
     appsettings.endGroup();  //Zapisz zmiany
 }
 
+void MainDialog::HideAdvancedTabs(bool hide)
+{
+    if(hide==true)
+    {
+        ui->Tabs->setTabEnabled(1, false);
+        ui->Tabs->setTabEnabled(2, false);
+        ui->Tabs->setTabEnabled(3, false);
+    } else
+    {
+        ui->Tabs->setTabEnabled(1, true);
+        ui->Tabs->setTabEnabled(2, true);
+        ui->Tabs->setTabEnabled(3, true);
+    }
+}
+
+void MainDialog::SetupShowSimplifiedView(int state)
+{
+    QSettings appsettings;
+     appsettings.beginGroup("MainWindow");
+     appsettings.setValue("SimplifiedView", state);   //Zapisz stan przycisku
+     appsettings.endGroup();  //Zapisz zmiany
+     if(state==Qt::Checked) HideAdvancedTabs(true); else HideAdvancedTabs(false);
+}
+
+void MainDialog::SetupShowAVDDudeWindow(int state)
+{
+    QSettings appsettings;
+     appsettings.beginGroup("MainWindow");
+     appsettings.setValue("AVRDudeShowWindowOnError", state);   //Zapisz stan przycisku
+     appsettings.endGroup();  //Zapisz zmiany
+}
+
+void MainDialog::SetupShowAVRDudeCmd(int state)
+{
+    QSettings appsettings;
+     appsettings.beginGroup("MainWindow");
+     appsettings.setValue("AVRDudeShowCMDLine", state);   //Zapisz stan przycisku
+     appsettings.endGroup();  //Zapisz zmiany
+}
 
 MainDialog::~MainDialog()
 {

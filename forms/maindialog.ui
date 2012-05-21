@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -102,6 +102,12 @@
              <layout class="QHBoxLayout" name="horizontalLayout_12">
               <item>
                <widget class="QPushButton" name="ConnectionTestBtn">
+                <property name="font">
+                 <font>
+                  <family>Arial</family>
+                  <pointsize>16</pointsize>
+                 </font>
+                </property>
                 <property name="toolTip">
                  <string>Testuje poprawność połączenia z AVR. Odczytana sygnatura umożliwia autodetekcję CPU</string>
                 </property>
@@ -116,7 +122,7 @@
                  <string>Wyniki</string>
                 </property>
                 <layout class="QGridLayout" name="gridLayout_9">
-                 <item row="0" column="0">
+                 <item row="1" column="0">
                   <layout class="QVBoxLayout" name="verticalLayout">
                    <item>
                     <widget class="QLabel" name="AVRSignatureLBL">
@@ -127,17 +133,17 @@
                    </item>
                   </layout>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="AVRTypeLBL">
-                   <property name="text">
-                    <string>Typ AVR</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
+                 <item row="3" column="0">
                   <widget class="QLabel" name="ConnectionOk">
                    <property name="text">
                     <string>Połączenie OK</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="AVRTypeLBL">
+                   <property name="text">
+                    <string>Typ AVR</string>
                    </property>
                   </widget>
                  </item>
@@ -278,6 +284,103 @@
         <layout class="QHBoxLayout" name="horizontalLayout_15">
          <item>
           <widget class="QPushButton" name="SimpProgrammBtn">
+           <property name="palette">
+            <palette>
+             <active>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>255</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="Text">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>255</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="ButtonText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>255</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </active>
+             <inactive>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>255</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="Text">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>255</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="ButtonText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>255</red>
+                 <green>0</green>
+                 <blue>0</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </inactive>
+             <disabled>
+              <colorrole role="WindowText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>120</red>
+                 <green>120</green>
+                 <blue>120</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="Text">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>120</red>
+                 <green>120</green>
+                 <blue>120</blue>
+                </color>
+               </brush>
+              </colorrole>
+              <colorrole role="ButtonText">
+               <brush brushstyle="SolidPattern">
+                <color alpha="255">
+                 <red>120</red>
+                 <green>120</green>
+                 <blue>120</blue>
+                </color>
+               </brush>
+              </colorrole>
+             </disabled>
+            </palette>
+           </property>
+           <property name="font">
+            <font>
+             <family>Arial</family>
+             <pointsize>16</pointsize>
+            </font>
+           </property>
            <property name="toolTip">
             <string>Programuj i weryfikuj.</string>
            </property>
@@ -445,7 +548,7 @@
          <item>
           <widget class="QTableWidget" name="FusebitTable">
            <property name="columnCount">
-            <number>2</number>
+            <number>3</number>
            </property>
            <column>
             <property name="text">
@@ -455,6 +558,11 @@
            <column>
             <property name="text">
              <string>Wartość</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Opis</string>
             </property>
            </column>
           </widget>
@@ -505,6 +613,11 @@
            <column>
             <property name="text">
              <string>Wartość</string>
+            </property>
+           </column>
+           <column>
+            <property name="text">
+             <string>Opis</string>
             </property>
            </column>
           </widget>
@@ -611,6 +724,103 @@
    </item>
    <item row="1" column="0">
     <widget class="QLabel" name="UsedProcessorLBL">
+     <property name="palette">
+      <palette>
+       <active>
+        <colorrole role="WindowText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Text">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>16</green>
+           <blue>20</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </active>
+       <inactive>
+        <colorrole role="WindowText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Text">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>16</green>
+           <blue>20</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>255</red>
+           <green>0</green>
+           <blue>0</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </inactive>
+       <disabled>
+        <colorrole role="WindowText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>120</red>
+           <green>120</green>
+           <blue>120</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="Text">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>120</red>
+           <green>120</green>
+           <blue>120</blue>
+          </color>
+         </brush>
+        </colorrole>
+        <colorrole role="ButtonText">
+         <brush brushstyle="SolidPattern">
+          <color alpha="255">
+           <red>120</red>
+           <green>120</green>
+           <blue>120</blue>
+          </color>
+         </brush>
+        </colorrole>
+       </disabled>
+      </palette>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial Black</family>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Procesor:</string>
      </property>
@@ -685,11 +895,129 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetFLASHFile(QString)</signal>
+   <receiver>FLASHFile</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>279</x>
+     <y>92</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>SetUpOnlySimplifierView</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SetupShowSimplifiedView(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>AVRDudeShowResultsOnError</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SetupShowAVDDudeWindow(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>363</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>AVRDudeShowCMDLine</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SetupShowAVRDudeCmd(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>416</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetSimplifierViewChBox(bool)</signal>
+   <receiver>SetUpOnlySimplifierView</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>248</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetAVRDudeCMDLine(bool)</signal>
+   <receiver>AVRDudeShowCMDLine</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>416</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetAVRDudeWindowOnError(bool)</signal>
+   <receiver>AVRDudeShowResultsOnError</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>363</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
   <signal>SetFLASHFile(QString)</signal>
+  <signal>SetSimplifierViewChBox(bool)</signal>
+  <signal>SetAVRDudeWindowOnError(bool)</signal>
+  <signal>SetAVRDudeCMDLine(bool)</signal>
   <slot>AVRDudeSetPath()</slot>
   <slot>OpenFLASHFileDlg()</slot>
+  <slot>SetupShowSimplifiedView(int)</slot>
+  <slot>SetupShowAVDDudeWindow(int)</slot>
+  <slot>SetupShowAVRDudeCmd(int)</slot>
  </slots>
 </ui>
