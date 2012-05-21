@@ -48,7 +48,6 @@ MainDialog::MainDialog(QWidget *parent) :
      } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
 
      appsettings.endGroup();
-
 }
 
 void MainDialog::AVRDudeSetPath()
@@ -108,17 +107,9 @@ void MainDialog::OpenFLASHFileDlg()
 
 void MainDialog::HideAdvancedTabs(bool hide)
 {
-    if(hide==true)
-    {
-        ui->Tabs->setTabEnabled(1, false);
-        ui->Tabs->setTabEnabled(2, false);
-        ui->Tabs->setTabEnabled(3, false);
-    } else
-    {
-        ui->Tabs->setTabEnabled(1, true);
-        ui->Tabs->setTabEnabled(2, true);
-        ui->Tabs->setTabEnabled(3, true);
-    }
+    ui->Tabs->setTabEnabled(1, !hide);
+    ui->Tabs->setTabEnabled(2, !hide);
+    ui->Tabs->setTabEnabled(3, !hide);
 }
 
 void MainDialog::SetupShowSimplifiedView(int state)
@@ -127,7 +118,8 @@ void MainDialog::SetupShowSimplifiedView(int state)
      appsettings.beginGroup("MainWindow");
      appsettings.setValue("SimplifiedView", state);   //Zapisz stan przycisku
      appsettings.endGroup();  //Zapisz zmiany
-     if(state==Qt::Checked) HideAdvancedTabs(true); else HideAdvancedTabs(false);
+
+     HideAdvancedTabs(state == Qt::Checked);
 }
 
 void MainDialog::SetupShowAVDDudeWindow(int state)
