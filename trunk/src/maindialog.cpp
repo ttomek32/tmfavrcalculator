@@ -94,7 +94,7 @@ void MainDialog::OpenFLASHFileDlg()
     if (dialog.exec())    //Wyœwietl dialog wyboru œcie¿ki
      {
         fileNames = dialog.selectedFiles();
-        if(fileNames.isEmpty()==false)
+        if(!fileNames.isEmpty())
         {
             path=fileNames.at(0);        //Odczytaj œcie¿kê
             appsettings.setValue("FLASHFilePath", path);
@@ -136,8 +136,7 @@ void MainDialog::SetupShowAVRDudeCmd(int state)
      appsettings.beginGroup("MainWindow");
      appsettings.setValue("AVRDudeShowCMDLine", state);   //Zapisz stan przycisku
      appsettings.endGroup();  //Zapisz zmiany
-     if(state==Qt::Checked) ui->AVRDudeCMDLineGroupBox->setVisible(true);  //Ukryj lub poka¿ okienko z lini¹ polecenia AVRDude
-       else ui->AVRDudeCMDLineGroupBox->setVisible(false);
+     ui->AVRDudeCMDLineGroupBox->setVisible(state==Qt::Checked);  //Ukryj lub poka¿ okienko z lini¹ polecenia AVRDude
 }
 
 MainDialog::~MainDialog()

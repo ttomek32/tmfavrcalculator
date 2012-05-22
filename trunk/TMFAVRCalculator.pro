@@ -12,10 +12,16 @@ TEMPLATE = app
 
 SOURCES += \
     src/maindialog.cpp \
-    src/main.cpp
+    src/main.cpp \
+    src/programmer.cpp \
+    src/part.cpp \
+    src/avrdudeconfparser.cpp
 
 HEADERS  += \
-    include/maindialog.h
+    include/maindialog.h \
+    include/programmer.h \
+    include/part.h \
+    include/avrdudeconfparser.h
 
 FORMS    += \
     forms/maindialog.ui
