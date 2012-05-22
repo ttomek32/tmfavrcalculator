@@ -1089,6 +1089,166 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetEEPROMFile(QString)</signal>
+   <receiver>EEPROMFile</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>284</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetEEPROMFile(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SavePathToEEPROMFile(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHOpenFile</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>OpenFLASHFileDlg()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>530</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EEPROMOpenBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>OpenEEPROMFileDlg()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>530</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHFile</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>FLASHFileSimp</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>288</x>
+     <y>235</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHFileSimp</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>FLASHFile</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>279</x>
+     <y>85</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EEPROMFile</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SavePathToEEPROMFile(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>284</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHFile</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SavePathToFLASHFile(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHFileSimp</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SavePathToFLASHFile(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>288</x>
+     <y>235</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetFLASHFile(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SavePathToFLASHFile(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1096,10 +1256,14 @@
   <signal>SetSimplifierViewChBox(bool)</signal>
   <signal>SetAVRDudeWindowOnError(bool)</signal>
   <signal>SetAVRDudeCMDLine(bool)</signal>
+  <signal>SetEEPROMFile(QString)</signal>
   <slot>AVRDudeSetPath()</slot>
   <slot>OpenFLASHFileDlg()</slot>
   <slot>SetupShowSimplifiedView(int)</slot>
   <slot>SetupShowAVDDudeWindow(int)</slot>
   <slot>SetupShowAVRDudeCmd(int)</slot>
+  <slot>SavePathToEEPROMFile(QString)</slot>
+  <slot>OpenEEPROMFileDlg()</slot>
+  <slot>SavePathToFLASHFile(QString)</slot>
  </slots>
 </ui>
