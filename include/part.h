@@ -6,7 +6,17 @@
 class Part
 {
 public:
+    // Initializes new instance of Part object.
     Part();
+
+    // Initializes new instance of Part object.
+    // param QString id - unique ID number of the part.
+    // param QString description - description of the part.
+    // param QString signature - the parts signature.
+    // param bool hasJTAG - determines whether the part is programmable via JTAG.
+    // param bool hasDebugwire - determines whether the part is programmable via Debug Wire.
+    // param bool hasPDI - determines whether the part is programmable via PDI.
+    // param bool hasTPI - determines whether the part is programmable via TPI.
     Part(
             QString id,
             QString description,
@@ -16,12 +26,25 @@ public:
             bool hasPDI,
             bool hasTPI);
 
+    // Gets the parts ID.
     QString GetID();
+
+    // Gets the parts description.
     QString GetDescription();
+
+    // Gets the parts signature.
     QString GetSignature();
+
+    // Determines whether part is programmable via JTAG.
     bool HasJTAG();
+
+    // Determines whether part is programmable via Debug Wire.
     bool HasDebugwire();
+
+    // Determines whether part is programmable via PDI.
     bool HasPDI();
+
+    // Determines whether part is programmable via TPI.
     bool HasTPI();
 
 private:
