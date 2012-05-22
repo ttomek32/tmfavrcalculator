@@ -23,14 +23,17 @@ MainDialog::MainDialog(QWidget *parent) :
      path=appsettings.value("AVRDudePath").toString();   //Odczytaj œcie¿kê do AVRDude (jeœli jest)
      emit SetAVRDudePath(path);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
      path=appsettings.value("FLASHFilePath").toString(); //Odczytaj ostatnio u¿yty plik FLASH
-     emit SetFLASHFile(path);                            //Uzupe³nij pola wyboru pliku FLASH we wszystkich zak³¹dkach
+     emit SetFLASHFile(path);                            //Uzupe³nij pola wyboru pliku FLASH we wszystkich zak³adkach
+
+     path=appsettings.value("EEPROMFilePath").toString(); //Odczytaj ostatnio u¿yty plik EEPROM
+     emit SetEEPROMFile(path);                            //Uzupe³nij pola wyboru pliku EEPROM we wszystkich zak³adkach
 
      //Setup tab
      int checkbox;
      checkbox=appsettings.value("SimplifiedView").toInt();
-     if(checkbox==Qt::Checked)
+     if(checkbox==Qt::Checked)                           //SprawdŸ czy wybrano widok uproszczony
      {
-         HideAdvancedTabs(true);
+         HideAdvancedTabs(true);                     //Ukryj zaawansowane zak³adki
          emit SetSimplifierViewChBox(true);
      } else HideAdvancedTabs(false);
 
@@ -81,10 +84,10 @@ void MainDialog::OpenFLASHFileDlg()
 {
     QString path;
 
-    QSettings appsettings;                               //Odczytaj œcie¿kê do AVRDude (jeœli jest)
+    QSettings appsettings;                               //Odczytaj œcie¿kê do pliku FLASH
      appsettings.beginGroup("MainWindow");
      path=appsettings.value("FLASHFilePath").toString();
-     emit SetFLASHFile(path);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
+     appsettings.endGroup();  //Zapisz zmiany
 
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::AnyFile);
@@ -97,12 +100,41 @@ void MainDialog::OpenFLASHFileDlg()
         if(!fileNames.isEmpty())
         {
             path=fileNames.at(0);        //Odczytaj œcie¿kê
-            appsettings.setValue("FLASHFilePath", path);
-            emit SetFLASHFile(path);
+            emit SetFLASHFile(path);                      //Uaktualnij pola w których wystêpuje odwo³anie do œcie¿ki pliku hex
+
+            if(path.endsWith(".hex", Qt::CaseInsensitive))   //Podano plik o rozszerzeniu .hex, szukamy wiêc czy jest .eep
+            {
+                path.truncate(path.size()-4);  //Wycinamy ".hex"
+                path.append(".eep");
+                if(QFile(path).exists()) emit SetEEPROMFile(path);  //Uaktualnij pola w których znajduje siê œcie¿ka do pliku eep
+            }
         }
      }
+}
 
-    appsettings.endGroup();  //Zapisz zmiany
+void MainDialog::OpenEEPROMFileDlg()
+{
+    QString path;
+
+    QSettings appsettings;                               //Odczytaj œcie¿kê do AVRDude (jeœli jest)
+     appsettings.beginGroup("MainWindow");
+     path=appsettings.value("EEPROMFilePath").toString();
+     appsettings.endGroup();
+
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::AnyFile);
+    dialog.setNameFilter(tr("IntelHex (*.eep)"));
+    dialog.setDirectory(path);
+    QStringList fileNames;
+    if (dialog.exec())    //Wyœwietl dialog wyboru œcie¿ki
+     {
+        fileNames = dialog.selectedFiles();
+        if(!fileNames.isEmpty())
+        {
+            path=fileNames.at(0);        //Odczytaj œcie¿kê
+            emit SetEEPROMFile(path);                      //Uaktualnij pola w których wystêpuje odwo³anie do œcie¿ki pliku hex
+        }
+     }
 }
 
 void MainDialog::HideAdvancedTabs(bool hide)
@@ -137,6 +169,24 @@ void MainDialog::SetupShowAVRDudeCmd(int state)
      appsettings.setValue("AVRDudeShowCMDLine", state);   //Zapisz stan przycisku
      appsettings.endGroup();  //Zapisz zmiany
      ui->AVRDudeCMDLineGroupBox->setVisible(state==Qt::Checked);  //Ukryj lub poka¿ okienko z lini¹ polecenia AVRDude
+}
+
+void MainDialog::SavePathToEEPROMFile(QString file)
+{
+    QSettings appsettings;                               //Zapisz œcie¿kê do pliku eep
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("EEPROMFilePath", file);
+     appsettings.endGroup();  //Zapisz zmiany
+}
+
+void MainDialog::SavePathToFLASHFile(QString file)
+{
+    QSettings appsettings;                               //Zapisz œcie¿kê do pliku eep
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("FLASHFilePath", file);
+     appsettings.endGroup();  //Zapisz zmiany
 }
 
 MainDialog::~MainDialog()
