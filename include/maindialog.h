@@ -2,6 +2,7 @@
 #define MAINDIALOG_H
 
 #include <QDialog>
+#include <avrdudeconfparser.h>
 
 namespace Ui {
 class MainDialog;
@@ -10,12 +11,19 @@ class MainDialog;
 class MainDialog : public QDialog
 {
     Q_OBJECT
+
+protected:
+    AvrdudeConfParser *AVRDudeConf;     //Parser pliku konfiguracyjnego AVRDude
     
 public:
     explicit MainDialog(QWidget *parent = 0);
     void HideAdvancedTabs(bool);     //Ukryj zak³adki z opcjami zaawansowanymi
 
     ~MainDialog();
+
+protected:
+    void FillProgrammerCB();          //Wype³nij listê dostêpnych programatorów
+    void FillPortCB();                //Wype³nij listê portów
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude

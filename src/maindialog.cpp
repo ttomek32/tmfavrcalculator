@@ -20,8 +20,9 @@ MainDialog::MainDialog(QWidget *parent) :
 
     QString path;
      appsettings.beginGroup("MainWindow");
-     path=appsettings.value("AVRDudePath").toString();   //Odczytaj œcie¿kê do AVRDude (jeœli jest)
-     emit SetAVRDudePath(path);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
+     QString ADpath=appsettings.value("AVRDudePath").toString();   //Odczytaj œcie¿kê do AVRDude (jeœli jest)
+     emit SetAVRDudePath(ADpath);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
+
      path=appsettings.value("FLASHFilePath").toString(); //Odczytaj ostatnio u¿yty plik FLASH
      emit SetFLASHFile(path);                            //Uzupe³nij pola wyboru pliku FLASH we wszystkich zak³adkach
 
@@ -51,6 +52,9 @@ MainDialog::MainDialog(QWidget *parent) :
      } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
 
      appsettings.endGroup();
+
+     AVRDudeConf=new AvrdudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
+     FillProgrammerCB();                           //Typy obs³ugiwanych programatorów
 }
 
 void MainDialog::AVRDudeSetPath()
@@ -137,6 +141,25 @@ void MainDialog::OpenEEPROMFileDlg()
      }
 }
 
+void MainDialog::FillProgrammerCB()
+{
+    ui->ProgrammerCB->clear();   //Skasuj poprzednie pozycje
+    if(AVRDudeConf)
+    {
+        QVector<Programmer> pgm=AVRDudeConf->GetProgrammers();  //Lista programatorów obs³ugiwanych przez AVRDude
+
+        for (int i = 0; i < pgm.size(); ++i)
+        {
+            ui->ProgrammerCB->addItem(pgm[i].GetID());         //Wype³nij combo z tympami obs³ugiwanych programatorów
+        }
+    }
+}
+
+void MainDialog::FillPortCB()
+{
+
+}
+
 void MainDialog::HideAdvancedTabs(bool hide)
 {
     ui->Tabs->setTabEnabled(1, !hide);
@@ -207,4 +230,6 @@ MainDialog::~MainDialog()
      appsettings.endGroup();
 
     delete ui;
+
+   // delete AVRDudeConf;        //Parser AVRDude ju¿ nam siê nie przyda :)
 }
