@@ -1281,6 +1281,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>PortCB</sender>
+   <signal>activated(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>PortChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>345</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1299,5 +1315,6 @@
   <slot>SavePathToFLASHFile(QString)</slot>
   <slot>SavePathToAVRDude(QString)</slot>
   <slot>ProgrammerChanged(QString)</slot>
+  <slot>PortChanged(QString)</slot>
  </slots>
 </ui>

@@ -36,6 +36,7 @@ signals:
 private slots:
     //Z okienka programowanie uproszczone
     void ProgrammerChanged(QString);     //U¿ytkownik wybra³ typ programatora
+    void PortChanged(QString);           //U¿ytkownik wybra³ typ portu
 
     void AVRDudeSetPath();            //Ustaw œcie¿kê do programu AVRDude
     void OpenFLASHFileDlg();          //Ustaw œcie¿kê do pliku z FLASH

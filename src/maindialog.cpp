@@ -3,6 +3,8 @@
 #include <QFileDialog>
 #include <QDir>
 
+#include "qextserialenumerator.h"   /.Klasa obs³uguj¹ca porty szeregowe
+
 #include "maindialog.h"
 #include "ui_maindialog.h"
 
@@ -58,6 +60,9 @@ MainDialog::MainDialog(QWidget *parent) :
      QString prg=appsettings.value("Programmer").toString();
      ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
 
+     FillPortCB();    //Typy dostêpnych portów
+     prg=appsettings.value("Port").toString();
+     ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
 
     appsettings.endGroup();
 
@@ -163,7 +168,14 @@ void MainDialog::FillProgrammerCB()
 
 void MainDialog::FillPortCB()
 {
+    ui->PortCB->clear();
+    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();  //Pobierz nazwy dostêpnych portów szeregowych
+    for (int i = 0; i < ports.size(); i++)
+    {
+        ui->PortCB->addItem(ports.at(i).portName);
+    }
 
+    ui->PortCB->addItem("usb");
 }
 
 void MainDialog::HideAdvancedTabs(bool hide)
@@ -229,13 +241,21 @@ void MainDialog::SavePathToFLASHFile(QString file)
 
  void MainDialog::ProgrammerChanged(QString text)
  {
-     QSettings appsettings;                               //Zapisz œcie¿kê do AVRDude
+     QSettings appsettings;                               //Zapisz wybrany typ programatora
       appsettings.beginGroup("MainWindow");
 
       appsettings.setValue("Programmer", text);
       appsettings.endGroup();  //Zapisz zmiany
  }
 
+void MainDialog::PortChanged(QString text)
+{
+    QSettings appsettings;                               //Zapisz wybrany port
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("Port", text);
+     appsettings.endGroup();  //Zapisz zmiany
+}
 
 MainDialog::~MainDialog()
 {
