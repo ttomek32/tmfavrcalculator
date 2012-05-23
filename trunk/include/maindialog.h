@@ -34,6 +34,9 @@ signals:
  void SetAVRDudeCMDLine(bool);        //Ustaw checkbox wyœwietlania linii polecenia AVR Dude
 
 private slots:
+    //Z okienka programowanie uproszczone
+    void ProgrammerChanged(QString);     //U¿ytkownik wybra³ typ programatora
+
     void AVRDudeSetPath();            //Ustaw œcie¿kê do programu AVRDude
     void OpenFLASHFileDlg();          //Ustaw œcie¿kê do pliku z FLASH
     void OpenEEPROMFileDlg();         //Ustaw œcie¿kê do pliku z EEPROM

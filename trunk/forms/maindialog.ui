@@ -1265,6 +1265,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>ProgrammerCB</sender>
+   <signal>activated(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ProgrammerChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1282,5 +1298,6 @@
   <slot>OpenEEPROMFileDlg()</slot>
   <slot>SavePathToFLASHFile(QString)</slot>
   <slot>SavePathToAVRDude(QString)</slot>
+  <slot>ProgrammerChanged(QString)</slot>
  </slots>
 </ui>
