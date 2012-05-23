@@ -34,6 +34,9 @@ private slots:
     void SetupShowAVDDudeWindow(int);      //Checkbox - poka¿ okno AVRDude tylko jeœli wyst¹pi³ b³¹d
     void SetupShowAVRDudeCmd(int);         //Poka¿ wygenerowane polecenie AVRDude
 
+    //Programownaie
+    void SavePathToAVRDude(QString);       //Zapisz œcie¿kê do AVRDude
+
     //Inne
     void SavePathToFLASHFile(QString);     //Zapisz w rejestrze œcie¿kê do pliku FLASH
     void SavePathToEEPROMFile(QString);    //Zapisz w rejestrze œcie¿kê do pliku EEPROM

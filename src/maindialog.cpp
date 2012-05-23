@@ -189,6 +189,15 @@ void MainDialog::SavePathToFLASHFile(QString file)
      appsettings.endGroup();  //Zapisz zmiany
 }
 
+ void MainDialog::SavePathToAVRDude(QString path)
+ {
+     QSettings appsettings;                               //Zapisz œcie¿kê do AVRDude
+      appsettings.beginGroup("MainWindow");
+
+      appsettings.setValue("AVRDudePath", path);
+      appsettings.endGroup();  //Zapisz zmiany
+ }
+
 MainDialog::~MainDialog()
 {
     QSettings appsettings;
