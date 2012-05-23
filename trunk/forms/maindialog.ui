@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -1249,6 +1249,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>AVRDudePath</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SavePathToAVRDude(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1265,5 +1281,6 @@
   <slot>SavePathToEEPROMFile(QString)</slot>
   <slot>OpenEEPROMFileDlg()</slot>
   <slot>SavePathToFLASHFile(QString)</slot>
+  <slot>SavePathToAVRDude(QString)</slot>
  </slots>
 </ui>
