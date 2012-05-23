@@ -51,10 +51,16 @@ MainDialog::MainDialog(QWidget *parent) :
 
      } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
 
-     appsettings.endGroup();
+
 
      AVRDudeConf=new AvrdudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
      FillProgrammerCB();                           //Typy obs³ugiwanych programatorów
+     QString prg=appsettings.value("Programmer").toString();
+     ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
+
+
+    appsettings.endGroup();
+
 }
 
 void MainDialog::AVRDudeSetPath()
@@ -220,6 +226,16 @@ void MainDialog::SavePathToFLASHFile(QString file)
       appsettings.setValue("AVRDudePath", path);
       appsettings.endGroup();  //Zapisz zmiany
  }
+
+ void MainDialog::ProgrammerChanged(QString text)
+ {
+     QSettings appsettings;                               //Zapisz œcie¿kê do AVRDude
+      appsettings.beginGroup("MainWindow");
+
+      appsettings.setValue("Programmer", text);
+      appsettings.endGroup();  //Zapisz zmiany
+ }
+
 
 MainDialog::~MainDialog()
 {
