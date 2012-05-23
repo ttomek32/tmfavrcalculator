@@ -24,6 +24,7 @@ public:
 protected:
     void FillProgrammerCB();          //Wype³nij listê dostêpnych programatorów
     void FillPortCB();                //Wype³nij listê portów
+    void FillMCUType();               //Wype³nij listê mikrokontrolerów
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude
@@ -37,6 +38,8 @@ private slots:
     //Z okienka programowanie uproszczone
     void ProgrammerChanged(QString);     //U¿ytkownik wybra³ typ programatora
     void PortChanged(QString);           //U¿ytkownik wybra³ typ portu
+    void MCUChanged(QString);            //U¿ytkownik wybra³ typ mikrokontrolera
+    void TestConnection();               //SprawdŸ po³¹czenie z MCU i przy okazji sygnaturê
 
     void AVRDudeSetPath();            //Ustaw œcie¿kê do programu AVRDude
     void OpenFLASHFileDlg();          //Ustaw œcie¿kê do pliku z FLASH

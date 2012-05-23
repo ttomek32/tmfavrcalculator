@@ -2,8 +2,9 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDir>
+#include <QProcess>
 
-#include "qextserialenumerator.h"   /.Klasa obs³uguj¹ca porty szeregowe
+#include "qextserialenumerator.h"   //Klasa obs³uguj¹ca porty szeregowe
 
 #include "maindialog.h"
 #include "ui_maindialog.h"
@@ -63,6 +64,10 @@ MainDialog::MainDialog(QWidget *parent) :
      FillPortCB();    //Typy dostêpnych portów
      prg=appsettings.value("Port").toString();
      ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
+
+     FillMCUType();  //Typy dostêpnych procesorów
+     prg=appsettings.value("MCU").toString();
+     ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
 
     appsettings.endGroup();
 
@@ -178,6 +183,41 @@ void MainDialog::FillPortCB()
     ui->PortCB->addItem("usb");
 }
 
+void MainDialog::FillMCUType()
+{
+    ui->AVRTypeCB->clear();   //Skasuj poprzednie pozycje
+    if(AVRDudeConf)
+    {
+        QVector<Part> pgm=AVRDudeConf->GetParts();  //Lista programatorów obs³ugiwanych przez AVRDude
+
+        for (int i = 0; i < pgm.size(); ++i)
+        {
+            ui->AVRTypeCB->addItem(pgm[i].GetDescription());         //Wype³nij combo z tympami obs³ugiwanych procesorów
+        }
+    }
+}
+
+void MainDialog::TestConnection()
+{
+    QSettings appsettings;
+    appsettings.beginGroup("MainWindow");
+    QString program = appsettings.value("AVRDudePath").toString()+"/avrdude";
+    appsettings.endGroup();
+
+    QStringList arguments;
+    //arguments << "-p" << "-c";
+
+    QProcess *avrdude = new QProcess(this);
+    avrdude->start(program, arguments);
+    avrdude->waitForFinished(5000);         //Czekaj na koniec, jednak nie wiêcej ni¿ 5s
+
+    QMessageBox::warning(this, tr("My Application"),
+                         tr("AVR Dude exit code: %1.\n AVRDude cmd: %2\nError: %3").arg(avrdude->exitCode()).arg(program).arg(avrdude->error()),
+                                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+
+    delete avrdude;
+}
+
 void MainDialog::HideAdvancedTabs(bool hide)
 {
     ui->Tabs->setTabEnabled(1, !hide);
@@ -254,6 +294,15 @@ void MainDialog::PortChanged(QString text)
      appsettings.beginGroup("MainWindow");
 
      appsettings.setValue("Port", text);
+     appsettings.endGroup();  //Zapisz zmiany
+}
+
+void MainDialog::MCUChanged(QString text)
+{
+    QSettings appsettings;                               //Zapisz wybrany mikrokontroler
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("MCU", text);
      appsettings.endGroup();  //Zapisz zmiany
 }
 
