@@ -211,6 +211,7 @@ void MainDialog::TestConnection()
     arguments << GetMCUAsAVRDudeParam();        //Dodaj wybrany typ CPU (jeœli wybrano)
     arguments << GetProgrammerAsAVRDudeParam(); //Dodaj wybrany typ programatora
     arguments << GetPortAsAVRDudeParam();       //Dodaj wybrany port
+    arguments << " -q";                         //Tryb cichszy, mniej informacji do przeparsowania
 
     QProcess *avrdude = new QProcess(this);
     avrdude->start(program, arguments);
