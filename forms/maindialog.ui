@@ -1329,6 +1329,70 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>AVRTypeCB</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ShowAVRDudeCmdLineParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>434</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>PortCB</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ShowAVRDudeCmdLineParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>345</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ProtocolCB</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ShowAVRDudeCmdLineParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>533</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ProgrammerCB</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ShowAVRDudeCmdLineParams()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>158</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1350,5 +1414,6 @@
   <slot>PortChanged(QString)</slot>
   <slot>MCUChanged(QString)</slot>
   <slot>TestConnection()</slot>
+  <slot>ShowAVRDudeCmdLineParams()</slot>
  </slots>
 </ui>

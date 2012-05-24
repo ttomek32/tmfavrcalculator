@@ -6,6 +6,7 @@
 
 #include "qextserialenumerator.h"   //Klasa obs³uguj¹ca porty szeregowe
 
+#include "QProcessErrorMsg.h"
 #include "maindialog.h"
 #include "ui_maindialog.h"
 
@@ -207,13 +208,27 @@ void MainDialog::TestConnection()
     QStringList arguments;
     //arguments << "-p" << "-c";
 
+    arguments << GetMCUAsAVRDudeParam();        //Dodaj wybrany typ CPU (jeœli wybrano)
+    arguments << GetProgrammerAsAVRDudeParam(); //Dodaj wybrany typ programatora
+    arguments << GetPortAsAVRDudeParam();       //Dodaj wybrany port
+
     QProcess *avrdude = new QProcess(this);
     avrdude->start(program, arguments);
     avrdude->waitForFinished(5000);         //Czekaj na koniec, jednak nie wiêcej ni¿ 5s
 
+    //TYLKO DO DEBUGOWANIA
+    QString params;
+    for(int i=0; i<arguments.size(); i++) params.append(arguments.at(i));
+
     QMessageBox::warning(this, tr("My Application"),
-                         tr("AVR Dude exit code: %1.\n AVRDude cmd: %2\nError: %3").arg(avrdude->exitCode()).arg(program).arg(avrdude->error()),
+                         tr("AVR Dude exit code: %1.\n AVRDude cmd: %2\nError: %3, param: %4").arg(avrdude->exitCode()).arg(program).arg(avrdude->error()).arg(params),
                                     QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+
+    //A¯ DOT¥D
+
+    if(avrdude->error()==QProcess::UnknownError)
+    {
+    } else QProcessErrorMsg(avrdude->error(), this).exec(); //Poinformuj u¿ytkownika o problemie z uruchomieniem AVRDude
 
     delete avrdude;
 }
@@ -306,6 +321,36 @@ void MainDialog::MCUChanged(QString text)
      appsettings.endGroup();  //Zapisz zmiany
 }
 
+QString MainDialog::GetMCUAsAVRDudeParam()
+{
+    QString str=" -p ";
+    str.append(AVRDudeConf->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID());
+    return str;
+}
+
+QString MainDialog::GetProgrammerAsAVRDudeParam()
+{
+    QString str=" -c ";
+    str.append(ui->ProgrammerCB->currentText());
+    return str;
+}
+
+QString MainDialog::GetPortAsAVRDudeParam()
+{
+    QString str=" -P ";
+    str.append(ui->PortCB->currentText());
+    return str;
+}
+
+void MainDialog::ShowAVRDudeCmdLineParams()
+{
+    QString str="avrdude";
+    str.append(GetMCUAsAVRDudeParam());
+    str.append(GetProgrammerAsAVRDudeParam());
+    str.append(GetPortAsAVRDudeParam());
+    ui->AVRDudeCMDLine->setText(str);
+}
+
 MainDialog::~MainDialog()
 {
     QSettings appsettings;
@@ -316,5 +361,5 @@ MainDialog::~MainDialog()
 
     delete ui;
 
-   // delete AVRDudeConf;        //Parser AVRDude ju¿ nam siê nie przyda :)
+    delete AVRDudeConf;        //Parser AVRDude ju¿ nam siê nie przyda :)
 }
