@@ -56,8 +56,15 @@ private slots:
     void SavePathToFLASHFile(QString);     //Zapisz w rejestrze œcie¿kê do pliku FLASH
     void SavePathToEEPROMFile(QString);    //Zapisz w rejestrze œcie¿kê do pliku EEPROM
 
+    void ShowAVRDudeCmdLineParams();       //Wyœwietla na dole w okienku liniê parametrów AVRDude
+
 private:
     Ui::MainDialog *ui;
+
+  //Funkcje zwracaj¹ce poszczególne elementy linii polecenia AVRDude
+    QString GetMCUAsAVRDudeParam();         //Zwróæ typ MCU jako parametr
+    QString GetProgrammerAsAVRDudeParam();  //Zwróæ typ programatora jako parametr
+    QString GetPortAsAVRDudeParam();        //Zwróæ typ wybranego portu jako parametr
 };
 
 #endif // MAINDIALOG_H

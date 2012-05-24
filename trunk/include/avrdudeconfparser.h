@@ -28,6 +28,10 @@ public:
 
     // Gets all parts specified in config file.
     QVector<Part> GetParts();
+
+    //Returns Part recort with Description field equal to Desc
+    Part GetPartByDescription (QString Desc);
+
 private:
     void Parse(QFile *file);
     void ProcessProperties(QVector<QString> *section);
