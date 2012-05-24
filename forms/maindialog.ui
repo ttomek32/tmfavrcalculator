@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -672,7 +672,7 @@
      </widget>
      <widget class="QWidget" name="SetUpTab">
       <attribute name="title">
-       <string>SetUp</string>
+       <string>Ustawienia</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_11">
        <item row="0" column="0">
