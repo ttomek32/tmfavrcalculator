@@ -22,7 +22,9 @@ Part::Part(
 {
     m_ID = id;
     m_Description = description;
-    m_Signature = signature;
+
+
+    m_Signature = signature.remove(" 0x"); //Combine signature bytes to form 24-bit hex signature
     m_HasJTAG = hasJTAG;
     m_HasDebugWire = hasDebugwire;
     m_HasPDI = hasPDI;

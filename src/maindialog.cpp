@@ -7,6 +7,7 @@
 #include "qextserialenumerator.h"   //Klasa obs³uguj¹ca porty szeregowe
 
 #include "QProcessErrorMsg.h"
+#include "AVRDudeExecutor.h"
 #include "maindialog.h"
 #include "ui_maindialog.h"
 
@@ -67,8 +68,10 @@ MainDialog::MainDialog(QWidget *parent) :
      ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
 
      FillMCUType();  //Typy dostêpnych procesorów
+     ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
      prg=appsettings.value("MCU").toString();
      ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
+     MCUChanged(prg);  //Ustaw sygnaturê
 
     appsettings.endGroup();
 
@@ -200,40 +203,14 @@ void MainDialog::FillMCUType()
 
 void MainDialog::TestConnection()
 {
-    QSettings appsettings;
-    appsettings.beginGroup("MainWindow");
-    QString program = appsettings.value("AVRDudePath").toString()+"/avrdude";
-    appsettings.endGroup();
-
-    QStringList arguments;
-    arguments << "-p";
-    arguments << GetMCUAsAVRDudeParam();        //Dodaj wybrany typ CPU (jeœli wybrano)
-    arguments << "-c";
-    arguments << GetProgrammerAsAVRDudeParam(); //Dodaj wybrany typ programatora
-    arguments << "-P";
-    arguments << GetPortAsAVRDudeParam();       //Dodaj wybrany port
-    arguments << "-q";                          //Tryb cichszy, mniej informacji do przeparsowania
-
-    QProcess *avrdude = new QProcess(this);
-    avrdude->start(program, arguments);
-    avrdude->waitForFinished(5000);         //Czekaj na koniec, jednak nie wiêcej ni¿ 5s
-
-    //TYLKO DO DEBUGOWANIA
-    //QString params;
-    //for(int i=0; i<arguments.size(); i++) params.append(arguments.at(i));
-
-    //QMessageBox::warning(this, tr("My Application"),
-    //                     tr("AVR Dude exit code: %1.\n AVRDude cmd: %2\nError: %3, param: %4").arg(avrdude->exitCode()).arg(program).arg(avrdude->error()).arg(params),
-    //                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
-
-    //A¯ DOT¥D
-
+/*
     if(avrdude->error()==QProcess::UnknownError)
     {
         avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
 
         QString strline;
         int index;
+        bool hasBeenFound=false;     //Czy znaleziono sygnaturê?
 
         while(avrdude->canReadLine())
         {
@@ -246,19 +223,26 @@ void MainDialog::TestConnection()
                 while(strline.at(index)>=QChar('0')) index++; //Usuñ z koñca linii znaki kontrolne
                 strline=strline.left(index);
                 ui->AVRSignatureValueLBL->setText(strline);   //Wyœwietl znalezion¹ sygnaturê
+                hasBeenFound=true;                          //Sygnaturê znaleziono
                 break;  //Koniec poszukiwañ                   //Koniec szukania
             }
         }
-
-        //int ind=text.indexOf("Device signature = ");
-
-        //QMessageBox::warning(this, tr("Output"),
-          //                   tr("%1").arg(text.), QMessageBox::Cancel, QMessageBox::Cancel);
-
+        if(hasBeenFound==false)
+        {
+            QMessageBox::critical(this, tr("AVRDude - b³¹d"),
+                                   tr("Nie znaleziono sygnatury urz¹dzenia !\nByæ mo¿e nie jest pod³¹czone lub wyst¹pi³ problem z po³¹czeniem."), QMessageBox::Ok, QMessageBox::Ok);
+            ui->AVRSignatureValueLBL->setText("brak sygnatury");
+        }
 
     } else QProcessErrorMsg(avrdude->error(), this).exec(); //Poinformuj u¿ytkownika o problemie z uruchomieniem AVRDude
 
-    delete avrdude;
+    delete avrdude;*/
+
+    AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), this);
+    QString MCUSig=AVRDude.LookForMCU();
+    ui->AVRSignatureValueLBL->setText(MCUSig);   //Wyœwietl znalezion¹ sygnaturê
+    ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(AVRDudeConf->GetPartBySignature(MCUSig).GetDescription()));  //ZnajdŸ MCU na podstawie sygnatury
+
 }
 
 void MainDialog::HideAdvancedTabs(bool hide)
@@ -342,6 +326,9 @@ void MainDialog::PortChanged(QString text)
 
 void MainDialog::MCUChanged(QString text)
 {
+    QString sig=AVRDudeConf->GetPartByDescription(text).GetSignature();  //ZnajdŸ opis wybranego MCU
+    ui->AVRSignatureValueLBL->setText(sig);
+
     QSettings appsettings;                               //Zapisz wybrany mikrokontroler
      appsettings.beginGroup("MainWindow");
 

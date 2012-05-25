@@ -54,6 +54,17 @@ Part AvrdudeConfParser::GetPartByDescription (QString Desc)
     return Part();  //Return empty Part object - given Desc has not been found
 }
 
+Part AvrdudeConfParser::GetPartBySignature(QString sig)
+{
+    QVector<Part> Parts=GetParts();
+    for(int i=0; i<Parts.size(); i++)
+    {
+        if(sig.compare(Parts[i].GetSignature(), Qt::CaseInsensitive)==0) return Parts[i];
+
+    }
+    return Part();  //Return empty Part object - given Desc has not been found
+}
+
 void AvrdudeConfParser::Parse(QFile *file)
 {
     QTextStream in(file);
@@ -139,7 +150,6 @@ void AvrdudeConfParser::MapPart(QMap<QString, QString> map)
                 StringToBool(map["has_debugwire"]),
                 StringToBool(map["has_pdi"]),
                 StringToBool(map["has_tpi"]));
-
     m_Parts.append(part);
 }
 
