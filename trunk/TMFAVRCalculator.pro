@@ -16,14 +16,17 @@ SOURCES += \
     src/programmer.cpp \
     src/part.cpp \
     src/avrdudeconfparser.cpp \
-    src/QProcessErrorMsg.cpp
+    src/QProcessErrorMsg.cpp \
+    src/AVRDudeExecutor.cpp
 
 HEADERS  += \
     include/maindialog.h \
     include/programmer.h \
     include/part.h \
     include/avrdudeconfparser.h \
-    include/QProcessErrorMsg.h
+    include/QProcessErrorMsg.h \
+    include/AVRDudeExecutor.h \
+    include/delay.h
 
 FORMS    += \
     forms/maindialog.ui
