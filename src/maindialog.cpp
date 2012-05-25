@@ -206,29 +206,56 @@ void MainDialog::TestConnection()
     appsettings.endGroup();
 
     QStringList arguments;
-    //arguments << "-p" << "-c";
-
+    arguments << "-p";
     arguments << GetMCUAsAVRDudeParam();        //Dodaj wybrany typ CPU (jeœli wybrano)
+    arguments << "-c";
     arguments << GetProgrammerAsAVRDudeParam(); //Dodaj wybrany typ programatora
+    arguments << "-P";
     arguments << GetPortAsAVRDudeParam();       //Dodaj wybrany port
-    arguments << " -q";                         //Tryb cichszy, mniej informacji do przeparsowania
+    arguments << "-q";                          //Tryb cichszy, mniej informacji do przeparsowania
 
     QProcess *avrdude = new QProcess(this);
     avrdude->start(program, arguments);
     avrdude->waitForFinished(5000);         //Czekaj na koniec, jednak nie wiêcej ni¿ 5s
 
     //TYLKO DO DEBUGOWANIA
-    QString params;
-    for(int i=0; i<arguments.size(); i++) params.append(arguments.at(i));
+    //QString params;
+    //for(int i=0; i<arguments.size(); i++) params.append(arguments.at(i));
 
-    QMessageBox::warning(this, tr("My Application"),
-                         tr("AVR Dude exit code: %1.\n AVRDude cmd: %2\nError: %3, param: %4").arg(avrdude->exitCode()).arg(program).arg(avrdude->error()).arg(params),
-                                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
+    //QMessageBox::warning(this, tr("My Application"),
+    //                     tr("AVR Dude exit code: %1.\n AVRDude cmd: %2\nError: %3, param: %4").arg(avrdude->exitCode()).arg(program).arg(avrdude->error()).arg(params),
+    //                                QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel, QMessageBox::Save);
 
     //A¯ DOT¥D
 
     if(avrdude->error()==QProcess::UnknownError)
     {
+        avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
+
+        QString strline;
+        int index;
+
+        while(avrdude->canReadLine())
+        {
+            strline=QString::fromLocal8Bit(avrdude->readLine(255));
+            index=strline.indexOf("Device signature = ");           //Czy mamy sygnaturê?
+            if(index!=-1)
+            {
+                strline=strline.right(strline.size()-QString("Device signature = ").size()-index); //Wytnij z ca³ej linii czêœæ od sygnatury do koñca
+                index=0;
+                while(strline.at(index)>=QChar('0')) index++; //Usuñ z koñca linii znaki kontrolne
+                strline=strline.left(index);
+                ui->AVRSignatureValueLBL->setText(strline);   //Wyœwietl znalezion¹ sygnaturê
+                break;  //Koniec poszukiwañ                   //Koniec szukania
+            }
+        }
+
+        //int ind=text.indexOf("Device signature = ");
+
+        //QMessageBox::warning(this, tr("Output"),
+          //                   tr("%1").arg(text.), QMessageBox::Cancel, QMessageBox::Cancel);
+
+
     } else QProcessErrorMsg(avrdude->error(), this).exec(); //Poinformuj u¿ytkownika o problemie z uruchomieniem AVRDude
 
     delete avrdude;
@@ -324,31 +351,28 @@ void MainDialog::MCUChanged(QString text)
 
 QString MainDialog::GetMCUAsAVRDudeParam()
 {
-    QString str=" -p ";
-    str.append(AVRDudeConf->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID());
+    QString str=AVRDudeConf->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID();
     return str;
 }
 
 QString MainDialog::GetProgrammerAsAVRDudeParam()
 {
-    QString str=" -c ";
-    str.append(ui->ProgrammerCB->currentText());
+    QString str=ui->ProgrammerCB->currentText();
     return str;
 }
 
 QString MainDialog::GetPortAsAVRDudeParam()
 {
-    QString str=" -P ";
-    str.append(ui->PortCB->currentText());
+    QString str=ui->PortCB->currentText();
     return str;
 }
 
 void MainDialog::ShowAVRDudeCmdLineParams()
 {
     QString str="avrdude";
-    str.append(GetMCUAsAVRDudeParam());
-    str.append(GetProgrammerAsAVRDudeParam());
-    str.append(GetPortAsAVRDudeParam());
+    str.append(" -p ").append(GetMCUAsAVRDudeParam());
+    str.append(" -c ").append(GetProgrammerAsAVRDudeParam());
+    str.append(" -P ").append(GetPortAsAVRDudeParam());
     ui->AVRDudeCMDLine->setText(str);
 }
 

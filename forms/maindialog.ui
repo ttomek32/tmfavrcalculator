@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>5</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -125,11 +125,28 @@
                  <item row="2" column="0">
                   <layout class="QVBoxLayout" name="verticalLayout">
                    <item>
-                    <widget class="QLabel" name="AVRSignatureLBL">
-                     <property name="text">
-                      <string>Sygnatura: XXXXXX</string>
-                     </property>
-                    </widget>
+                    <layout class="QHBoxLayout" name="horizontalLayout_19">
+                     <item>
+                      <widget class="QLabel" name="AVRSignatureLBL">
+                       <property name="text">
+                        <string>Sygnatura:</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="AVRSignatureValueLBL">
+                       <property name="font">
+                        <font>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>brak sygnatury</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </item>
                   </layout>
                  </item>
