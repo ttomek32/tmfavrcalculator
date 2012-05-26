@@ -6,10 +6,10 @@
 #include <QMap>
 #include <QFile>
 
-#include "part.h"
-#include "programmer.h"
+#include "Part.h"
+#include "Programmer.h"
 
-class AvrdudeConfParser
+class AVRDudeConfParser
 {
     static const QChar CommentChar;
     static const QChar CloseTag;
@@ -21,7 +21,7 @@ class AvrdudeConfParser
 public:
     // Initializes new instance of AvrDudeConfParser object.
     // param QString confFilePath - path to the avrdude.conf file with its name and extension.
-    AvrdudeConfParser(QString confFilePath);
+    AVRDudeConfParser(QString confFilePath);
 
     // Gets all programmers specified in config file.
     QVector<Programmer> GetProgrammers();

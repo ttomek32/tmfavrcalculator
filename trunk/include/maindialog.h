@@ -2,7 +2,7 @@
 #define MAINDIALOG_H
 
 #include <QDialog>
-#include <avrdudeconfparser.h>
+#include <AVRDudeConfParser.h>
 
 namespace Ui {
 class MainDialog;
@@ -13,7 +13,7 @@ class MainDialog : public QDialog
     Q_OBJECT
 
 protected:
-    AvrdudeConfParser *AVRDudeConf;     //Parser pliku konfiguracyjnego AVRDude
+    AVRDudeConfParser *AVRDudeConf;     //Parser pliku konfiguracyjnego AVRDude
     
 public:
     explicit MainDialog(QWidget *parent = 0);
