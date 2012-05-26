@@ -10,9 +10,11 @@
 #include "AVRDudeExecutor.h"
 #include "maindialog.h"
 #include "ui_maindialog.h"
+#include "ConfigParseException.h"
 
 MainDialog::MainDialog(QWidget *parent) :
     QDialog(parent),
+    AVRDudeConf(NULL),
     ui(new Ui::MainDialog)
 {
     QSettings appsettings;
@@ -56,25 +58,30 @@ MainDialog::MainDialog(QWidget *parent) :
 
      } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
 
+    try
+    {
+        AVRDudeConf = new AVRDudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
 
+        FillProgrammerCB();                           //Typy obs³ugiwanych programatorów
+        QString prg=appsettings.value("Programmer").toString();
+        ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
 
-     AVRDudeConf=new AVRDudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
-     FillProgrammerCB();                           //Typy obs³ugiwanych programatorów
-     QString prg=appsettings.value("Programmer").toString();
-     ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
+        FillPortCB();    //Typy dostêpnych portów
+        prg=appsettings.value("Port").toString();
+        ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
 
-     FillPortCB();    //Typy dostêpnych portów
-     prg=appsettings.value("Port").toString();
-     ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
+        FillMCUType();  //Typy dostêpnych procesorów
+        ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
+        prg=appsettings.value("MCU").toString();
+        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
+        MCUChanged(prg);  //Ustaw sygnaturê
+    }
+    catch (ConfigParseException &ex)
+    {
+         QMessageBox(QMessageBox::Critical, appsettings.value("windowTitle").toString(), QString("Something fucked up!\n\nCo siê sta³o - niebawem.")).exec();
+    }
 
-     FillMCUType();  //Typy dostêpnych procesorów
-     ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
-     prg=appsettings.value("MCU").toString();
-     ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
-     MCUChanged(prg);  //Ustaw sygnaturê
-
-    appsettings.endGroup();
-
+     appsettings.endGroup();
 }
 
 void MainDialog::AVRDudeSetPath()
@@ -247,9 +254,8 @@ void MainDialog::TestConnection()
 
 void MainDialog::HideAdvancedTabs(bool hide)
 {
-    ui->Tabs->setTabEnabled(1, !hide);
-    ui->Tabs->setTabEnabled(2, !hide);
-    ui->Tabs->setTabEnabled(3, !hide);
+    for(int i = 1; i < 4; i++)
+        ui->Tabs->setTabEnabled(i, !hide);
 }
 
 void MainDialog::SetupShowSimplifiedView(int state)
@@ -372,6 +378,5 @@ MainDialog::~MainDialog()
      appsettings.endGroup();
 
     delete ui;
-
     delete AVRDudeConf;        //Parser AVRDude ju¿ nam siê nie przyda :)
 }
