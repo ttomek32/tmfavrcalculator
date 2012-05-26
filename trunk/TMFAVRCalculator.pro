@@ -26,7 +26,8 @@ HEADERS  += \
     include/delay.h \
     include/Part.h \
     include/Programmer.h \
-    include/AVRDudeConfParser.h
+    include/AVRDudeConfParser.h \
+    include/ConfigParseException.h
 
 FORMS    += \
     forms/maindialog.ui

@@ -2,7 +2,9 @@
 #include <QStringList>
 #include <QTextStream>
 #include <QRegExp>
+
 #include "AVRDudeConfParser.h"
+#include "ConfigParseException.h"
 
 const QChar AVRDudeConfParser::CommentChar = '#';
 const QChar AVRDudeConfParser::CloseTag = ';';
@@ -26,9 +28,7 @@ AVRDudeConfParser::AVRDudeConfParser(QString confFilePath)
     if(file.open(QIODevice::ReadOnly | QIODevice::Text))
         Parse(&file);
     else
-    {
-        /// TODO: something went really bad
-    }
+        throw ConfigParseException();
 }
 
 // Gets all programmers specified in config file.
