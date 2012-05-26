@@ -1,16 +1,24 @@
 #include <QSettings>
 #include <QStringList>
+#include <QFileInfo>
 
 #include "AVRDudeExecutor.h"
 #include "QProcessErrorMsg.h"
 #include "delay.h"
 
 
-AVRDudeExecutor::AVRDudeExecutor(QString aProgrammerType, QString aPort, QString aMCUType, QWidget *parent) : QWidget(parent)
+AVRDudeExecutor::AVRDudeExecutor(QString aProgrammerType, QString aPort, QString aMCUType, QWidget *parent = 0)
+{
+    AVRDudeExecutor(aProgrammerType, aPort, aMCUType, QString(""), QString(""), parent);
+}
+
+AVRDudeExecutor::AVRDudeExecutor(QString aProgrammerType, QString aPort, QString aMCUType, QString aFLASHHex, QString aEEPROMHex, QWidget *parent) : QWidget(parent)
 {
     ProgrammerType=aProgrammerType;
     Port=aPort;
     MCUType=aMCUType;
+    FLASHHex=aFLASHHex;
+    EEPROMHex=aEEPROMHex;
 }
 
 QString AVRDudeExecutor::ReadSignature()
@@ -87,6 +95,24 @@ QString AVRDudeExecutor::LookForMCU()
 
     MCUType=tmpMCU;
     return signature;
+}
+
+QStringList *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(QString aFLASHHex, QString aEEPROMHex, bool verify)
+{
+    QString writestring="w";
+    if(verify) writestring.append("v");
+    QString EEPROMPath=QFileInfo(aEEPROMHex).absolutePath();
+    QString FLASHPath=QFileInfo(aFLASHHex).absolutePath();
+
+    QStringList *ret=new QStringList();
+    *ret<<QString("-Uflash:%1:").arg(writestring).append(QFileInfo(aFLASHHex).fileName());
+
+    if(EEPROMPath.compare(FLASHPath))
+    { //Oba pliki s¹ ró¿nych katalogach
+      *ret<<QString("-Ueeprom:%1:").arg(writestring).append(aEEPROMHex); //Dodaj pe³n¹ œcie¿kê
+    } else *ret<<QString("-Ueeprom:%1:").arg(writestring).append(QFileInfo(aEEPROMHex).fileName());
+
+    return ret;
 }
 
 void AVRDudeExecutor::SetMCUType(QString aMCUType)
