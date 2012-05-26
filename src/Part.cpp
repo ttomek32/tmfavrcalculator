@@ -1,4 +1,4 @@
-#include "part.h"
+#include "Part.h"
 
 // Initializes new instance of Part object.
 Part::Part() { }

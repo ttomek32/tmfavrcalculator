@@ -58,7 +58,7 @@ MainDialog::MainDialog(QWidget *parent) :
 
 
 
-     AVRDudeConf=new AvrdudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
+     AVRDudeConf=new AVRDudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
      FillProgrammerCB();                           //Typy obs³ugiwanych programatorów
      QString prg=appsettings.value("Programmer").toString();
      ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));

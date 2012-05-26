@@ -2,21 +2,21 @@
 #include <QStringList>
 #include <QTextStream>
 #include <QRegExp>
-#include "avrdudeconfparser.h"
+#include "AVRDudeConfParser.h"
 
-const QChar AvrdudeConfParser::CommentChar = '#';
-const QChar AvrdudeConfParser::CloseTag = ';';
+const QChar AVRDudeConfParser::CommentChar = '#';
+const QChar AVRDudeConfParser::CloseTag = ';';
 
-const QString AvrdudeConfParser::PartOpenTag = "part";
-const QString AvrdudeConfParser::ProgrammerOpenTag = "programmer";
-const QString AvrdudeConfParser::MemoryOpenTag = "memory";
-const QStringList AvrdudeConfParser::DeviceOpeningTags = QStringList()
+const QString AVRDudeConfParser::PartOpenTag = "part";
+const QString AVRDudeConfParser::ProgrammerOpenTag = "programmer";
+const QString AVRDudeConfParser::MemoryOpenTag = "memory";
+const QStringList AVRDudeConfParser::DeviceOpeningTags = QStringList()
         << PartOpenTag
         << ProgrammerOpenTag;
 
 // Initializes new instance of AvrDudeConfParser object.
 // param QString confFilePath - path to the avrdude.conf file with its name and extension.
-AvrdudeConfParser::AvrdudeConfParser(QString confFilePath)
+AVRDudeConfParser::AVRDudeConfParser(QString confFilePath)
 {
     m_Programmers = QVector<Programmer>(0);
     m_Parts = QVector<Part>(0);
@@ -32,18 +32,18 @@ AvrdudeConfParser::AvrdudeConfParser(QString confFilePath)
 }
 
 // Gets all programmers specified in config file.
-QVector<Programmer> AvrdudeConfParser::GetProgrammers()
+QVector<Programmer> AVRDudeConfParser::GetProgrammers()
 {
     return m_Programmers;
 }
 
 // Gets all parts specified in config file.
-QVector<Part> AvrdudeConfParser::GetParts()
+QVector<Part> AVRDudeConfParser::GetParts()
 {
     return m_Parts;
 }
 
-Part AvrdudeConfParser::GetPartByDescription (QString Desc)
+Part AVRDudeConfParser::GetPartByDescription (QString Desc)
 {
     QVector<Part> Parts=GetParts();
     for(int i=0; i<Parts.size(); i++)
@@ -54,7 +54,7 @@ Part AvrdudeConfParser::GetPartByDescription (QString Desc)
     return Part();  //Return empty Part object - given Desc has not been found
 }
 
-Part AvrdudeConfParser::GetPartBySignature(QString sig)
+Part AVRDudeConfParser::GetPartBySignature(QString sig)
 {
     QVector<Part> Parts=GetParts();
     for(int i=0; i<Parts.size(); i++)
@@ -65,7 +65,7 @@ Part AvrdudeConfParser::GetPartBySignature(QString sig)
     return Part();  //Return empty Part object - given Desc has not been found
 }
 
-void AvrdudeConfParser::Parse(QFile *file)
+void AVRDudeConfParser::Parse(QFile *file)
 {
     QTextStream in(file);
     QVector<QString> section(0);
@@ -101,7 +101,7 @@ void AvrdudeConfParser::Parse(QFile *file)
     }
 }
 
-void AvrdudeConfParser::ProcessProperties(QVector<QString> *section)
+void AVRDudeConfParser::ProcessProperties(QVector<QString> *section)
 {
     const QRegExp Regex("[\";]");
     const QString AssignFilter = " = ";
@@ -130,7 +130,7 @@ void AvrdudeConfParser::ProcessProperties(QVector<QString> *section)
     section->clear();
 }
 
-void AvrdudeConfParser::MapProgrammer(QMap<QString, QString> map)
+void AVRDudeConfParser::MapProgrammer(QMap<QString, QString> map)
 {
     Programmer programmer = Programmer(
                 map["id"],
@@ -140,7 +140,7 @@ void AvrdudeConfParser::MapProgrammer(QMap<QString, QString> map)
     m_Programmers.append(programmer);
 }
 
-void AvrdudeConfParser::MapPart(QMap<QString, QString> map)
+void AVRDudeConfParser::MapPart(QMap<QString, QString> map)
 {
     Part part = Part(
                 map["id"],
@@ -153,7 +153,7 @@ void AvrdudeConfParser::MapPart(QMap<QString, QString> map)
     m_Parts.append(part);
 }
 
-bool AvrdudeConfParser::StringToBool(QString string)
+bool AVRDudeConfParser::StringToBool(QString string)
 {
     const QString yes = "yes";
     return string.compare(yes, string, Qt::CaseInsensitive) == 0;

@@ -13,20 +13,20 @@ TEMPLATE = app
 SOURCES += \
     src/maindialog.cpp \
     src/main.cpp \
-    src/programmer.cpp \
-    src/part.cpp \
-    src/avrdudeconfparser.cpp \
     src/QProcessErrorMsg.cpp \
-    src/AVRDudeExecutor.cpp
+    src/AVRDudeExecutor.cpp \
+    src/AVRDudeConfParser.cpp \
+    src/Part.cpp \
+    src/Programmer.cpp
 
 HEADERS  += \
     include/maindialog.h \
-    include/programmer.h \
-    include/part.h \
-    include/avrdudeconfparser.h \
     include/QProcessErrorMsg.h \
     include/AVRDudeExecutor.h \
-    include/delay.h
+    include/delay.h \
+    include/Part.h \
+    include/Programmer.h \
+    include/AVRDudeConfParser.h
 
 FORMS    += \
     forms/maindialog.ui
