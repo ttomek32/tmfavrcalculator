@@ -245,7 +245,7 @@ void MainDialog::TestConnection()
 
     delete avrdude;*/
 
-    AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), this);
+    AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), QString(""), QString(""), this);
     QString MCUSig=AVRDude.LookForMCU();
     ui->AVRSignatureValueLBL->setText(MCUSig);   //Wyúwietl znalezionπ sygnaturÍ
     ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(AVRDudeConf->GetPartBySignature(MCUSig).GetDescription()));  //Znajdü MCU na podstawie sygnatury
@@ -366,7 +366,20 @@ void MainDialog::ShowAVRDudeCmdLineParams()
     str.append(" -p ").append(GetMCUAsAVRDudeParam());
     str.append(" -c ").append(GetProgrammerAsAVRDudeParam());
     str.append(" -P ").append(GetPortAsAVRDudeParam());
+    QStringList *sl=AVRDudeExecutor::GetAVRDudeCmdMemProgramm(GetFLASHFilePath(), GetEEPROMFilePath(), false);
+    for(int index=0; index<sl->size(); index++) str.append(" ").append(sl->at(index));
+    delete sl;
     ui->AVRDudeCMDLine->setText(str);
+}
+
+QString MainDialog::GetFLASHFilePath()
+{
+    return ui->FLASHFile->text();
+}
+
+QString MainDialog::GetEEPROMFilePath()
+{
+    return ui->EEPROMFile->text();
 }
 
 MainDialog::~MainDialog()

@@ -65,6 +65,8 @@ private:
     QString GetMCUAsAVRDudeParam();         //Zwróæ typ MCU jako parametr
     QString GetProgrammerAsAVRDudeParam();  //Zwróæ typ programatora jako parametr
     QString GetPortAsAVRDudeParam();        //Zwróæ typ wybranego portu jako parametr
+    QString GetFLASHFilePath();             //Zwróæ œcie¿kê + nazwê pliku z zawartoœci¹ FLASH
+    QString GetEEPROMFilePath();            //Zwróæ œcie¿kê + nazwê pliku z zawartoœci¹ EEPROM
 };
 
 #endif // MAINDIALOG_H
