@@ -51,6 +51,8 @@ private slots:
 
     //Programownaie
     void SavePathToAVRDude(QString);       //Zapisz œcie¿kê do AVRDude
+    void EraseFLASHChBox(int);             //Przycisk kasowania CPU
+    void VerifyFLASHChBox(int);            //Przycisk weryfikacji pamiêci
 
     //Inne
     void SavePathToFLASHFile(QString);     //Zapisz w rejestrze œcie¿kê do pliku FLASH
@@ -65,8 +67,10 @@ private:
     QString GetMCUAsAVRDudeParam();         //Zwróæ typ MCU jako parametr
     QString GetProgrammerAsAVRDudeParam();  //Zwróæ typ programatora jako parametr
     QString GetPortAsAVRDudeParam();        //Zwróæ typ wybranego portu jako parametr
+    QString GetPerformEraseChipAsAVRDudeParam(); //Zwróæ parametr - kasowanie chipu w zale¿noœci od ustawienia checkboxa
     QString GetFLASHFilePath();             //Zwróæ œcie¿kê + nazwê pliku z zawartoœci¹ FLASH
     QString GetEEPROMFilePath();            //Zwróæ œcie¿kê + nazwê pliku z zawartoœci¹ EEPROM
+    void AVRDudeCmdLineParams();            //Wyœwietla na dole w okienku liniê parametrów AVRDude
 };
 
 #endif // MAINDIALOG_H

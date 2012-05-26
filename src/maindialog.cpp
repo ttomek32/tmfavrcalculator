@@ -58,6 +58,10 @@ MainDialog::MainDialog(QWidget *parent) :
 
      } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
 
+     ui->VerifyBox->setCheckState((Qt::CheckState)appsettings.value("VerifyFLASH", Qt::Unchecked).toInt());   //Odczytaj stan checkboxa weryfikacji zapisu
+     ui->EraseBox->setCheckState((Qt::CheckState)appsettings.value("EraseFLASH", Qt::Checked).toInt());     //Odczytaj stan checkboxa kasuj¹cego pamiêæ
+
+
     try
     {
         AVRDudeConf = new AVRDudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
@@ -342,6 +346,24 @@ void MainDialog::MCUChanged(QString text)
      appsettings.endGroup();  //Zapisz zmiany
 }
 
+void MainDialog::EraseFLASHChBox(int state)
+{
+    QSettings appsettings;
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("EraseFLASH", state);
+     appsettings.endGroup();  //Zapisz zmiany
+}
+
+void MainDialog::VerifyFLASHChBox(int state)
+{
+    QSettings appsettings;
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("VerifyFLASH", state);
+     appsettings.endGroup();  //Zapisz zmiany
+}
+
 QString MainDialog::GetMCUAsAVRDudeParam()
 {
     QString str=AVRDudeConf->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID();
@@ -360,13 +382,26 @@ QString MainDialog::GetPortAsAVRDudeParam()
     return str;
 }
 
+QString MainDialog::GetPerformEraseChipAsAVRDudeParam()
+{
+    QString str="";
+    if(ui->EraseBox->checkState()==Qt::Checked) str.append(" -e ");
+    return str;
+}
+
 void MainDialog::ShowAVRDudeCmdLineParams()
+{
+    AVRDudeCmdLineParams();
+}
+
+void MainDialog::AVRDudeCmdLineParams()
 {
     QString str="avrdude";
     str.append(" -p ").append(GetMCUAsAVRDudeParam());
     str.append(" -c ").append(GetProgrammerAsAVRDudeParam());
     str.append(" -P ").append(GetPortAsAVRDudeParam());
-    QStringList *sl=AVRDudeExecutor::GetAVRDudeCmdMemProgramm(GetFLASHFilePath(), GetEEPROMFilePath(), false);
+    str.append(GetPerformEraseChipAsAVRDudeParam());
+    QStringList *sl=AVRDudeExecutor::GetAVRDudeCmdMemProgramm(GetFLASHFilePath(), GetEEPROMFilePath(), ui->VerifyBox->checkState());
     for(int index=0; index<sl->size(); index++) str.append(" ").append(sl->at(index));
     delete sl;
     ui->AVRDudeCMDLine->setText(str);

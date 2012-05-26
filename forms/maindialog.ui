@@ -17,7 +17,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -552,6 +552,9 @@
           </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="EraseBox">
+            <property name="toolTip">
+             <string>Wymagane dla wszystkich MCU z wyjątkiem XMEGA. Wartość domyślna tego parametru przyjmowana przez program jest właściwa w większości przypadków</string>
+            </property>
             <property name="text">
              <string>Kasuj przed programowaniem</string>
             </property>
@@ -559,6 +562,9 @@
           </item>
           <item row="3" column="0">
            <widget class="QCheckBox" name="VerifyBox">
+            <property name="toolTip">
+             <string>Włącz weryfikację, jeśli masz jakiekolwiek problemy ze wczytaniem firmware.</string>
+            </property>
             <property name="text">
              <string>Weryfikuj po programowaniu</string>
             </property>
@@ -1410,6 +1416,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>EraseBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>EraseFLASHChBox(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>176</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>VerifyBox</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>VerifyFLASHChBox(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>199</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1432,5 +1470,7 @@
   <slot>MCUChanged(QString)</slot>
   <slot>TestConnection()</slot>
   <slot>ShowAVRDudeCmdLineParams()</slot>
+  <slot>EraseFLASHChBox(int)</slot>
+  <slot>VerifyFLASHChBox(int)</slot>
  </slots>
 </ui>
