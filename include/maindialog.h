@@ -40,6 +40,7 @@ private slots:
     void PortChanged(QString);           //U¿ytkownik wybra³ typ portu
     void MCUChanged(QString);            //U¿ytkownik wybra³ typ mikrokontrolera
     void TestConnection();               //SprawdŸ po³¹czenie z MCU i przy okazji sygnaturê
+    void ProgrammBtn();                  //Wciœniêto przycisk programowanie
 
     void AVRDudeSetPath();            //Ustaw œcie¿kê do programu AVRDude
     void OpenFLASHFileDlg();          //Ustaw œcie¿kê do pliku z FLASH

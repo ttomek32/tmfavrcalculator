@@ -17,7 +17,8 @@ SOURCES += \
     src/AVRDudeExecutor.cpp \
     src/AVRDudeConfParser.cpp \
     src/Part.cpp \
-    src/Programmer.cpp
+    src/Programmer.cpp \
+    src/simppgmdlg.cpp
 
 HEADERS  += \
     include/maindialog.h \
@@ -27,10 +28,12 @@ HEADERS  += \
     include/Part.h \
     include/Programmer.h \
     include/AVRDudeConfParser.h \
-    include/ConfigParseException.h
+    include/ConfigParseException.h \
+    include/simppgmdlg.h
 
 FORMS    += \
-    forms/maindialog.ui
+    forms/maindialog.ui \
+    forms/simppgmdlg.ui
 
 INCLUDEPATH = include
 

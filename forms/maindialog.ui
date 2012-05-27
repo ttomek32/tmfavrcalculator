@@ -1448,6 +1448,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>SimpProgrammBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ProgrammBtn()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1472,5 +1488,6 @@
   <slot>ShowAVRDudeCmdLineParams()</slot>
   <slot>EraseFLASHChBox(int)</slot>
   <slot>VerifyFLASHChBox(int)</slot>
+  <slot>ProgrammBtn()</slot>
  </slots>
 </ui>
