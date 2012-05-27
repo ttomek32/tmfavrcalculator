@@ -39,3 +39,5 @@ include(qextserialport-1.2beta1/src/qextserialport.pri)
 OBJECTS_DIR = output/obj
 MOC_DIR = output/moc
 DESTDIR = output
+
+RESOURCES +=

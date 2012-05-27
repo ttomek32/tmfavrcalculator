@@ -8,8 +8,13 @@
 
 class AVRDudeExecutor : public QWidget
 {
+public:
+    enum Errors {Err_Ok, Err_FinishingTimeOut, Err_CannotReadSignature};   //Lost of possible errors
+
 protected:
     QString ProgrammerType, Port, MCUType, FLASHHex, EEPROMHex;
+    bool ShowErrors;                   //True if class should show error messages
+    enum Errors LastError;             //Last error that occured
 
 public:
     AVRDudeExecutor(QString aProgrammerType, QString aPort, QString aMCUType, QWidget *parent);
@@ -22,6 +27,10 @@ public:
                                                //tak, aby wskazywa³ na oba pliki.
 
     void SetMCUType(QString aMCUType);         //Zmieñ typ MCU
+    void SetExecErr(Errors err) {LastError=err;};    //Typ ostatniego b³êdu
+    Errors GetExecErr();
+    void SetShowErrors(bool sh) {ShowErrors=sh;};  //W³¹cz/wy³¹cz pokazywanie b³êdóW
+    bool GetShowErrors() {return ShowErrors;};
 protected:
     QString GetAVRDudeExecPath();              //Zwróæ œcie¿kê do uruchomienia AVRDude
 };
