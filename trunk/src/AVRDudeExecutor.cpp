@@ -110,15 +110,6 @@ QString AVRDudeExecutor::LookForMCU()
          progress.setWindowModality(Qt::WindowModal);
          progress.setMinimumDuration(0);
          progress.show();
- /*        for (int i = 0; i < numFiles; i++) {
-             progress.setValue(i);
-
-             if (progress.wasCanceled())
-                 break;
-             //... copy one file
-         }
-         progress.setValue(numFiles);
-   */
 
     for(int index=0; index<MCUMainTypes.size(); index++)
     {
