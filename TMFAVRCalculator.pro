@@ -18,7 +18,8 @@ SOURCES += \
     src/AVRDudeConfParser.cpp \
     src/Part.cpp \
     src/Programmer.cpp \
-    src/simppgmdlg.cpp
+    src/simppgmdlg.cpp \
+    src/AVRDudeErrorWindow.cpp
 
 HEADERS  += \
     include/maindialog.h \
@@ -29,11 +30,13 @@ HEADERS  += \
     include/Programmer.h \
     include/AVRDudeConfParser.h \
     include/ConfigParseException.h \
-    include/simppgmdlg.h
+    include/simppgmdlg.h \
+    include/AVRDudeErrorWindow.h
 
 FORMS    += \
     forms/maindialog.ui \
-    forms/simppgmdlg.ui
+    forms/simppgmdlg.ui \
+    forms/AVRDudeErrorWindow.ui
 
 INCLUDEPATH = include
 
