@@ -46,4 +46,5 @@ OBJECTS_DIR = output/obj
 MOC_DIR = output/moc
 DESTDIR = output
 
-RESOURCES +=
+RESOURCES += \
+    Resources.qrc
