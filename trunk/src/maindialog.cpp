@@ -91,8 +91,44 @@ MainDialog::MainDialog(QWidget *parent) :
 
 void MainDialog::ProgrammBtn()
 {
-   // Ui_SimpPgmDialog(this).exec();
-    SimpPgmDialog(this).exec();
+    SimpPgmDialog dlg(this);
+    if(dlg.exec()==QMessageBox::Ok)
+    {
+        ui->SimpProgrammBtn->setText("Przerwij");
+        AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), ui->FLASHFile->text(), ui->EEPROMFile->text(), this);
+        int res=dlg.GetResult();   //Co wybra³ u¿ytkownik
+        AVRDude.ProgramMemories(res, ui->SimpProgrammProgressBar); //Rozpocznij programowanie
+        ui->SimpProgrammBtn->setText("Programuj");
+    }
+}
+
+void MainDialog::EnablePgmButtons()
+{
+    bool en=true;
+    bool FLASHen=true;
+    bool EEPROMen=true;
+
+    if(ui->AVRTypeCB->currentText().compare("<Auto>")==0) en=false;  //Nie mo¿emy odblokowaæ jeœli nie wybrano typu MCU
+    if(ui->FLASHFile->text().size()==0) FLASHen=false;               //Nie mo¿na programowaæ jeœli nie ma pliku z FLASHEM
+    if(ui->EEPROMFile->text().size()==0) EEPROMen=false;             //Lub pliku z EEPROM
+
+    ui->SimpProgrammBtn->setEnabled(en);  //Odblokuj przycisk programowania na zak³adce uproszczonego programowania
+
+    ui->FLASHReadBtn->setEnabled(en && FLASHen);
+    ui->FLASHVerifyBtn->setEnabled(en && FLASHen);
+    ui->FLASHProgrammBtn->setEnabled(en && FLASHen);
+
+    ui->EEPROMReadBtn->setEnabled(en && EEPROMen);
+    ui->EEPROMVerifyBtn->setEnabled(en && EEPROMen);
+    ui->EEPROMWriteBtn->setEnabled(en && EEPROMen);
+
+    ui->FuseReadBtn->setEnabled(en);
+    ui->FuseVerifyBtn->setEnabled(en);
+    ui->FuseWriteBtn->setEnabled(en);
+
+    ui->LockbitReadBtn->setEnabled(en);
+    ui->LockbitVerifyBtn->setEnabled(en);
+    ui->LockbitWriteBtn->setEnabled(en);
 }
 
 void MainDialog::AVRDudeSetPath()
@@ -221,45 +257,20 @@ void MainDialog::FillMCUType()
 
 void MainDialog::TestConnection()
 {
-/*
-    if(avrdude->error()==QProcess::UnknownError)
-    {
-        avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
-
-        QString strline;
-        int index;
-        bool hasBeenFound=false;     //Czy znaleziono sygnaturê?
-
-        while(avrdude->canReadLine())
-        {
-            strline=QString::fromLocal8Bit(avrdude->readLine(255));
-            index=strline.indexOf("Device signature = ");           //Czy mamy sygnaturê?
-            if(index!=-1)
-            {
-                strline=strline.right(strline.size()-QString("Device signature = ").size()-index); //Wytnij z ca³ej linii czêœæ od sygnatury do koñca
-                index=0;
-                while(strline.at(index)>=QChar('0')) index++; //Usuñ z koñca linii znaki kontrolne
-                strline=strline.left(index);
-                ui->AVRSignatureValueLBL->setText(strline);   //Wyœwietl znalezion¹ sygnaturê
-                hasBeenFound=true;                          //Sygnaturê znaleziono
-                break;  //Koniec poszukiwañ                   //Koniec szukania
-            }
-        }
-        if(hasBeenFound==false)
-        {
-            QMessageBox::critical(this, tr("AVRDude - b³¹d"),
-                                   tr("Nie znaleziono sygnatury urz¹dzenia !\nByæ mo¿e nie jest pod³¹czone lub wyst¹pi³ problem z po³¹czeniem."), QMessageBox::Ok, QMessageBox::Ok);
-            ui->AVRSignatureValueLBL->setText("brak sygnatury");
-        }
-
-    } else QProcessErrorMsg(avrdude->error(), this).exec(); //Poinformuj u¿ytkownika o problemie z uruchomieniem AVRDude
-
-    delete avrdude;*/
-
     AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), QString(""), QString(""), this);
     QString MCUSig=AVRDude.LookForMCU();
-    ui->AVRSignatureValueLBL->setText(MCUSig);   //Wyœwietl znalezion¹ sygnaturê
-    ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(AVRDudeConf->GetPartBySignature(MCUSig).GetDescription()));  //ZnajdŸ MCU na podstawie sygnatury
+    AVRDudeExecutor::Errors err=AVRDude.GetExecErr();   //Czy wszystko siê skoñczy³o ok?
+    if(err==AVRDudeExecutor::Err_Ok)
+    {
+        ui->AVRSignatureValueLBL->setText(MCUSig);   //Wyœwietl znalezion¹ sygnaturê
+        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(AVRDudeConf->GetPartBySignature(MCUSig).GetDescription()));  //ZnajdŸ MCU na podstawie sygnatury
+        ui->ConnectionOk->setText(tr("Po³¹czenie ok"));
+    } else
+    {
+        ui->ConnectionOk->setText(tr("Brak po³¹czenia"));
+        QMessageBox::information(this, tr("AVRDude - b³¹d"),
+                                 tr("Nie znaleziono sygnatury urz¹dzenia !\nByæ mo¿e nie jest pod³¹czone lub wyst¹pi³ problem z po³¹czeniem."), QMessageBox::Ok, QMessageBox::Ok);
+    }
 
 }
 

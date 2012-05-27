@@ -308,6 +308,9 @@
         <layout class="QHBoxLayout" name="horizontalLayout_15">
          <item>
           <widget class="QPushButton" name="SimpProgrammBtn">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="palette">
             <palette>
              <active>
@@ -416,7 +419,7 @@
          <item>
           <widget class="QProgressBar" name="SimpProgrammProgressBar">
            <property name="value">
-            <number>24</number>
+            <number>0</number>
            </property>
           </widget>
          </item>
@@ -1464,6 +1467,86 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>AVRTypeCB</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>EnablePgmButtons()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>434</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EEPROMFile</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>EnablePgmButtons()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>284</x>
+     <y>315</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EEPROMFile</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>EnablePgmButtons()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>284</x>
+     <y>315</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHFile</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>EnablePgmButtons()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHFile</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>EnablePgmButtons()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>85</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>286</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1489,5 +1572,6 @@
   <slot>EraseFLASHChBox(int)</slot>
   <slot>VerifyFLASHChBox(int)</slot>
   <slot>ProgrammBtn()</slot>
+  <slot>EnablePgmButtons()</slot>
  </slots>
 </ui>
