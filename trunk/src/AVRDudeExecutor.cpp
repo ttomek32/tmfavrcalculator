@@ -1,6 +1,7 @@
 #include <QSettings>
 #include <QStringList>
 #include <QFileInfo>
+#include <QProgressDialog>
 
 #include "AVRDudeExecutor.h"
 #include "QProcessErrorMsg.h"
@@ -105,8 +106,28 @@ QString AVRDudeExecutor::LookForMCU()
     bool tmpShowError=GetShowErrors();
     SetShowErrors(false);
 
+    QProgressDialog progress("Szukam typu MCU...", "&Anuluj", 0, MCUMainTypes.size(), this);
+         progress.setWindowModality(Qt::WindowModal);
+         progress.setMinimumDuration(0);
+         progress.show();
+ /*        for (int i = 0; i < numFiles; i++) {
+             progress.setValue(i);
+
+             if (progress.wasCanceled())
+                 break;
+             //... copy one file
+         }
+         progress.setValue(numFiles);
+   */
+
     for(int index=0; index<MCUMainTypes.size(); index++)
     {
+        progress.setValue(index);
+        if (progress.wasCanceled())
+        {
+            SetExecErr(Err_CancelledByUser);
+            break;
+        }
         SetMCUType(MCUMainTypes.at(index));    //Sprawdzaj po kolei ró¿ne typy ró¿ni¹ce siê sposobem programowania
         signature=ReadSignature();
 

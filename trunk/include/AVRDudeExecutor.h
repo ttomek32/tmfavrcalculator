@@ -9,7 +9,7 @@
 class AVRDudeExecutor : public QWidget
 {
 public:
-    enum Errors {Err_Ok, Err_FinishingTimeOut, Err_CannotReadSignature};   //Lost of possible errors
+    enum Errors {Err_Ok, Err_FinishingTimeOut, Err_CannotReadSignature, Err_CancelledByUser};   //Lost of possible errors
 
 protected:
     QString ProgrammerType, Port, MCUType, FLASHHex, EEPROMHex;
