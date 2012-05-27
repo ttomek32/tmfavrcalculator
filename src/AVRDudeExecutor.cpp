@@ -19,6 +19,15 @@ AVRDudeExecutor::AVRDudeExecutor(QString aProgrammerType, QString aPort, QString
     MCUType=aMCUType;
     FLASHHex=aFLASHHex;
     EEPROMHex=aEEPROMHex;
+    SetExecErr(Err_Ok);
+    SetShowErrors(true);                   //Domyœlnie wyœwietlamy komunikaty b³êdów
+}
+
+AVRDudeExecutor::Errors AVRDudeExecutor::GetExecErr()
+{
+    Errors tmp=LastError;
+    LastError=Err_Ok;
+    return tmp;
 }
 
 QString AVRDudeExecutor::ReadSignature()
@@ -36,7 +45,15 @@ QString AVRDudeExecutor::ReadSignature()
 
     QProcess *avrdude = new QProcess(this);
     avrdude->start(GetAVRDudeExecPath(), arguments);
-    avrdude->waitForFinished(5000);         //Czekaj na koniec, jednak nie wiêcej ni¿ 5s
+    if(avrdude->waitForFinished(5000)==false)         //Czekaj na koniec, jednak nie wiêcej ni¿ 5s
+    {
+        if(GetShowErrors()) QMessageBox::critical(this, tr("AVRDude - b³¹d"),
+                                            tr("B³¹d wywo³ania AVR Dude. Najprawdopodobniej wybrano z³y port lub programator."), QMessageBox::Ok, QMessageBox::Ok);
+        avrdude->kill();   //Kille the AVRDude
+        delete avrdude;
+        SetExecErr(Err_FinishingTimeOut);
+        return Signature;
+    }
 
     if(avrdude->error()==QProcess::UnknownError)
     {
@@ -63,9 +80,9 @@ QString AVRDudeExecutor::ReadSignature()
         }
         if(hasBeenFound==false)
         {
-            //QMessageBox::critical(this, tr("AVRDude - b³¹d"),
-            //                       tr("Nie znaleziono sygnatury urz¹dzenia !\nByæ mo¿e nie jest pod³¹czone lub wyst¹pi³ problem z po³¹czeniem."), QMessageBox::Ok, QMessageBox::Ok);
-            //ui->AVRSignatureValueLBL->setText("brak sygnatury");
+            if(GetShowErrors()) QMessageBox::critical(this, tr("AVRDude - b³¹d"),
+                                   tr("Nie znaleziono sygnatury urz¹dzenia !\nByæ mo¿e nie jest pod³¹czone lub wyst¹pi³ problem z po³¹czeniem."), QMessageBox::Ok, QMessageBox::Ok);
+            SetExecErr(Err_CannotReadSignature);
         }
 
     } else QProcessErrorMsg(avrdude->error(), this).exec(); //Poinformuj u¿ytkownika o problemie z uruchomieniem AVRDude
@@ -85,15 +102,29 @@ QString AVRDudeExecutor::LookForMCU()
     MCUMainTypes << "2313";
     MCUMainTypes << "usb82";
 
+    bool tmpShowError=GetShowErrors();
+    SetShowErrors(false);
+
     for(int index=0; index<MCUMainTypes.size(); index++)
     {
         SetMCUType(MCUMainTypes.at(index));    //Sprawdzaj po kolei ró¿ne typy ró¿ni¹ce siê sposobem programowania
         signature=ReadSignature();
+
+        Errors tmperr=GetExecErr();
+        if(tmperr==Err_FinishingTimeOut)
+        {
+            SetExecErr(tmperr);                //Zachowaj kod b³êdu
+            if(tmpShowError) QMessageBox::critical(this, tr("AVRDude - b³¹d"),
+                                                tr("B³¹d wywo³ania AVR Dude. Najprawdopodobniej wybrano z³y port lub programator."), QMessageBox::Ok, QMessageBox::Ok);
+            break;   //Zakoñcz poszukiwania MCU - bêd¹ one bezowocne bo AVRDude nie mo¿e siê po³¹czyæ
+        }
+
         if(signature.size()) break;
         Delay::sleep(1);
     }
 
     MCUType=tmpMCU;
+    SetShowErrors(tmpShowError);
     return signature;
 }
 
