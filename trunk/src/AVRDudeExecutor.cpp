@@ -154,7 +154,7 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
 
     QStringList *arguments=GetAVRDudeCmdMemProgramm(FLASHHex, EEPROMHex, false);
     SetBasicAVRDudeParams(arguments);   //Uzupe³nij podstawowe parametry wywo³ania AVRDude
-    *arguments<<"-t";                   //Programowanie odbywa siê w trybie terminalowym - tak jest wygodniej
+    //*arguments<<"-t";                   //Programowanie odbywa siê w trybie terminalowym - tak jest wygodniej
 
     *arguments<<"-n";                   //Nic nie zapisujemy - do testów
 
@@ -163,8 +163,9 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
     avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziêki czemu mo¿na skróciæ œcie¿ki do plików HEX
     avrdude->start(GetAVRDudeExecPath(), *arguments);
     avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
-
-    while(!avrdude->waitForFinished(10))  //Czekaj a¿ programowanie siê zakoñczy
+    //avrdude->setReadChannel(QProcess::StandardOutput);  //Czytamy z stderr
+avrdude->waitForFinished(10000);
+    //while(!avrdude->waitForFinished(10000))  //Czekaj a¿ programowanie siê zakoñczy
     {
         QApplication::processEvents();
 
