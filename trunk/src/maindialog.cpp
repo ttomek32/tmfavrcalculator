@@ -10,6 +10,7 @@
 #include "AVRDudeExecutor.h"
 #include "maindialog.h"
 #include "ui_maindialog.h"
+#include "simppgmdlg.h"
 #include "ConfigParseException.h"
 
 MainDialog::MainDialog(QWidget *parent) :
@@ -86,6 +87,12 @@ MainDialog::MainDialog(QWidget *parent) :
     }
 
      appsettings.endGroup();
+}
+
+void MainDialog::ProgrammBtn()
+{
+   // Ui_SimpPgmDialog(this).exec();
+    SimpPgmDialog(this).exec();
 }
 
 void MainDialog::AVRDudeSetPath()
