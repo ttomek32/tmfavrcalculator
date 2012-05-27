@@ -7,11 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>601</width>
-    <height>574</height>
+    <height>629</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>TMFAVRCalculator</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../Resources.qrc">
+    <normaloff>:/images/logo.png</normaloff>:/images/logo.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
@@ -937,7 +941,9 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources/>
+ <resources>
+  <include location="../Resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>AVRDudePathSeBtn</sender>
