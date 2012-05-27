@@ -60,6 +60,7 @@ private slots:
     void SavePathToEEPROMFile(QString);    //Zapisz w rejestrze œcie¿kê do pliku EEPROM
 
     void ShowAVRDudeCmdLineParams();       //Wyœwietla na dole w okienku liniê parametrów AVRDude
+    void EnablePgmButtons();               //Sprawdza czy mo¿na odblokowaæ przyciski programowania (read, verify, write) we wszystkich zak³adkach, jeœli tak, to je odblokowuje
 
 private:
     Ui::MainDialog *ui;

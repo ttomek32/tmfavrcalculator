@@ -2,6 +2,7 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QProgressDialog>
+#include <QApplication>
 
 #include "AVRDudeExecutor.h"
 #include "QProcessErrorMsg.h"
@@ -31,18 +32,23 @@ AVRDudeExecutor::Errors AVRDudeExecutor::GetExecErr()
     return tmp;
 }
 
+void AVRDudeExecutor::SetBasicAVRDudeParams(QStringList *sl)
+{
+    *sl << "-p";
+    *sl << MCUType;        //Dodaj wybrany typ CPU (jeœli wybrano)
+    *sl << "-c";
+    *sl << ProgrammerType; //Dodaj wybrany typ programatora
+    *sl << "-P";
+    *sl << Port;           //Dodaj wybrany port
+}
+
 QString AVRDudeExecutor::ReadSignature()
 {
     QString Signature;
 
     QStringList arguments;
-    arguments << "-p";
-    arguments << MCUType;        //Dodaj wybrany typ CPU (jeœli wybrano)
-    arguments << "-c";
-    arguments << ProgrammerType; //Dodaj wybrany typ programatora
-    arguments << "-P";
-    arguments << Port;           //Dodaj wybrany port
-    arguments << "-q";                          //Tryb cichszy, mniej informacji do przeparsowania
+    SetBasicAVRDudeParams(&arguments);   //Uzupe³nij podstawowe parametry wywo³ania AVRDude
+    arguments << "-q";                   //Tryb cichszy, mniej informacji do przeparsowania
 
     QProcess *avrdude = new QProcess(this);
     avrdude->start(GetAVRDudeExecPath(), arguments);
@@ -76,6 +82,7 @@ QString AVRDudeExecutor::ReadSignature()
                 Signature=strline.left(index);
 
                 hasBeenFound=true;                          //Sygnaturê znaleziono
+                SetExecErr(Err_Ok);
                 break;  //Koniec poszukiwañ                   //Koniec szukania
             }
         }
@@ -123,9 +130,9 @@ QString AVRDudeExecutor::LookForMCU()
         signature=ReadSignature();
 
         Errors tmperr=GetExecErr();
+        SetExecErr(tmperr);                //Zachowaj kod b³êdu
         if(tmperr==Err_FinishingTimeOut)
         {
-            SetExecErr(tmperr);                //Zachowaj kod b³êdu
             if(tmpShowError) QMessageBox::critical(this, tr("AVRDude - b³¹d"),
                                                 tr("B³¹d wywo³ania AVR Dude. Najprawdopodobniej wybrano z³y port lub programator."), QMessageBox::Ok, QMessageBox::Ok);
             break;   //Zakoñcz poszukiwania MCU - bêd¹ one bezowocne bo AVRDude nie mo¿e siê po³¹czyæ
@@ -140,6 +147,44 @@ QString AVRDudeExecutor::LookForMCU()
     return signature;
 }
 
+bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
+{
+    bool ret=false;
+    int progress=0;   //Wartoœæ progress bara
+
+    QStringList *arguments=GetAVRDudeCmdMemProgramm(FLASHHex, EEPROMHex, false);
+    SetBasicAVRDudeParams(arguments);   //Uzupe³nij podstawowe parametry wywo³ania AVRDude
+    *arguments<<"-t";                   //Programowanie odbywa siê w trybie terminalowym - tak jest wygodniej
+
+    *arguments<<"-n";                   //Nic nie zapisujemy - do testów
+
+    if(bar) bar->setValue(progress);    //Ustaw progress bar
+    QProcess *avrdude = new QProcess(this);
+    avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziêki czemu mo¿na skróciæ œcie¿ki do plików HEX
+    avrdude->start(GetAVRDudeExecPath(), *arguments);
+    avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
+
+    while(!avrdude->waitForFinished(10))  //Czekaj a¿ programowanie siê zakoñczy
+    {
+        QApplication::processEvents();
+
+        QString strline;
+        while(avrdude->canReadLine())
+        {
+            strline=strline.append("\n").append(QString::fromLocal8Bit(avrdude->readLine(255)));
+        }
+        QMessageBox::critical(this, tr("Wyjœcie"), tr("%1").arg(strline), QMessageBox::Ok, QMessageBox::Ok);
+
+        //QString txt;
+        //for(int index=0; index<arguments->size(); index++) txt.append(arguments->at(index));
+        //QMessageBox::critical(this, tr("Programowanie"),
+        //                      tr("%1").arg(txt), QMessageBox::Ok, QMessageBox::Ok);
+    }
+
+
+    return ret;
+}
+
 QStringList *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(QString aFLASHHex, QString aEEPROMHex, bool verify)
 {
     QString writestring="w";
@@ -148,12 +193,15 @@ QStringList *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(QString aFLASHHex, QStrin
     QString FLASHPath=QFileInfo(aFLASHHex).absolutePath();
 
     QStringList *ret=new QStringList();
-    *ret<<QString("-Uflash:%1:").arg(writestring).append(QFileInfo(aFLASHHex).fileName());
+    if(aFLASHHex.size()) *ret<<QString("-Uflash:%1:").arg(writestring).append(QFileInfo(aFLASHHex).fileName());
 
-    if(EEPROMPath.compare(FLASHPath))
-    { //Oba pliki s¹ ró¿nych katalogach
-      *ret<<QString("-Ueeprom:%1:").arg(writestring).append(aEEPROMHex); //Dodaj pe³n¹ œcie¿kê
-    } else *ret<<QString("-Ueeprom:%1:").arg(writestring).append(QFileInfo(aEEPROMHex).fileName());
+    if(aEEPROMHex.size())
+    {
+        if(EEPROMPath.compare(FLASHPath))
+            { //Oba pliki s¹ ró¿nych katalogach
+              *ret<<QString("-Ueeprom:%1:").arg(writestring).append(aEEPROMHex); //Dodaj pe³n¹ œcie¿kê
+            } else *ret<<QString("-Ueeprom:%1:").arg(writestring).append(QFileInfo(aEEPROMHex).fileName());
+    }
 
     return ret;
 }

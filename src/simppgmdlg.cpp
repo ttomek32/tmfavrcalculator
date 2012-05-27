@@ -19,6 +19,15 @@ SimpPgmDialog::SimpPgmDialog(QWidget *parent) :
      setResult(QMessageBox::Cancel);
 }
 
+int SimpPgmDialog::GetResult()
+{
+    int res=0;
+    if(ui->EEPROMCBox->checkState()) res|=R_EEPROM;
+    if(ui->FLASHCBox->checkState()) res|=R_FLASH;
+    if(ui->FuseCBox->checkState()) res|=R_FUSE;
+    if(ui->LockCBox->checkState()) res|=R_LOCK;
+}
+
 void SimpPgmDialog::Programm()
 {
     QSettings appsettings;
@@ -29,8 +38,9 @@ void SimpPgmDialog::Programm()
      appsettings.setValue("LockBits", ui->LockCBox->checkState());
     appsettings.endGroup();
 
-    setResult(QMessageBox::Ok);
-    close();
+    //setResult(QMessageBox::Ok);
+    //close();
+    done(QMessageBox::Ok);
 }
 
  SimpPgmDialog::~SimpPgmDialog()
