@@ -26,6 +26,7 @@ int SimpPgmDialog::GetResult()
     if(ui->FLASHCBox->checkState()) res|=R_FLASH;
     if(ui->FuseCBox->checkState()) res|=R_FUSE;
     if(ui->LockCBox->checkState()) res|=R_LOCK;
+    return res;
 }
 
 void SimpPgmDialog::Programm()

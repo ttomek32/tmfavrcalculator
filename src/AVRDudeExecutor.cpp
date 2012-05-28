@@ -23,6 +23,12 @@ AVRDudeExecutor::AVRDudeExecutor(QString aProgrammerType, QString aPort, QString
     EEPROMHex=aEEPROMHex;
     SetExecErr(Err_Ok);
     SetShowErrors(true);                   //Domyœlnie wyœwietlamy komunikaty b³êdów
+    Output=new AVRDudeErrorWindow(this);
+}
+
+AVRDudeExecutor::~AVRDudeExecutor()
+{
+    delete Output;    //Usuñ okienko wyjœciowe AVRDude
 }
 
 AVRDudeExecutor::Errors AVRDudeExecutor::GetExecErr()
@@ -41,6 +47,26 @@ void AVRDudeExecutor::SetBasicAVRDudeParams(QStringList *sl)
     *sl << "-P";
     *sl << Port;           //Dodaj wybrany port
 }
+
+bool AVRDudeExecutor::ShowAVRDudeOutput()
+{
+    int checkbox;
+
+    QSettings appsettings;
+     appsettings.beginGroup("MainWindow");
+     checkbox=appsettings.value("AVRDudeShowWindowOnError").toInt();
+     appsettings.endGroup();
+
+    return checkbox;
+}
+
+//void AVRDudeExecutor::AVRDudeOutput()
+//{
+    //QByteArray strdata = proc->readAllStandardOutput();
+    //Output->ui->AVRDudeOutputTxt->append(text);
+    //QByteArray strdata = proc->readAllStandardError();
+    //Output->ui->AVRDudeOutputTxt->append(text);
+//}
 
 QString AVRDudeExecutor::ReadSignature()
 {
@@ -150,7 +176,11 @@ QString AVRDudeExecutor::LookForMCU()
 bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
 {
     bool ret=false;
+    bool ShowOutput=ShowAVRDudeOutput();       //Czy wyœwietlaæ wyjœcie z AVRDude?
     int progress=0;   //Wartoœæ progress bara
+
+    Output->ui->AVRDudeOutputTxt->clear();      //Skasuj listê wyjœciow¹
+    if(ShowOutput) Output->show();              //Warunkowo wyœwietl okienko wyjœcia AVRDude
 
     QStringList *arguments=GetAVRDudeCmdMemProgramm(FLASHHex, EEPROMHex, false);
     SetBasicAVRDudeParams(arguments);   //Uzupe³nij podstawowe parametry wywo³ania AVRDude
@@ -160,12 +190,16 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
 
     if(bar) bar->setValue(progress);    //Ustaw progress bar
     QProcess *avrdude = new QProcess(this);
+
+    //connect(avrdude, SIGNAL(readyReadStandardOutput()),this, SLOT(AVRDudeOutput());
+    //connect(avrdude, SIGNAL(readyReadStandardError()), this, SLOT(AVRDudeOutput());
+
     avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziêki czemu mo¿na skróciæ œcie¿ki do plików HEX
     avrdude->start(GetAVRDudeExecPath(), *arguments);
     avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
     //avrdude->setReadChannel(QProcess::StandardOutput);  //Czytamy z stderr
-avrdude->waitForFinished(10000);
-    //while(!avrdude->waitForFinished(10000))  //Czekaj a¿ programowanie siê zakoñczy
+//avrdude->waitForFinished(10000);
+    while(!avrdude->waitForFinished(10))  //Czekaj a¿ programowanie siê zakoñczy
     {
         QApplication::processEvents();
 
@@ -173,8 +207,14 @@ avrdude->waitForFinished(10000);
         while(avrdude->canReadLine())
         {
             strline=strline.append("\n").append(QString::fromLocal8Bit(avrdude->readLine(255)));
+            if(ShowOutput) Output->ui->AVRDudeOutputTxt->append(strline);
         }
-        QMessageBox::critical(this, tr("Wyjœcie"), tr("%1").arg(strline), QMessageBox::Ok, QMessageBox::Ok);
+
+        while((ShowOutput) && (Output->result()!=QDialog::Rejected))
+        {
+            QApplication::processEvents();
+        }
+        //QMessageBox::critical(this, tr("Wyjœcie"), tr("%1").arg(strline), QMessageBox::Ok, QMessageBox::Ok);
 
         //QString txt;
         //for(int index=0; index<arguments->size(); index++) txt.append(arguments->at(index));

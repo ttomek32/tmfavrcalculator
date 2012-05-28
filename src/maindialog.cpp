@@ -263,7 +263,9 @@ void MainDialog::TestConnection()
     if(err==AVRDudeExecutor::Err_Ok)
     {
         ui->AVRSignatureValueLBL->setText(MCUSig);   //Wyœwietl znalezion¹ sygnaturê
-        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(AVRDudeConf->GetPartBySignature(MCUSig).GetDescription()));  //ZnajdŸ MCU na podstawie sygnatury
+        QString MCU=AVRDudeConf->GetPartBySignature(MCUSig).GetDescription();
+        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(MCU));  //ZnajdŸ MCU na podstawie sygnatury
+        MCUChanged(MCU);
         ui->ConnectionOk->setText(tr("Po³¹czenie ok"));
     } else
     {
@@ -356,6 +358,7 @@ void MainDialog::MCUChanged(QString text)
 {
     QString sig=AVRDudeConf->GetPartByDescription(text).GetSignature();  //ZnajdŸ opis wybranego MCU
     ui->AVRSignatureValueLBL->setText(sig);
+    ui->StatusLBL->setText(tr("Procesor: ").append(text));   //Uaktualnij liniê stanu wskazuj¹c¹ na typ procesora
 
     QSettings appsettings;                               //Zapisz wybrany mikrokontroler
      appsettings.beginGroup("MainWindow");

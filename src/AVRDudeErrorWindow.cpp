@@ -12,18 +12,20 @@ AVRDudeErrorWindow::AVRDudeErrorWindow(QWidget *parent) :
       ui->FLASHCBox->setCheckState((Qt::CheckState)appsettings.value("FLASH", Qt::Unchecked).toInt());
       ui->FuseCBox->setCheckState((Qt::CheckState)appsettings.value("FuseBits", Qt::Unchecked).toInt());
       ui->LockCBox->setCheckState((Qt::CheckState)appsettings.value("LockBits", Qt::Unchecked).toInt());
-     appsettings.endGroup();
+     appsettings.endGroup();*/
 
-     setResult(QMessageBox::Cancel);*/
+     //setResult(QDialog::Accepted);
 }
 
 int AVRDudeErrorWindow::GetResult()
 {
-/*    int res=0;
-    if(ui->EEPROMCBox->checkState()) res|=R_EEPROM;
+    int res=0;
+    /*if(ui->EEPROMCBox->checkState()) res|=R_EEPROM;
     if(ui->FLASHCBox->checkState()) res|=R_FLASH;
     if(ui->FuseCBox->checkState()) res|=R_FUSE;
     if(ui->LockCBox->checkState()) res|=R_LOCK;*/
+
+    return res;
 }
 
 AVRDudeErrorWindow::~AVRDudeErrorWindow()

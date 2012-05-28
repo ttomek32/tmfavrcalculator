@@ -6,9 +6,12 @@
 #include <QStringList>
 #include <QWidget>
 #include <QProgressBar>
+#include "AVRDudeErrorWindow.h"
 
 class AVRDudeExecutor : public QWidget
 {
+    //Q_OBJECT
+
 public:
     enum Errors {Err_Ok, Err_FinishingTimeOut, Err_CannotReadSignature, Err_CancelledByUser};   //Lost of possible errors
 
@@ -16,10 +19,13 @@ protected:
     QString ProgrammerType, Port, MCUType, FLASHHex, EEPROMHex;
     bool ShowErrors;                   //True if class should show error messages
     enum Errors LastError;             //Last error that occured
+    AVRDudeErrorWindow *Output;        //Okienko wyjœciowe AVRDude
 
 public:
     AVRDudeExecutor(QString aProgrammerType, QString aPort, QString aMCUType, QWidget *parent);
     AVRDudeExecutor(QString aProgrammerType, QString aPort, QString aMCUType, QString aFLASHHex, QString aEEPROMHex, QWidget *parent);
+    ~AVRDudeExecutor();
+
     QString ReadSignature();                   //Odczytaj i zwróæ sygnaturê procesora. Zwraca pusty ³añcuch w razie b³êdu
     QString LookForMCU();                      //Prubuje ustaliæ typ pod³¹czonego procesora, zwraca sygnaturê znalezionego lub pusty ³añcuch jeœli ¿adnego nie znaleziono
 
@@ -33,9 +39,14 @@ public:
     Errors GetExecErr();
     void SetShowErrors(bool sh) {ShowErrors=sh;};  //W³¹cz/wy³¹cz pokazywanie b³êdóW
     bool GetShowErrors() {return ShowErrors;};
+
 protected:
     QString GetAVRDudeExecPath();                 //Zwróæ œcie¿kê do uruchomienia AVRDude
     void SetBasicAVRDudeParams(QStringList *sl);  //Zwraca listê parametrów wywo³ania AVRDude, zawieraj¹c¹ info o programatorze, porcie i MCU
+    bool ShowAVRDudeOutput();                     //Wyœwietl okienko komunikatów wyjœciowych AVRDude
+
+//private slots:
+  //  void AVRDudeOutput();                         //Komunikaty z stdout i stderr trafiaj¹ do okienka AVRDude
 };
 
 #endif // AVRDUDEEXECUTOR_H
