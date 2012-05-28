@@ -20,7 +20,6 @@ public:
 
     ~AVRDudeErrorWindow();
 
-private:
     Ui::AVRDudeErrorWindow *ui;
 };
 
