@@ -23,12 +23,11 @@ AVRDudeExecutor::AVRDudeExecutor(QString aProgrammerType, QString aPort, QString
     EEPROMHex=aEEPROMHex;
     SetExecErr(Err_Ok);
     SetShowErrors(true);                   //Domyœlnie wyœwietlamy komunikaty b³êdów
-    Output=new AVRDudeErrorWindow(this);
 }
 
 AVRDudeExecutor::~AVRDudeExecutor()
 {
-    delete Output;    //Usuñ okienko wyjœciowe AVRDude
+    //delete Output;    //Usuñ okienko wyjœciowe AVRDude
 }
 
 AVRDudeExecutor::Errors AVRDudeExecutor::GetExecErr()
@@ -179,8 +178,14 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
     bool ShowOutput=ShowAVRDudeOutput();       //Czy wyœwietlaæ wyjœcie z AVRDude?
     int progress=0;   //Wartoœæ progress bara
 
-    Output->ui->AVRDudeOutputTxt->clear();      //Skasuj listê wyjœciow¹
-    if(ShowOutput) Output->show();              //Warunkowo wyœwietl okienko wyjœcia AVRDude
+    AVRDudeErrorWindow Output(this);
+    Output.ui->AVRDudeOutputTxt->clear();      //Skasuj listê wyjœciow¹
+    if(ShowOutput)
+    {
+        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyœwietlania
+        Output.show();              //Warunkowo wyœwietl okienko wyjœcia AVRDude
+        Output.raise();
+    }
 
     QStringList *arguments=GetAVRDudeCmdMemProgramm(FLASHHex, EEPROMHex, false);
     SetBasicAVRDudeParams(arguments);   //Uzupe³nij podstawowe parametry wywo³ania AVRDude
@@ -190,10 +195,6 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
 
     if(bar) bar->setValue(progress);    //Ustaw progress bar
     QProcess *avrdude = new QProcess(this);
-
-    //connect(avrdude, SIGNAL(readyReadStandardOutput()),this, SLOT(AVRDudeOutput());
-    //connect(avrdude, SIGNAL(readyReadStandardError()), this, SLOT(AVRDudeOutput());
-
     avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziêki czemu mo¿na skróciæ œcie¿ki do plików HEX
     avrdude->start(GetAVRDudeExecPath(), *arguments);
     avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
@@ -206,14 +207,11 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
         QString strline;
         while(avrdude->canReadLine())
         {
-            strline=strline.append("\n").append(QString::fromLocal8Bit(avrdude->readLine(255)));
-            if(ShowOutput) Output->ui->AVRDudeOutputTxt->append(strline);
+            //strline=strline.append("\n").append(QString::fromLocal8Bit(avrdude->readLine(255)));
+            QByteArray strline = avrdude->readAllStandardError();
+            Output.ui->AVRDudeOutputTxt->append(strline);
         }
 
-        while((ShowOutput) && (Output->result()!=QDialog::Rejected))
-        {
-            QApplication::processEvents();
-        }
         //QMessageBox::critical(this, tr("Wyjœcie"), tr("%1").arg(strline), QMessageBox::Ok, QMessageBox::Ok);
 
         //QString txt;
@@ -222,6 +220,10 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
         //                      tr("%1").arg(txt), QMessageBox::Ok, QMessageBox::Ok);
     }
 
+    while((ShowOutput) && (Output.fin==false)) //QDialog::Rejected))
+    {
+        QApplication::processEvents();
+    }
 
     return ret;
 }
