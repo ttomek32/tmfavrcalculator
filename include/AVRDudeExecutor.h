@@ -19,7 +19,6 @@ protected:
     QString ProgrammerType, Port, MCUType, FLASHHex, EEPROMHex;
     bool ShowErrors;                   //True if class should show error messages
     enum Errors LastError;             //Last error that occured
-    AVRDudeErrorWindow *Output;        //Okienko wyjœciowe AVRDude
 
 public:
     AVRDudeExecutor(QString aProgrammerType, QString aPort, QString aMCUType, QWidget *parent);

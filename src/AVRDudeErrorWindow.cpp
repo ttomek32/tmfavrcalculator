@@ -1,34 +1,34 @@
 #include "AVRDudeErrorWindow.h"
+#include <QSettings>
 
 AVRDudeErrorWindow::AVRDudeErrorWindow(QWidget *parent) :
     QDialog(parent), ui(new Ui::AVRDudeErrorWindow)
 {
-    ui->setupUi(this);
-/*    setFixedHeight(174);
-
+    fin=false;
     QSettings appsettings;
-     appsettings.beginGroup("SimpPgmDialog");
-      ui->EEPROMCBox->setCheckState((Qt::CheckState)appsettings.value("EEPROM", Qt::Unchecked).toInt());
-      ui->FLASHCBox->setCheckState((Qt::CheckState)appsettings.value("FLASH", Qt::Unchecked).toInt());
-      ui->FuseCBox->setCheckState((Qt::CheckState)appsettings.value("FuseBits", Qt::Unchecked).toInt());
-      ui->LockCBox->setCheckState((Qt::CheckState)appsettings.value("LockBits", Qt::Unchecked).toInt());
-     appsettings.endGroup();*/
+     appsettings.beginGroup("AVRDudeErrorWindow");
+     resize(appsettings.value("size", QSize(640, 480)).toSize());   //restore main window size and position
+     move(appsettings.value("pos", QPoint(0, 0)).toPoint());
+     appsettings.endGroup();
+
+     ui->setupUi(this);
 
      //setResult(QDialog::Accepted);
 }
 
-int AVRDudeErrorWindow::GetResult()
+void AVRDudeErrorWindow::reject()
 {
-    int res=0;
-    /*if(ui->EEPROMCBox->checkState()) res|=R_EEPROM;
-    if(ui->FLASHCBox->checkState()) res|=R_FLASH;
-    if(ui->FuseCBox->checkState()) res|=R_FUSE;
-    if(ui->LockCBox->checkState()) res|=R_LOCK;*/
+    QSettings appsettings;
+     appsettings.beginGroup("AVRDudeErrorWindow");     //Save mainwindow size and position
+     appsettings.setValue("size", size());
+     appsettings.setValue("pos", pos());
+     appsettings.endGroup();
 
-    return res;
+     fin=true;
+     QDialog::reject();
 }
 
 AVRDudeErrorWindow::~AVRDudeErrorWindow()
 {
-     delete ui;
+    delete ui;
 }
