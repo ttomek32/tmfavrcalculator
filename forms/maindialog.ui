@@ -21,7 +21,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>1</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -1055,16 +1055,39 @@ p, li { white-space: pre-wrap; }
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QCheckBox" name="AVRDudeShowResultsOnError">
-             <property name="text">
-              <string>Pokaż okienko AVRDude jeśli wystąpi błąd</string>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_20">
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Pokaż okno wyników AVRDude:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="ShowAVRDudeWindow">
+               <item>
+                <property name="text">
+                 <string>nigdy</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>tylko jeśli wystąpi błąd</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>zawsze</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
             <widget class="QCheckBox" name="AVRDudeShowCMDLine">
              <property name="text">
-              <string>Pokaż wygenerowane polecenie</string>
+              <string>Pokaż wygenerowane polecenie AVRDude</string>
              </property>
             </widget>
            </item>
@@ -1352,22 +1375,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>AVRDudeShowResultsOnError</sender>
-   <signal>stateChanged(int)</signal>
-   <receiver>MainDialog</receiver>
-   <slot>SetupShowAVDDudeWindow(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>299</x>
-     <y>363</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>300</x>
-     <y>256</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>AVRDudeShowCMDLine</sender>
    <signal>stateChanged(int)</signal>
    <receiver>MainDialog</receiver>
@@ -1412,22 +1419,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>299</x>
      <y>416</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>MainDialog</sender>
-   <signal>SetAVRDudeWindowOnError(bool)</signal>
-   <receiver>AVRDudeShowResultsOnError</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>300</x>
-     <y>256</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>299</x>
-     <y>363</y>
     </hint>
    </hints>
   </connection>
@@ -1952,6 +1943,22 @@ p, li { white-space: pre-wrap; }
     <hint type="sourcelabel">
      <x>480</x>
      <y>367</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ShowAVRDudeWindow</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SetupShowAVDDudeWindow(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>439</x>
+     <y>330</y>
     </hint>
     <hint type="destinationlabel">
      <x>300</x>

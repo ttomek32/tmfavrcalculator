@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QWidget>
 #include <QProgressBar>
+//#include <QTextBrowser>
 #include "AVRDudeErrorWindow.h"
 
 class AVRDudeExecutor : public QWidget
@@ -43,6 +44,7 @@ protected:
     QString GetAVRDudeExecPath();                 //Zwróæ œcie¿kê do uruchomienia AVRDude
     void SetBasicAVRDudeParams(QStringList *sl);  //Zwraca listê parametrów wywo³ania AVRDude, zawieraj¹c¹ info o programatorze, porcie i MCU
     bool ShowAVRDudeOutput();                     //Wyœwietl okienko komunikatów wyjœciowych AVRDude
+    void AnalyzeOutput(QString output);           //Analizuje komunikaty AVR Dude pod k¹tem b³êdów
 
 //private slots:
   //  void AVRDudeOutput();                         //Komunikaty z stdout i stderr trafiaj¹ do okienka AVRDude

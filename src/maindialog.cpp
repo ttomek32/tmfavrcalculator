@@ -48,10 +48,11 @@ MainDialog::MainDialog(QWidget *parent) :
      } else HideAdvancedTabs(false);
 
      checkbox=appsettings.value("AVRDudeShowWindowOnError").toInt();
-     if(checkbox==Qt::Checked)
+     ui->ShowAVRDudeWindow->setCurrentIndex(checkbox);
+     /*if(checkbox==Qt::Checked)
      {
          emit SetAVRDudeWindowOnError(true);
-     };
+     };*/
 
      checkbox=appsettings.value("AVRDudeShowCMDLine").toInt();
      if(checkbox==Qt::Checked)

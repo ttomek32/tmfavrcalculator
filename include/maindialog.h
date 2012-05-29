@@ -47,7 +47,7 @@ private slots:
     void OpenEEPROMFileDlg();         //Ustaw œcie¿kê do pliku z EEPROM
     //Z okienka SetUp
     void SetupShowSimplifiedView(int);     //Checkbox pokazuj¹cy tylko widok uproszczony
-    void SetupShowAVDDudeWindow(int);      //Checkbox - poka¿ okno AVRDude tylko jeœli wyst¹pi³ b³¹d
+    void SetupShowAVDDudeWindow(int);      //Combobox - poka¿ okno AVRDude tylko jeœli wyst¹pi³ b³¹d
     void SetupShowAVRDudeCmd(int);         //Poka¿ wygenerowane polecenie AVRDude
 
     //Programownaie

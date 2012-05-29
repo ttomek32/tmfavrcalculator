@@ -191,7 +191,7 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
     SetBasicAVRDudeParams(arguments);   //Uzupe³nij podstawowe parametry wywo³ania AVRDude
     //*arguments<<"-t";                   //Programowanie odbywa siê w trybie terminalowym - tak jest wygodniej
 
-    *arguments<<"-n";                   //Nic nie zapisujemy - do testów
+    //*arguments<<"-n";                   //Nic nie zapisujemy - do testów
 
     if(bar) bar->setValue(progress);    //Ustaw progress bar
     QProcess *avrdude = new QProcess(this);
@@ -220,10 +220,14 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
         //                      tr("%1").arg(txt), QMessageBox::Ok, QMessageBox::Ok);
     }
 
-    while((ShowOutput) && (Output.fin==false)) //QDialog::Rejected))
+    while((ShowOutput) && (Output.fin==false))
     {
         QApplication::processEvents();
     }
+
+    if(avrdude->exitCode()) AnalyzeOutput(Output.ui->AVRDudeOutputTxt->toPlainText());  //Wyst¹pi³ b³¹d AVRDude - sprawdŸ co by³o przyczyn¹
+
+    //QMessageBox::critical(this, tr("Wyjœcie"), tr("Exit code: %1").arg(avrdude->exitCode()), QMessageBox::Ok, QMessageBox::Ok);
 
     return ret;
 }
@@ -247,6 +251,11 @@ QStringList *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(QString aFLASHHex, QStrin
     }
 
     return ret;
+}
+
+void AVRDudeExecutor::AnalyzeOutput(QString output)
+{
+
 }
 
 void AVRDudeExecutor::SetMCUType(QString aMCUType)
