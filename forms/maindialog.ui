@@ -1863,6 +1863,102 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>FLASHReadBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ReadFLASH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>118</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHVerifyBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>VerifyFLASH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FLASHProgrammBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>WriteFLASH()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EEPROMReadBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ReadEEPROM()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>118</x>
+     <y>367</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EEPROMVerifyBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>VerifyEEPROM()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>299</x>
+     <y>367</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EEPROMWriteBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>WriteEEPROM()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>480</x>
+     <y>367</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1889,5 +1985,11 @@ p, li { white-space: pre-wrap; }
   <slot>VerifyFLASHChBox(int)</slot>
   <slot>ProgrammBtn()</slot>
   <slot>EnablePgmButtons()</slot>
+  <slot>ReadFLASH()</slot>
+  <slot>VerifyFLASH()</slot>
+  <slot>WriteFLASH()</slot>
+  <slot>ReadEEPROM()</slot>
+  <slot>VerifyEEPROM()</slot>
+  <slot>WriteEEPROM()</slot>
  </slots>
 </ui>

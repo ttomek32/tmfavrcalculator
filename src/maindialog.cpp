@@ -2,6 +2,7 @@
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QDir>
+#include <QFile>
 #include <QProcess>
 
 #include "qextserialenumerator.h"   //Klasa obs³uguj¹ca porty szeregowe
@@ -182,14 +183,15 @@ void MainDialog::OpenFLASHFileDlg()
         if(!fileNames.isEmpty())
         {
             path=fileNames.at(0);        //Odczytaj œcie¿kê
-            emit SetFLASHFile(path);                      //Uaktualnij pola w których wystêpuje odwo³anie do œcie¿ki pliku hex
+            emit SetFLASHFile(path);     //Uaktualnij pola w których wystêpuje odwo³anie do œcie¿ki pliku hex
 
-            if(path.endsWith(".hex", Qt::CaseInsensitive))   //Podano plik o rozszerzeniu .hex, szukamy wiêc czy jest .eep
-            {
+            if((ui->AutoEEPBtn->checkState()==Qt::Checked) && (path.endsWith(".hex", Qt::CaseInsensitive)))  //Podano plik o rozszerzeniu .hex, szukamy wiêc czy jest .eep
+            {                                                                                                //o ile wybrano opcjê automatyczneg ³adowania EEPROM
                 path.truncate(path.size()-4);  //Wycinamy ".hex"
                 path.append(".eep");
                 if(QFile(path).exists()) emit SetEEPROMFile(path);  //Uaktualnij pola w których znajduje siê œcie¿ka do pliku eep
             }
+            AVRDudeCmdLineParams();      //Uaktualnij listê polecenia AVRDude, aby zawiera³a nazwy nowowybranych plików
         }
      }
 }
@@ -380,6 +382,45 @@ void MainDialog::EraseFLASHChBox(int state)
      appsettings.endGroup();  //Zapisz zmiany
 
      AVRDudeCmdLineParams();    //Odœwie¿ okienko stanu
+}
+
+void MainDialog::ReadFLASH()
+{
+    QString Filename=GetFLASHFilePath(); //Nazwa pliku FLASH
+    if(QFile(Filename).exists())
+    {
+        int res=QMessageBox::information(this, tr("Plik"), tr("Plik %1 istnieje. Nadpisaæ go?").arg(Filename), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        switch(res)
+        {
+        case QMessageBox::Yes: break;
+        case QMessageBox::No:  return;   //Nic nie rób
+        };
+    }
+}
+
+void MainDialog::WriteFLASH()
+{
+
+}
+
+void MainDialog::VerifyFLASH()
+{
+
+}
+
+void MainDialog::ReadEEPROM()
+{
+
+}
+
+void MainDialog::WriteEEPROM()
+{
+
+}
+
+void MainDialog::VerifyEEPROM()
+{
+
 }
 
 void MainDialog::VerifyFLASHChBox(int state)

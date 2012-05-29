@@ -54,6 +54,12 @@ private slots:
     void SavePathToAVRDude(QString);       //Zapisz œcie¿kê do AVRDude
     void EraseFLASHChBox(int);             //Przycisk kasowania CPU
     void VerifyFLASHChBox(int);            //Przycisk weryfikacji pamiêci
+    void ReadFLASH();                      //Odczytaj pamiêæ FLASH i zapisz do pliku
+    void WriteFLASH();                     //Zapisz pamiêæ FLASH
+    void VerifyFLASH();                    //Porównaj FLASH MCU z plikiem
+    void ReadEEPROM();                     //Odczytaj pamiêæ EEPROM i zapisz do pliku
+    void WriteEEPROM();                    //Zapisz pamiêæ EEPROM
+    void VerifyEEPROM();                   //Porównaj EEPROM MCU z plikiem
 
     //Inne
     void SavePathToFLASHFile(QString);     //Zapisz w rejestrze œcie¿kê do pliku FLASH
