@@ -59,9 +59,13 @@ MainDialog::MainDialog(QWidget *parent) :
 
      } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
 
+     ui->VerifyBox->blockSignals(true);
      ui->VerifyBox->setCheckState((Qt::CheckState)appsettings.value("VerifyFLASH", Qt::Unchecked).toInt());   //Odczytaj stan checkboxa weryfikacji zapisu
-     ui->EraseBox->setCheckState((Qt::CheckState)appsettings.value("EraseFLASH", Qt::Checked).toInt());     //Odczytaj stan checkboxa kasuj¹cego pamiêæ
+     ui->VerifyBox->blockSignals(false);
 
+     ui->EraseBox->blockSignals(true);
+     ui->EraseBox->setCheckState((Qt::CheckState)appsettings.value("EraseFLASH", Qt::Checked).toInt());     //Odczytaj stan checkboxa kasuj¹cego pamiêæ
+     ui->EraseBox->blockSignals(false);
 
     try
     {
@@ -374,6 +378,8 @@ void MainDialog::EraseFLASHChBox(int state)
 
      appsettings.setValue("EraseFLASH", state);
      appsettings.endGroup();  //Zapisz zmiany
+
+     AVRDudeCmdLineParams();    //Odœwie¿ okienko stanu
 }
 
 void MainDialog::VerifyFLASHChBox(int state)
@@ -383,6 +389,8 @@ void MainDialog::VerifyFLASHChBox(int state)
 
      appsettings.setValue("VerifyFLASH", state);
      appsettings.endGroup();  //Zapisz zmiany
+
+     AVRDudeCmdLineParams();    //Odœwie¿ okienko stanu
 }
 
 QString MainDialog::GetMCUAsAVRDudeParam()

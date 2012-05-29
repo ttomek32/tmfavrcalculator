@@ -21,7 +21,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>2</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -445,7 +445,11 @@
           <item row="0" column="3">
            <widget class="QCheckBox" name="AutoEEPBtn">
             <property name="toolTip">
-             <string>Zaznaczenie spowoduje, że program automatycznie poszuka odpowiedniego pliku z zawartością EEPROM i użyje go do programowania</string>
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zaznaczenie spowoduje, że program automatycznie poszuka odpowiedniego pliku z zawartością EEPROM i użyje go do programowania.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Automatycznie odczytaj plik EEP</string>
@@ -458,7 +462,11 @@
           <item row="1" column="3">
            <widget class="QCheckBox" name="EaseEEPRONBtn">
             <property name="toolTip">
-             <string>Zaznacz jeśli pamięć EEPROM ma być kasowana przy każdym programowaniu. Typowo nie jest to potrzebne.</string>
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Zaznacz jeśli pamięć EEPROM ma być kasowana przy każdym programowaniu. Typowo nie jest to potrzebne. Opcja ta wymaga przeprogramowania fusebitów.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Kasuj EEPROM przed programowaniem</string>
@@ -569,7 +577,11 @@
           <item row="2" column="0">
            <widget class="QCheckBox" name="EraseBox">
             <property name="toolTip">
-             <string>Wymagane dla wszystkich MCU z wyjątkiem XMEGA. Wartość domyślna tego parametru przyjmowana przez program jest właściwa w większości przypadków</string>
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt; font-weight:600;&quot;&gt;Wymagane dla wszystkich MCU z wyjątkiem XMEGA.&lt;/span&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; Wartość domyślna tego parametru przyjmowana przez program jest właściwa w większości przypadków.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>Kasuj przed programowaniem</string>
@@ -579,10 +591,15 @@
           <item row="3" column="0">
            <widget class="QCheckBox" name="VerifyBox">
             <property name="toolTip">
-             <string>Włącz weryfikację, jeśli masz jakiekolwiek problemy ze wczytaniem firmware.</string>
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Włącz weryfikację, jeśli masz jakiekolwiek problemy ze wczytaniem firmware.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;Włącza weryfikację wszystkich zapisów do MCU, nie tylko zapisu do FLASH.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>Weryfikuj po programowaniu</string>
+             <string>Weryfikuj po programowaniu.</string>
             </property>
            </widget>
           </item>
