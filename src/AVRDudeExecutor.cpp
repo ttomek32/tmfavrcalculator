@@ -199,7 +199,7 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
     avrdude->start(GetAVRDudeExecPath(), *arguments);
     avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
     //avrdude->setReadChannel(QProcess::StandardOutput);  //Czytamy z stderr
-//avrdude->waitForFinished(10000);
+
     while(!avrdude->waitForFinished(10))  //Czekaj a¿ programowanie siê zakoñczy
     {
         QApplication::processEvents();
