@@ -396,6 +396,14 @@ void MainDialog::ReadFLASH()
         case QMessageBox::Yes: break;
         case QMessageBox::No:  return;   //Nic nie rób
         };
+
+        QStringList sl;
+        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        sl<<QString("-Uflash:r:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
+        AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
+        AVRDude.ReadMemory(sl); //Odczytaj pamiêæ
     }
 }
 

@@ -47,7 +47,7 @@ void AVRDudeExecutor::SetBasicAVRDudeParams(QStringList *sl)
     *sl << Port;           //Dodaj wybrany port
 }
 
-bool AVRDudeExecutor::ShowAVRDudeOutput()
+int AVRDudeExecutor::ShowAVRDudeOutput()
 {
     int checkbox;
 
@@ -229,7 +229,75 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
 
     //QMessageBox::critical(this, tr("Wyjœcie"), tr("Exit code: %1").arg(avrdude->exitCode()), QMessageBox::Ok, QMessageBox::Ok);
 
+    delete avrdude;
     return ret;
+}
+
+bool AVRDudeExecutor::ReadMemory(QStringList type)
+{
+    bool ret=false;
+    int prg=0;     //Licznik progresu
+
+    int ShowOutput=ShowAVRDudeOutput();       //Czy wyœwietlaæ wyjœcie z AVRDude?
+    AVRDudeErrorWindow Output(this);
+    if(ShowOutput==2)
+    {
+        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyœwietlania
+        Output.show();              //Warunkowo wyœwietl okienko wyjœcia AVRDude
+        Output.raise();
+    }
+
+    QProgressDialog progress(tr("Czytam pamiêæ..."), tr("&Anuluj"), 0, 100, this);
+         progress.setWindowModality(Qt::WindowModal);
+         progress.setMinimumDuration(0);
+         progress.show();
+
+    QProcess *avrdude = new QProcess(this);
+    avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziêki czemu mo¿na skróciæ œcie¿ki do plików HEX
+    avrdude->start(GetAVRDudeExecPath(), type);
+    avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
+
+    while(!avrdude->waitForFinished(100))  //Czekaj a¿ programowanie siê zakoñczy
+    {
+        QApplication::processEvents();
+
+        QString strline;
+        while(avrdude->canReadLine())
+        {
+            QByteArray strline = avrdude->readAllStandardError();
+            Output.ui->AVRDudeOutputTxt->append(strline);
+        }
+        prg++;
+        progress.setValue(prg/10);
+        if(progress.wasCanceled()) //U¿ytkownik przerwa³ programowanie
+        {
+            avrdude->kill();  //Zabij AVRDude
+            delete avrdude;
+            SetExecErr(Err_CancelledByUser);
+            return false;
+        }
+    }
+
+    ret=avrdude->exitCode();   //SprawdŸ czy program zakoñczy³ siê pomyœlnie
+
+    if(ret && (ShowOutput==1))   //Jeœli b³¹d i u¿ytkownik wybra³ opcjê wyœwietlania b³êdów AVRDude
+    {
+        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyœwietlania
+        Output.show();              //Warunkowo wyœwietl okienko wyjœcia AVRDude
+        Output.raise();
+    }
+
+    progress.setValue(99);
+    progress.setCancelButtonText(tr("&Ok"));  //Operacja zakoñczona, trzeba zmieniæ Cancel na Ok
+    while(!progress.wasCanceled()) QApplication::processEvents();           //Zaczekaj a¿ u¿ytkownik zamknie dialog
+
+    while(((ShowOutput==2) || ((ShowOutput==1) && ret)) && (Output.fin==false))   //Czekaj na zamkniêcie okienka jeœli by³o ono wczeœniej wyœwietlone
+    {
+        QApplication::processEvents();
+    }
+
+    delete avrdude;
+    return !ret;
 }
 
 QStringList *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(QString aFLASHHex, QString aEEPROMHex, bool verify)
