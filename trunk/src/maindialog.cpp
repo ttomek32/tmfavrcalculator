@@ -5,7 +5,7 @@
 #include <QFile>
 #include <QProcess>
 
-#include "qextserialenumerator.h"   //Klasa obs³uguj¹ca porty szeregowe
+#include "qextserialenumerator.h"   //Klasa obsÅ‚ugujÄ…ca porty szeregowe
 
 #include "QProcessErrorMsg.h"
 #include "AVRDudeExecutor.h"
@@ -29,21 +29,21 @@ MainDialog::MainDialog(QWidget *parent) :
 
     QString path;
      appsettings.beginGroup("MainWindow");
-     QString ADpath=appsettings.value("AVRDudePath").toString();   //Odczytaj œcie¿kê do AVRDude (jeœli jest)
-     emit SetAVRDudePath(ADpath);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
+     QString ADpath=appsettings.value("AVRDudePath").toString();   //Odczytaj Å›cieÅ¼kÄ™ do AVRDude (jeÅ›li jest)
+     emit SetAVRDudePath(ADpath);                          //UzupeÅ‚nij pole edycji Å›cieÅ¼ki do AVRDude
 
-     path=appsettings.value("FLASHFilePath").toString(); //Odczytaj ostatnio u¿yty plik FLASH
-     emit SetFLASHFile(path);                            //Uzupe³nij pola wyboru pliku FLASH we wszystkich zak³adkach
+     path=appsettings.value("FLASHFilePath").toString(); //Odczytaj ostatnio uÅ¼yty plik FLASH
+     emit SetFLASHFile(path);                            //UzupeÅ‚nij pola wyboru pliku FLASH we wszystkich zakÅ‚adkach
 
-     path=appsettings.value("EEPROMFilePath").toString(); //Odczytaj ostatnio u¿yty plik EEPROM
-     emit SetEEPROMFile(path);                            //Uzupe³nij pola wyboru pliku EEPROM we wszystkich zak³adkach
+     path=appsettings.value("EEPROMFilePath").toString(); //Odczytaj ostatnio uÅ¼yty plik EEPROM
+     emit SetEEPROMFile(path);                            //UzupeÅ‚nij pola wyboru pliku EEPROM we wszystkich zakÅ‚adkach
 
      //Setup tab
      int checkbox;
      checkbox=appsettings.value("SimplifiedView").toInt();
-     if(checkbox==Qt::Checked)                           //SprawdŸ czy wybrano widok uproszczony
+     if(checkbox==Qt::Checked)                           //SprawdÅº czy wybrano widok uproszczony
      {
-         HideAdvancedTabs(true);                     //Ukryj zaawansowane zak³adki
+         HideAdvancedTabs(true);                     //Ukryj zaawansowane zakÅ‚adki
          emit SetSimplifierViewChBox(true);
      } else HideAdvancedTabs(false);
 
@@ -59,37 +59,37 @@ MainDialog::MainDialog(QWidget *parent) :
      {
          emit SetAVRDudeCMDLine(true);
 
-     } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawieraj¹ce polecenie AVRDude
+     } else ui->AVRDudeCMDLineGroupBox->setVisible(false); //Ukryj okno zawierajÄ…ce polecenie AVRDude
 
      ui->VerifyBox->blockSignals(true);
      ui->VerifyBox->setCheckState((Qt::CheckState)appsettings.value("VerifyFLASH", Qt::Unchecked).toInt());   //Odczytaj stan checkboxa weryfikacji zapisu
      ui->VerifyBox->blockSignals(false);
 
      ui->EraseBox->blockSignals(true);
-     ui->EraseBox->setCheckState((Qt::CheckState)appsettings.value("EraseFLASH", Qt::Checked).toInt());     //Odczytaj stan checkboxa kasuj¹cego pamiêæ
+     ui->EraseBox->setCheckState((Qt::CheckState)appsettings.value("EraseFLASH", Qt::Checked).toInt());     //Odczytaj stan checkboxa kasujÄ…cego pamiÄ™Ä‡
      ui->EraseBox->blockSignals(false);
 
     try
     {
         AVRDudeConf = new AVRDudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
 
-        FillProgrammerCB();                           //Typy obs³ugiwanych programatorów
+        FillProgrammerCB();                           //Typy obsÅ‚ugiwanych programatorÃ³w
         QString prg=appsettings.value("Programmer").toString();
         ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
 
-        FillPortCB();    //Typy dostêpnych portów
+        FillPortCB();    //Typy dostÄ™pnych portÃ³w
         prg=appsettings.value("Port").toString();
         ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
 
-        FillMCUType();  //Typy dostêpnych procesorów
+        FillMCUType();  //Typy dostÄ™pnych procesorÃ³w
         ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
         prg=appsettings.value("MCU").toString();
         ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
-        MCUChanged(prg);  //Ustaw sygnaturê
+        MCUChanged(prg);  //Ustaw sygnaturÄ™
     }
     catch (ConfigParseException &ex)
     {
-         QMessageBox(QMessageBox::Critical, appsettings.value("windowTitle").toString(), QString("Something fucked up!\n\nCo siê sta³o - niebawem.")).exec();
+         QMessageBox(QMessageBox::Critical, appsettings.value("windowTitle").toString(), QString("Something fucked up!\n\nCo siÄ™ staÅ‚o - niebawem.")).exec();
     }
 
      appsettings.endGroup();
@@ -102,7 +102,7 @@ void MainDialog::ProgrammBtn()
     {
         ui->SimpProgrammBtn->setText("Przerwij");
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), ui->FLASHFile->text(), ui->EEPROMFile->text(), this);
-        int res=dlg.GetResult();   //Co wybra³ u¿ytkownik
+        int res=dlg.GetResult();   //Co wybraÅ‚ uÅ¼ytkownik
         AVRDude.ProgramMemories(res, ui->SimpProgrammProgressBar); //Rozpocznij programowanie
         ui->SimpProgrammBtn->setText("Programuj");
     }
@@ -114,11 +114,11 @@ void MainDialog::EnablePgmButtons()
     bool FLASHen=true;
     bool EEPROMen=true;
 
-    if(ui->AVRTypeCB->currentText().compare("<Auto>")==0) en=false;  //Nie mo¿emy odblokowaæ jeœli nie wybrano typu MCU
-    if(ui->FLASHFile->text().size()==0) FLASHen=false;               //Nie mo¿na programowaæ jeœli nie ma pliku z FLASHEM
+    if(ui->AVRTypeCB->currentText().compare("<Auto>")==0) en=false;  //Nie moÅ¼emy odblokowaÄ‡ jeÅ›li nie wybrano typu MCU
+    if(ui->FLASHFile->text().size()==0) FLASHen=false;               //Nie moÅ¼na programowaÄ‡ jeÅ›li nie ma pliku z FLASHEM
     if(ui->EEPROMFile->text().size()==0) EEPROMen=false;             //Lub pliku z EEPROM
 
-    ui->SimpProgrammBtn->setEnabled(en);  //Odblokuj przycisk programowania na zak³adce uproszczonego programowania
+    ui->SimpProgrammBtn->setEnabled(en);  //Odblokuj przycisk programowania na zakÅ‚adce uproszczonego programowania
 
     ui->FLASHReadBtn->setEnabled(en && FLASHen);
     ui->FLASHVerifyBtn->setEnabled(en && FLASHen);
@@ -141,21 +141,21 @@ void MainDialog::AVRDudeSetPath()
 {
     QString path;
 
-    QSettings appsettings;                               //Odczytaj œcie¿kê do AVRDude (jeœli jest)
+    QSettings appsettings;                               //Odczytaj Å›cieÅ¼kÄ™ do AVRDude (jeÅ›li jest)
      appsettings.beginGroup("MainWindow");
      path=appsettings.value("AVRDudePath").toString();
-     emit SetAVRDudePath(path);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
+     emit SetAVRDudePath(path);                          //UzupeÅ‚nij pole edycji Å›cieÅ¼ki do AVRDude
 
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::DirectoryOnly);
     dialog.setDirectory(path);
     QStringList fileNames;
-    if (dialog.exec())    //Wyœwietl dialog wyboru œcie¿ki
+    if (dialog.exec())    //WyÅ›wietl dialog wyboru Å›cieÅ¼ki
      {
         fileNames = dialog.selectedFiles();
         if(fileNames.isEmpty()==false)
         {
-            path=fileNames.at(0);        //Odczytaj œcie¿kê
+            path=fileNames.at(0);        //Odczytaj Å›cieÅ¼kÄ™
             appsettings.setValue("AVRDudePath", path);
             emit SetAVRDudePath(path);
         }
@@ -168,7 +168,7 @@ void MainDialog::OpenFLASHFileDlg()
 {
     QString path;
 
-    QSettings appsettings;                               //Odczytaj œcie¿kê do pliku FLASH
+    QSettings appsettings;                               //Odczytaj Å›cieÅ¼kÄ™ do pliku FLASH
      appsettings.beginGroup("MainWindow");
      path=appsettings.value("FLASHFilePath").toString();
      appsettings.endGroup();  //Zapisz zmiany
@@ -178,21 +178,21 @@ void MainDialog::OpenFLASHFileDlg()
     dialog.setNameFilter(tr("IntelHex (*.hex)"));
     dialog.setDirectory(path);
     QStringList fileNames;
-    if (dialog.exec())    //Wyœwietl dialog wyboru œcie¿ki
+    if (dialog.exec())    //WyÅ›wietl dialog wyboru Å›cieÅ¼ki
      {
         fileNames = dialog.selectedFiles();
         if(!fileNames.isEmpty())
         {
-            path=fileNames.at(0);        //Odczytaj œcie¿kê
-            emit SetFLASHFile(path);     //Uaktualnij pola w których wystêpuje odwo³anie do œcie¿ki pliku hex
+            path=fileNames.at(0);        //Odczytaj Å›cieÅ¼kÄ™
+            emit SetFLASHFile(path);     //Uaktualnij pola w ktÃ³rych wystÄ™puje odwoÅ‚anie do Å›cieÅ¼ki pliku hex
 
-            if((ui->AutoEEPBtn->checkState()==Qt::Checked) && (path.endsWith(".hex", Qt::CaseInsensitive)))  //Podano plik o rozszerzeniu .hex, szukamy wiêc czy jest .eep
-            {                                                                                                //o ile wybrano opcjê automatyczneg ³adowania EEPROM
+            if((ui->AutoEEPBtn->checkState()==Qt::Checked) && (path.endsWith(".hex", Qt::CaseInsensitive)))  //Podano plik o rozszerzeniu .hex, szukamy wiÄ™c czy jest .eep
+            {                                                                                                //o ile wybrano opcjÄ™ automatyczneg Å‚adowania EEPROM
                 path.truncate(path.size()-4);  //Wycinamy ".hex"
                 path.append(".eep");
-                if(QFile(path).exists()) emit SetEEPROMFile(path);  //Uaktualnij pola w których znajduje siê œcie¿ka do pliku eep
+                if(QFile(path).exists()) emit SetEEPROMFile(path);  //Uaktualnij pola w ktÃ³rych znajduje siÄ™ Å›cieÅ¼ka do pliku eep
             }
-            AVRDudeCmdLineParams();      //Uaktualnij listê polecenia AVRDude, aby zawiera³a nazwy nowowybranych plików
+            AVRDudeCmdLineParams();      //Uaktualnij listÄ™ polecenia AVRDude, aby zawieraÅ‚a nazwy nowowybranych plikÃ³w
         }
      }
 }
@@ -201,7 +201,7 @@ void MainDialog::OpenEEPROMFileDlg()
 {
     QString path;
 
-    QSettings appsettings;                               //Odczytaj œcie¿kê do AVRDude (jeœli jest)
+    QSettings appsettings;                               //Odczytaj Å›cieÅ¼kÄ™ do AVRDude (jeÅ›li jest)
      appsettings.beginGroup("MainWindow");
      path=appsettings.value("EEPROMFilePath").toString();
      appsettings.endGroup();
@@ -211,13 +211,13 @@ void MainDialog::OpenEEPROMFileDlg()
     dialog.setNameFilter(tr("IntelHex (*.eep)"));
     dialog.setDirectory(path);
     QStringList fileNames;
-    if (dialog.exec())    //Wyœwietl dialog wyboru œcie¿ki
+    if (dialog.exec())    //WyÅ›wietl dialog wyboru Å›cieÅ¼ki
      {
         fileNames = dialog.selectedFiles();
         if(!fileNames.isEmpty())
         {
-            path=fileNames.at(0);        //Odczytaj œcie¿kê
-            emit SetEEPROMFile(path);                      //Uaktualnij pola w których wystêpuje odwo³anie do œcie¿ki pliku hex
+            path=fileNames.at(0);        //Odczytaj Å›cieÅ¼kÄ™
+            emit SetEEPROMFile(path);                      //Uaktualnij pola w ktÃ³rych wystÄ™puje odwoÅ‚anie do Å›cieÅ¼ki pliku hex
         }
      }
 }
@@ -227,11 +227,11 @@ void MainDialog::FillProgrammerCB()
     ui->ProgrammerCB->clear();   //Skasuj poprzednie pozycje
     if(AVRDudeConf)
     {
-        QVector<Programmer> pgm=AVRDudeConf->GetProgrammers();  //Lista programatorów obs³ugiwanych przez AVRDude
+        QVector<Programmer> pgm=AVRDudeConf->GetProgrammers();  //Lista programatorÃ³w obsÅ‚ugiwanych przez AVRDude
 
         for (int i = 0; i < pgm.size(); ++i)
         {
-            ui->ProgrammerCB->addItem(pgm[i].GetID());         //Wype³nij combo z tympami obs³ugiwanych programatorów
+            ui->ProgrammerCB->addItem(pgm[i].GetID());         //WypeÅ‚nij combo z tympami obsÅ‚ugiwanych programatorÃ³w
         }
     }
 }
@@ -239,7 +239,7 @@ void MainDialog::FillProgrammerCB()
 void MainDialog::FillPortCB()
 {
     ui->PortCB->clear();
-    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();  //Pobierz nazwy dostêpnych portów szeregowych
+    QList<QextPortInfo> ports = QextSerialEnumerator::getPorts();  //Pobierz nazwy dostÄ™pnych portÃ³w szeregowych
     for (int i = 0; i < ports.size(); i++)
     {
         ui->PortCB->addItem(ports.at(i).portName);
@@ -253,11 +253,11 @@ void MainDialog::FillMCUType()
     ui->AVRTypeCB->clear();   //Skasuj poprzednie pozycje
     if(AVRDudeConf)
     {
-        QVector<Part> pgm=AVRDudeConf->GetParts();  //Lista programatorów obs³ugiwanych przez AVRDude
+        QVector<Part> pgm=AVRDudeConf->GetParts();  //Lista programatorÃ³w obsÅ‚ugiwanych przez AVRDude
 
         for (int i = 0; i < pgm.size(); ++i)
         {
-            ui->AVRTypeCB->addItem(pgm[i].GetDescription());         //Wype³nij combo z tympami obs³ugiwanych procesorów
+            ui->AVRTypeCB->addItem(pgm[i].GetDescription());         //WypeÅ‚nij combo z tympami obsÅ‚ugiwanych procesorÃ³w
         }
     }
 }
@@ -266,19 +266,19 @@ void MainDialog::TestConnection()
 {
     AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), QString(""), QString(""), this);
     QString MCUSig=AVRDude.LookForMCU();
-    AVRDudeExecutor::Errors err=AVRDude.GetExecErr();   //Czy wszystko siê skoñczy³o ok?
+    AVRDudeExecutor::Errors err=AVRDude.GetExecErr();   //Czy wszystko siÄ™ skoÅ„czyÅ‚o ok?
     if(err==AVRDudeExecutor::Err_Ok)
     {
-        ui->AVRSignatureValueLBL->setText(MCUSig);   //Wyœwietl znalezion¹ sygnaturê
+        ui->AVRSignatureValueLBL->setText(MCUSig);   //WyÅ›wietl znalezionÄ… sygnaturÄ™
         QString MCU=AVRDudeConf->GetPartBySignature(MCUSig).GetDescription();
-        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(MCU));  //ZnajdŸ MCU na podstawie sygnatury
+        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(MCU));  //ZnajdÅº MCU na podstawie sygnatury
         MCUChanged(MCU);
-        ui->ConnectionOk->setText(tr("Po³¹czenie ok"));
+        ui->ConnectionOk->setText(tr("PoÅ‚Ä…czenie ok"));
     } else
     {
-        ui->ConnectionOk->setText(tr("Brak po³¹czenia"));
-        QMessageBox::information(this, tr("AVRDude - b³¹d"),
-                                 tr("Nie znaleziono sygnatury urz¹dzenia !\nByæ mo¿e nie jest pod³¹czone lub wyst¹pi³ problem z po³¹czeniem."), QMessageBox::Ok, QMessageBox::Ok);
+        ui->ConnectionOk->setText(tr("Brak poÅ‚Ä…czenia"));
+        QMessageBox::information(this, tr("AVRDude - bÅ‚Ä…d"),
+                                 tr("Nie znaleziono sygnatury urzÄ…dzenia !\nByÄ‡ moÅ¼e nie jest podÅ‚Ä…czone lub wystÄ…piÅ‚ problem z poÅ‚Ä…czeniem."), QMessageBox::Ok, QMessageBox::Ok);
     }
 
 }
@@ -313,12 +313,12 @@ void MainDialog::SetupShowAVRDudeCmd(int state)
      appsettings.beginGroup("MainWindow");
      appsettings.setValue("AVRDudeShowCMDLine", state);   //Zapisz stan przycisku
      appsettings.endGroup();  //Zapisz zmiany
-     ui->AVRDudeCMDLineGroupBox->setVisible(state==Qt::Checked);  //Ukryj lub poka¿ okienko z lini¹ polecenia AVRDude
+     ui->AVRDudeCMDLineGroupBox->setVisible(state==Qt::Checked);  //Ukryj lub pokaÅ¼ okienko z liniÄ… polecenia AVRDude
 }
 
 void MainDialog::SavePathToEEPROMFile(QString file)
 {
-    QSettings appsettings;                               //Zapisz œcie¿kê do pliku eep
+    QSettings appsettings;                               //Zapisz Å›cieÅ¼kÄ™ do pliku eep
      appsettings.beginGroup("MainWindow");
 
      appsettings.setValue("EEPROMFilePath", file);
@@ -327,7 +327,7 @@ void MainDialog::SavePathToEEPROMFile(QString file)
 
 void MainDialog::SavePathToFLASHFile(QString file)
 {
-    QSettings appsettings;                               //Zapisz œcie¿kê do pliku eep
+    QSettings appsettings;                               //Zapisz Å›cieÅ¼kÄ™ do pliku eep
      appsettings.beginGroup("MainWindow");
 
      appsettings.setValue("FLASHFilePath", file);
@@ -336,7 +336,7 @@ void MainDialog::SavePathToFLASHFile(QString file)
 
  void MainDialog::SavePathToAVRDude(QString path)
  {
-     QSettings appsettings;                               //Zapisz œcie¿kê do AVRDude
+     QSettings appsettings;                               //Zapisz Å›cieÅ¼kÄ™ do AVRDude
       appsettings.beginGroup("MainWindow");
 
       appsettings.setValue("AVRDudePath", path);
@@ -363,9 +363,9 @@ void MainDialog::PortChanged(QString text)
 
 void MainDialog::MCUChanged(QString text)
 {
-    QString sig=AVRDudeConf->GetPartByDescription(text).GetSignature();  //ZnajdŸ opis wybranego MCU
+    QString sig=AVRDudeConf->GetPartByDescription(text).GetSignature();  //ZnajdÅº opis wybranego MCU
     ui->AVRSignatureValueLBL->setText(sig);
-    ui->StatusLBL->setText(tr("Procesor: ").append(text));   //Uaktualnij liniê stanu wskazuj¹c¹ na typ procesora
+    ui->StatusLBL->setText(tr("Procesor: ").append(text));   //Uaktualnij liniÄ™ stanu wskazujÄ…cÄ… na typ procesora
 
     QSettings appsettings;                               //Zapisz wybrany mikrokontroler
      appsettings.beginGroup("MainWindow");
@@ -382,7 +382,7 @@ void MainDialog::EraseFLASHChBox(int state)
      appsettings.setValue("EraseFLASH", state);
      appsettings.endGroup();  //Zapisz zmiany
 
-     AVRDudeCmdLineParams();    //Odœwie¿ okienko stanu
+     AVRDudeCmdLineParams();    //OdÅ›wieÅ¼ okienko stanu
 }
 
 void MainDialog::ReadFLASH()
@@ -390,11 +390,11 @@ void MainDialog::ReadFLASH()
     QString Filename=GetFLASHFilePath(); //Nazwa pliku FLASH
     if(QFile(Filename).exists())
     {
-        int res=QMessageBox::information(this, tr("Plik"), tr("Plik %1 istnieje. Nadpisaæ go?").arg(Filename), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        int res=QMessageBox::information(this, tr("Plik"), tr("Plik %1 istnieje. NadpisaÄ‡ go?").arg(Filename), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
         switch(res)
         {
         case QMessageBox::Yes: break;
-        case QMessageBox::No:  return;   //Nic nie rób
+        case QMessageBox::No:  return;   //Nic nie rÃ³b
         };
 
         QStringList sl;
@@ -403,7 +403,7 @@ void MainDialog::ReadFLASH()
         sl<<"-P"; sl<<GetPortAsAVRDudeParam();
         sl<<QString("-Uflash:r:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
-        AVRDude.ReadMemory(sl); //Odczytaj pamiêæ
+        AVRDude.ReadMemory(sl); //Odczytaj pamiÄ™Ä‡
     }
 }
 
@@ -440,7 +440,7 @@ void MainDialog::VerifyFLASHChBox(int state)
      appsettings.setValue("VerifyFLASH", state);
      appsettings.endGroup();  //Zapisz zmiany
 
-     AVRDudeCmdLineParams();    //Odœwie¿ okienko stanu
+     AVRDudeCmdLineParams();    //OdÅ›wieÅ¼ okienko stanu
 }
 
 QString MainDialog::GetMCUAsAVRDudeParam()
@@ -505,5 +505,5 @@ MainDialog::~MainDialog()
      appsettings.endGroup();
 
     delete ui;
-    delete AVRDudeConf;        //Parser AVRDude ju¿ nam siê nie przyda :)
+    delete AVRDudeConf;        //Parser AVRDude juÅ¼ nam siÄ™ nie przyda :)
 }

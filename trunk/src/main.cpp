@@ -1,6 +1,7 @@
 #include <QtGui/QApplication>
 #include <QSplashScreen>
 #include "maindialog.h"
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {
@@ -14,6 +15,8 @@ int main(int argc, char *argv[])
     QCoreApplication::setOrganizationName("TMF");
     QCoreApplication::setOrganizationDomain("http://mikrokontrolery.blogspot.com/");
     QCoreApplication::setApplicationName("TMFAVRCalculator");
+
+    QTextCodec::setCodecForTr (QTextCodec::codecForName("UTF-8")); //Ustaw kodowanie dla ca≥ej aplikacji. èrÛd≥a muszπ byÊ napisane w UTF-8
 
     MainDialog w;
     w.show();
