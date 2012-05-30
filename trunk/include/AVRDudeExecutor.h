@@ -34,6 +34,9 @@ public:
                                                //tak, aby wskazywa³ na oba pliki.
     bool ProgramMemories(int types, QProgressBar *bar=0);           //Programuj wskazane typy pamiêci, zwraca false w razie b³êdu, opcjonalnie przyjmuje wskaŸnik do paska postêpu
 
+    bool ReadMemory(QStringList type);         //Odczytaj pamiêæ o typie okreœlonym przez type (parametr wywo³ania odczytu pamiêci i zapisz wynik do podanego w parametrach pliku
+                                               //type musi zawieraæ kompletn¹ liniê wywo³ania AVRDude
+
     void SetMCUType(QString aMCUType);         //Zmieñ typ MCU
     void SetExecErr(Errors err) {LastError=err;};    //Typ ostatniego b³êdu
     Errors GetExecErr();
@@ -43,7 +46,7 @@ public:
 protected:
     QString GetAVRDudeExecPath();                 //Zwróæ œcie¿kê do uruchomienia AVRDude
     void SetBasicAVRDudeParams(QStringList *sl);  //Zwraca listê parametrów wywo³ania AVRDude, zawieraj¹c¹ info o programatorze, porcie i MCU
-    bool ShowAVRDudeOutput();                     //Wyœwietl okienko komunikatów wyjœciowych AVRDude
+    int ShowAVRDudeOutput();                      //Wyœwietl okienko komunikatów wyjœciowych AVRDude
     void AnalyzeOutput(QString output);           //Analizuje komunikaty AVR Dude pod k¹tem b³êdów
 
 //private slots:
