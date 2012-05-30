@@ -22,12 +22,12 @@ AVRDudeExecutor::AVRDudeExecutor(QString aProgrammerType, QString aPort, QString
     FLASHHex=aFLASHHex;
     EEPROMHex=aEEPROMHex;
     SetExecErr(Err_Ok);
-    SetShowErrors(true);                   //Domyúlnie wyúwietlamy komunikaty b≥ÍdÛw
+    SetShowErrors(true);                   //Domy≈õlnie wy≈õwietlamy komunikaty b≈Çƒôd√≥w
 }
 
 AVRDudeExecutor::~AVRDudeExecutor()
 {
-    //delete Output;    //UsuÒ okienko wyjúciowe AVRDude
+    //delete Output;    //Usu≈Ñ okienko wyj≈õciowe AVRDude
 }
 
 AVRDudeExecutor::Errors AVRDudeExecutor::GetExecErr()
@@ -40,7 +40,7 @@ AVRDudeExecutor::Errors AVRDudeExecutor::GetExecErr()
 void AVRDudeExecutor::SetBasicAVRDudeParams(QStringList *sl)
 {
     *sl << "-p";
-    *sl << MCUType;        //Dodaj wybrany typ CPU (jeúli wybrano)
+    *sl << MCUType;        //Dodaj wybrany typ CPU (je≈õli wybrano)
     *sl << "-c";
     *sl << ProgrammerType; //Dodaj wybrany typ programatora
     *sl << "-P";
@@ -72,15 +72,15 @@ QString AVRDudeExecutor::ReadSignature()
     QString Signature;
 
     QStringList arguments;
-    SetBasicAVRDudeParams(&arguments);   //Uzupe≥nij podstawowe parametry wywo≥ania AVRDude
+    SetBasicAVRDudeParams(&arguments);   //Uzupe≈Çnij podstawowe parametry wywo≈Çania AVRDude
     arguments << "-q";                   //Tryb cichszy, mniej informacji do przeparsowania
 
     QProcess *avrdude = new QProcess(this);
     avrdude->start(GetAVRDudeExecPath(), arguments);
-    if(avrdude->waitForFinished(5000)==false)         //Czekaj na koniec, jednak nie wiÍcej niø 5s
+    if(avrdude->waitForFinished(5000)==false)         //Czekaj na koniec, jednak nie wiƒôcej ni≈º 5s
     {
-        if(GetShowErrors()) QMessageBox::critical(this, tr("AVRDude - b≥πd"),
-                                            tr("B≥πd wywo≥ania AVR Dude. Najprawdopodobniej wybrano z≥y port lub programator."), QMessageBox::Ok, QMessageBox::Ok);
+        if(GetShowErrors()) QMessageBox::critical(this, tr("AVRDude - b≈ÇƒÖd"),
+                                            tr("B≈ÇƒÖd wywo≈Çania AVR Dude. Najprawdopodobniej wybrano z≈Çy port lub programator."), QMessageBox::Ok, QMessageBox::Ok);
         avrdude->kill();   //Kille the AVRDude
         delete avrdude;
         SetExecErr(Err_FinishingTimeOut);
@@ -93,35 +93,35 @@ QString AVRDudeExecutor::ReadSignature()
 
         QString strline;
         int index;
-        bool hasBeenFound=false;     //Czy znaleziono sygnaturÍ?
+        bool hasBeenFound=false;     //Czy znaleziono sygnaturƒô?
 
         while(avrdude->canReadLine())
         {
             strline=QString::fromLocal8Bit(avrdude->readLine(255));
-            index=strline.indexOf("Device signature = ");           //Czy mamy sygnaturÍ?
+            index=strline.indexOf("Device signature = ");           //Czy mamy sygnaturƒô?
             if(index!=-1)
             {
-                strline=strline.right(strline.size()-QString("Device signature = ").size()-index); //Wytnij z ca≥ej linii czÍúÊ od sygnatury do koÒca
+                strline=strline.right(strline.size()-QString("Device signature = ").size()-index); //Wytnij z ca≈Çej linii czƒô≈õƒá od sygnatury do ko≈Ñca
                 index=0;
-                while(strline.at(index)>=QChar('0')) index++; //UsuÒ z koÒca linii znaki kontrolne
+                while(strline.at(index)>=QChar('0')) index++; //Usu≈Ñ z ko≈Ñca linii znaki kontrolne
                 Signature=strline.left(index);
 
-                hasBeenFound=true;                          //SygnaturÍ znaleziono
+                hasBeenFound=true;                          //Sygnaturƒô znaleziono
                 SetExecErr(Err_Ok);
-                break;  //Koniec poszukiwaÒ                   //Koniec szukania
+                break;  //Koniec poszukiwa≈Ñ                   //Koniec szukania
             }
         }
         if(hasBeenFound==false)
         {
-            if(GetShowErrors()) QMessageBox::critical(this, tr("AVRDude - b≥πd"),
-                                   tr("Nie znaleziono sygnatury urzπdzenia !\nByÊ moøe nie jest pod≥πczone lub wystπpi≥ problem z po≥πczeniem."), QMessageBox::Ok, QMessageBox::Ok);
+            if(GetShowErrors()) QMessageBox::critical(this, tr("AVRDude - b≈ÇƒÖd"),
+                                   tr("Nie znaleziono sygnatury urzƒÖdzenia !\nByƒá mo≈ºe nie jest pod≈ÇƒÖczone lub wystƒÖpi≈Ç problem z po≈ÇƒÖczeniem."), QMessageBox::Ok, QMessageBox::Ok);
             SetExecErr(Err_CannotReadSignature);
         }
 
-    } else QProcessErrorMsg(avrdude->error(), this).exec(); //Poinformuj uøytkownika o problemie z uruchomieniem AVRDude
+    } else QProcessErrorMsg(avrdude->error(), this).exec(); //Poinformuj u≈ºytkownika o problemie z uruchomieniem AVRDude
 
     delete avrdude;
-    return Signature;     //ZwrÛÊ sygnaturÍ procesora
+    return Signature;     //Zwr√≥ƒá sygnaturƒô procesora
 }
 
 QString AVRDudeExecutor::LookForMCU()
@@ -129,7 +129,7 @@ QString AVRDudeExecutor::LookForMCU()
     QString signature;
     QString tmpMCU=MCUType;   //Zachowaj aktualny typ MCU
     QStringList MCUMainTypes;
-    MCUMainTypes << "t84";       //Lista g≥Ûwnych typÛw procesorÛw, rÛøniπcych siÍ sposobem programowania
+    MCUMainTypes << "t84";       //Lista g≈Ç√≥wnych typ√≥w procesor√≥w, r√≥≈ºniƒÖcych siƒô sposobem programowania
     MCUMainTypes << "m8";        //Funkcja po kolei je sprawdza
     MCUMainTypes << "x128a1";
     MCUMainTypes << "2313";
@@ -151,16 +151,16 @@ QString AVRDudeExecutor::LookForMCU()
             SetExecErr(Err_CancelledByUser);
             break;
         }
-        SetMCUType(MCUMainTypes.at(index));    //Sprawdzaj po kolei rÛøne typy rÛøniπce siÍ sposobem programowania
+        SetMCUType(MCUMainTypes.at(index));    //Sprawdzaj po kolei r√≥≈ºne typy r√≥≈ºniƒÖce siƒô sposobem programowania
         signature=ReadSignature();
 
         Errors tmperr=GetExecErr();
-        SetExecErr(tmperr);                //Zachowaj kod b≥Ídu
+        SetExecErr(tmperr);                //Zachowaj kod b≈Çƒôdu
         if(tmperr==Err_FinishingTimeOut)
         {
-            if(tmpShowError) QMessageBox::critical(this, tr("AVRDude - b≥πd"),
-                                                tr("B≥πd wywo≥ania AVR Dude. Najprawdopodobniej wybrano z≥y port lub programator."), QMessageBox::Ok, QMessageBox::Ok);
-            break;   //ZakoÒcz poszukiwania MCU - bÍdπ one bezowocne bo AVRDude nie moøe siÍ po≥πczyÊ
+            if(tmpShowError) QMessageBox::critical(this, tr("AVRDude - b≈ÇƒÖd"),
+                                                tr("B≈ÇƒÖd wywo≈Çania AVR Dude. Najprawdopodobniej wybrano z≈Çy port lub programator."), QMessageBox::Ok, QMessageBox::Ok);
+            break;   //Zako≈Ñcz poszukiwania MCU - bƒôdƒÖ one bezowocne bo AVRDude nie mo≈ºe siƒô po≈ÇƒÖczyƒá
         }
 
         if(signature.size()) break;
@@ -175,32 +175,31 @@ QString AVRDudeExecutor::LookForMCU()
 bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
 {
     bool ret=false;
-    bool ShowOutput=ShowAVRDudeOutput();       //Czy wyúwietlaÊ wyjúcie z AVRDude?
-    int progress=0;   //WartoúÊ progress bara
+    bool ShowOutput=ShowAVRDudeOutput();       //Czy wy≈õwietlaƒá wyj≈õcie z AVRDude?
+    int progress=0;   //Warto≈õƒá progress bara
 
     AVRDudeErrorWindow Output(this);
-    Output.ui->AVRDudeOutputTxt->clear();      //Skasuj listÍ wyjúciowπ
+    Output.ui->AVRDudeOutputTxt->clear();      //Skasuj listƒô wyj≈õciowƒÖ
     if(ShowOutput)
     {
-        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyúwietlania
-        Output.show();              //Warunkowo wyúwietl okienko wyjúcia AVRDude
+        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wy≈õwietlania
+        Output.show();              //Warunkowo wy≈õwietl okienko wyj≈õcia AVRDude
         Output.raise();
     }
 
     QStringList *arguments=GetAVRDudeCmdMemProgramm(FLASHHex, EEPROMHex, false);
-    SetBasicAVRDudeParams(arguments);   //Uzupe≥nij podstawowe parametry wywo≥ania AVRDude
-    //*arguments<<"-t";                   //Programowanie odbywa siÍ w trybie terminalowym - tak jest wygodniej
+    SetBasicAVRDudeParams(arguments);   //Uzupe≈Çnij podstawowe parametry wywo≈Çania AVRDude
+    //*arguments<<"-t";                   //Programowanie odbywa siƒô w trybie terminalowym - tak jest wygodniej
 
-    //*arguments<<"-n";                   //Nic nie zapisujemy - do testÛw
+    //*arguments<<"-n";                   //Nic nie zapisujemy - do test√≥w
 
     if(bar) bar->setValue(progress);    //Ustaw progress bar
     QProcess *avrdude = new QProcess(this);
-    avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziÍki czemu moøna skrÛciÊ úcieøki do plikÛw HEX
+    avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziƒôki czemu mo≈ºna skr√≥ciƒá ≈õcie≈ºki do plik√≥w HEX
     avrdude->start(GetAVRDudeExecPath(), *arguments);
     avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
-    //avrdude->setReadChannel(QProcess::StandardOutput);  //Czytamy z stderr
 
-    while(!avrdude->waitForFinished(10))  //Czekaj aø programowanie siÍ zakoÒczy
+    while(!avrdude->waitForFinished(10))  //Czekaj a≈º programowanie siƒô zako≈Ñczy
     {
         QApplication::processEvents();
 
@@ -212,7 +211,7 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
             Output.ui->AVRDudeOutputTxt->append(strline);
         }
 
-        //QMessageBox::critical(this, tr("Wyjúcie"), tr("%1").arg(strline), QMessageBox::Ok, QMessageBox::Ok);
+        //QMessageBox::critical(this, tr("Wyj≈õcie"), tr("%1").arg(strline), QMessageBox::Ok, QMessageBox::Ok);
 
         //QString txt;
         //for(int index=0; index<arguments->size(); index++) txt.append(arguments->at(index));
@@ -225,9 +224,9 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
         QApplication::processEvents();
     }
 
-    if(avrdude->exitCode()) AnalyzeOutput(Output.ui->AVRDudeOutputTxt->toPlainText());  //Wystπpi≥ b≥πd AVRDude - sprawdü co by≥o przyczynπ
+    if(avrdude->exitCode()) AnalyzeOutput(Output.ui->AVRDudeOutputTxt->toPlainText());  //WystƒÖpi≈Ç b≈ÇƒÖd AVRDude - sprawd≈∫ co by≈Ço przyczynƒÖ
 
-    //QMessageBox::critical(this, tr("Wyjúcie"), tr("Exit code: %1").arg(avrdude->exitCode()), QMessageBox::Ok, QMessageBox::Ok);
+    //QMessageBox::critical(this, tr("Wyj≈õcie"), tr("Exit code: %1").arg(avrdude->exitCode()), QMessageBox::Ok, QMessageBox::Ok);
 
     delete avrdude;
     return ret;
@@ -238,26 +237,26 @@ bool AVRDudeExecutor::ReadMemory(QStringList type)
     bool ret=false;
     int prg=0;     //Licznik progresu
 
-    int ShowOutput=ShowAVRDudeOutput();       //Czy wyúwietlaÊ wyjúcie z AVRDude?
+    int ShowOutput=ShowAVRDudeOutput();       //Czy wy≈õwietlaƒá wyj≈õcie z AVRDude?
     AVRDudeErrorWindow Output(this);
     if(ShowOutput==2)
     {
-        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyúwietlania
-        Output.show();              //Warunkowo wyúwietl okienko wyjúcia AVRDude
+        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wy≈õwietlania
+        Output.show();              //Warunkowo wy≈õwietl okienko wyj≈õcia AVRDude
         Output.raise();
     }
 
-    QProgressDialog progress(tr("Czytam pamiÍÊ..."), tr("&Anuluj"), 0, 100, this);
+    QProgressDialog progress(tr("Czytam pamiƒôƒá..."), tr("&Anuluj"), 0, 100, this);
          progress.setWindowModality(Qt::WindowModal);
          progress.setMinimumDuration(0);
          progress.show();
 
     QProcess *avrdude = new QProcess(this);
-    avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziÍki czemu moøna skrÛciÊ úcieøki do plikÛw HEX
+    avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dziƒôki czemu mo≈ºna skr√≥ciƒá ≈õcie≈ºki do plik√≥w HEX
     avrdude->start(GetAVRDudeExecPath(), type);
     avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
 
-    while(!avrdude->waitForFinished(100))  //Czekaj aø programowanie siÍ zakoÒczy
+    while(!avrdude->waitForFinished(100))  //Czekaj a≈º programowanie siƒô zako≈Ñczy
     {
         QApplication::processEvents();
 
@@ -269,7 +268,7 @@ bool AVRDudeExecutor::ReadMemory(QStringList type)
         }
         prg++;
         progress.setValue(prg/10);
-        if(progress.wasCanceled()) //Uøytkownik przerwa≥ programowanie
+        if(progress.wasCanceled()) //U≈ºytkownik przerwa≈Ç programowanie
         {
             avrdude->kill();  //Zabij AVRDude
             delete avrdude;
@@ -278,20 +277,20 @@ bool AVRDudeExecutor::ReadMemory(QStringList type)
         }
     }
 
-    ret=avrdude->exitCode();   //Sprawdü czy program zakoÒczy≥ siÍ pomyúlnie
+    ret=avrdude->exitCode();   //Sprawd≈∫ czy program zako≈Ñczy≈Ç siƒô pomy≈õlnie
 
-    if(ret && (ShowOutput==1))   //Jeúli b≥πd i uøytkownik wybra≥ opcjÍ wyúwietlania b≥ÍdÛw AVRDude
+    if(ret && (ShowOutput==1))   //Je≈õli b≈ÇƒÖd i u≈ºytkownik wybra≈Ç opcjƒô wy≈õwietlania b≈Çƒôd√≥w AVRDude
     {
-        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyúwietlania
-        Output.show();              //Warunkowo wyúwietl okienko wyjúcia AVRDude
+        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wy≈õwietlania
+        Output.show();              //Warunkowo wy≈õwietl okienko wyj≈õcia AVRDude
         Output.raise();
     }
 
     progress.setValue(99);
-    progress.setCancelButtonText(tr("&Ok"));  //Operacja zakoÒczona, trzeba zmieniÊ Cancel na Ok
-    while(!progress.wasCanceled()) QApplication::processEvents();           //Zaczekaj aø uøytkownik zamknie dialog
+    progress.setCancelButtonText(tr("&Ok"));  //Operacja zako≈Ñczona, trzeba zmieniƒá Cancel na Ok
+    while(!progress.wasCanceled()) QApplication::processEvents();           //Zaczekaj a≈º u≈ºytkownik zamknie dialog
 
-    while(((ShowOutput==2) || ((ShowOutput==1) && ret)) && (Output.fin==false))   //Czekaj na zamkniÍcie okienka jeúli by≥o ono wczeúniej wyúwietlone
+    while(((ShowOutput==2) || ((ShowOutput==1) && ret)) && (Output.fin==false))   //Czekaj na zamkniƒôcie okienka je≈õli by≈Ço ono wcze≈õniej wy≈õwietlone
     {
         QApplication::processEvents();
     }
@@ -313,8 +312,8 @@ QStringList *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(QString aFLASHHex, QStrin
     if(aEEPROMHex.size())
     {
         if(EEPROMPath.compare(FLASHPath))
-            { //Oba pliki sπ rÛønych katalogach
-              *ret<<QString("-Ueeprom:%1:").arg(writestring).append(aEEPROMHex); //Dodaj pe≥nπ úcieøkÍ
+            { //Oba pliki sƒÖ r√≥≈ºnych katalogach
+              *ret<<QString("-Ueeprom:%1:").arg(writestring).append(aEEPROMHex); //Dodaj pe≈ÇnƒÖ ≈õcie≈ºkƒô
             } else *ret<<QString("-Ueeprom:%1:").arg(writestring).append(QFileInfo(aEEPROMHex).fileName());
     }
 
