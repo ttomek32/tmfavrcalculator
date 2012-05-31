@@ -394,7 +394,7 @@ void MainDialog::ReadFLASH()
         switch(res)
         {
         case QMessageBox::Yes: break;
-        case QMessageBox::No:  return;   //Nic nie r√≥b
+        case QMessageBox::No:  return;   //Nic nie sta≥o
         };
 
         QStringList sl;
@@ -403,33 +403,92 @@ void MainDialog::ReadFLASH()
         sl<<"-P"; sl<<GetPortAsAVRDudeParam();
         sl<<QString("-Uflash:r:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
-        AVRDude.ReadMemory(sl); //Odczytaj pamiƒôƒá
+        AVRDude.MemoryOp(sl, "Czytam pamiÍÊ FLASH"); //Odczytaj pamiÍÊ
     }
 }
 
 void MainDialog::WriteFLASH()
 {
-
+    QString Filename=GetFLASHFilePath(); //Nazwa pliku FLASH
+    if(QFile(Filename).exists())
+    {
+        QStringList sl;
+        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        sl<<GetPerformEraseChipAsAVRDudeParam();   //Czy kasowaÊ chip?
+        sl<<QString("-Uflash:w:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
+        AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
+        AVRDude.MemoryOp(sl, "ZapisujÍ pamiÍÊ FLASH"); //Zapisz pamiÍÊ
+    } else QMessageBox::information(this, tr("Plik"), tr("Plik %1 nie istnieje.").arg(Filename), QMessageBox::Ok, QMessageBox::Ok);
 }
 
 void MainDialog::VerifyFLASH()
 {
-
+    QString Filename=GetFLASHFilePath(); //Nazwa pliku FLASH
+    if(QFile(Filename).exists())
+    {
+        QStringList sl;
+        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        sl<<QString("-Uflash:v:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
+        AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
+        AVRDude.MemoryOp(sl, "WeryfikujÍ pamiÍÊ FLASH"); //Weryfikuj pamiÍÊ
+    } else QMessageBox::information(this, tr("Plik"), tr("Plik %1 nie istnieje.").arg(Filename), QMessageBox::Ok, QMessageBox::Ok);
 }
 
 void MainDialog::ReadEEPROM()
 {
+    QString Filename=GetEEPROMFilePath(); //Nazwa pliku EEPROM
+    if(QFile(Filename).exists())
+    {
+        int res=QMessageBox::information(this, tr("Plik"), tr("Plik %1 istnieje. Nadpisaƒá go?").arg(Filename), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        switch(res)
+        {
+        case QMessageBox::Yes: break;
+        case QMessageBox::No:  return;   //Nic nie sta≥o
+        };
 
+        QStringList sl;
+        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        sl<<QString("-Ueeprom:r:%1:i").arg(QFileInfo(GetEEPROMFilePath()).fileName());
+        AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), GetEEPROMFilePath(), this);
+        AVRDude.MemoryOp(sl, "Czytam pamiÍÊ EEPROM"); //Odczytaj pamiÍÊ
+    }
 }
 
 void MainDialog::WriteEEPROM()
 {
-
+    QString Filename=GetEEPROMFilePath(); //Nazwa pliku EEPROM
+    if(QFile(Filename).exists())
+    {
+        QStringList sl;
+        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        sl<<GetPerformEraseChipAsAVRDudeParam();   //Czy kasowaÊ chip?
+        sl<<QString("-Ueeprom:w:%1:i").arg(QFileInfo(GetEEPROMFilePath()).fileName());
+        AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), GetEEPROMFilePath(), this);
+        AVRDude.MemoryOp(sl, "ZapisujÍ pamiÍÊ EEPROM"); //Zapisz pamiÍÊ
+    } else QMessageBox::information(this, tr("Plik"), tr("Plik %1 nie istnieje.").arg(Filename), QMessageBox::Ok, QMessageBox::Ok);
 }
 
 void MainDialog::VerifyEEPROM()
 {
-
+    QString Filename=GetEEPROMFilePath(); //Nazwa pliku EEPROM
+    if(QFile(Filename).exists())
+    {
+        QStringList sl;
+        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        sl<<QString("-Ueeprom:v:%1:i").arg(QFileInfo(GetEEPROMFilePath()).fileName());
+        AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetEEPROMFilePath(), GetEEPROMFilePath(), this);
+        AVRDude.MemoryOp(sl, "WeryfikujÍ pamiÍÊ EEPROM"); //Weryfikuj pamiÍÊ
+    } else QMessageBox::information(this, tr("Plik"), tr("Plik %1 nie istnieje.").arg(Filename), QMessageBox::Ok, QMessageBox::Ok);
 }
 
 void MainDialog::VerifyFLASHChBox(int state)
@@ -464,7 +523,7 @@ QString MainDialog::GetPortAsAVRDudeParam()
 QString MainDialog::GetPerformEraseChipAsAVRDudeParam()
 {
     QString str="";
-    if(ui->EraseBox->checkState()==Qt::Checked) str.append(" -e ");
+    if(ui->EraseBox->checkState()!=Qt::Checked) str.append(" -D ");  //Nie wykonuj chip erase przed programowaniem
     return str;
 }
 

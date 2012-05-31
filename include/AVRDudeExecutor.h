@@ -34,8 +34,8 @@ public:
                                                //tak, aby wskazywa³ na oba pliki.
     bool ProgramMemories(int types, QProgressBar *bar=0);           //Programuj wskazane typy pamiêci, zwraca false w razie b³êdu, opcjonalnie przyjmuje wskaŸnik do paska postêpu
 
-    bool ReadMemory(QStringList type);         //Odczytaj pamiêæ o typie okreœlonym przez type (parametr wywo³ania odczytu pamiêci i zapisz wynik do podanego w parametrach pliku
-                                               //type musi zawieraæ kompletn¹ liniê wywo³ania AVRDude
+    bool MemoryOp(QStringList type, QString desc); //Odczytaj pamiêæ o typie okreœlonym przez type (parametr wywo³ania odczytu pamiêci i zapisz wynik do podanego w parametrach pliku
+                                               //type musi zawieraæ kompletn¹ liniê wywo³ania AVRDude, desc - opis wyœwietlany na progresie
 
     void SetMCUType(QString aMCUType);         //Zmieñ typ MCU
     void SetExecErr(Errors err) {LastError=err;};    //Typ ostatniego b³êdu
