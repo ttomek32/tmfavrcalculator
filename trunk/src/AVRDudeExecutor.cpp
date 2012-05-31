@@ -232,7 +232,7 @@ bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
     return ret;
 }
 
-bool AVRDudeExecutor::ReadMemory(QStringList type)
+bool AVRDudeExecutor::MemoryOp(QStringList type, QString desc)
 {
     bool ret=false;
     int prg=0;     //Licznik progresu
@@ -246,15 +246,15 @@ bool AVRDudeExecutor::ReadMemory(QStringList type)
         Output.raise();
     }
 
-    QProgressDialog progress(tr("Czytam pamięć..."), tr("&Anuluj"), 0, 100, this);
+    QProgressDialog progress(desc, tr("&Anuluj"), 0, 100, this);
          progress.setWindowModality(Qt::WindowModal);
          progress.setMinimumDuration(0);
          progress.show();
 
     QProcess *avrdude = new QProcess(this);
-    avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dzięki czemu można skrócić ścieżki do plików HEX
-    avrdude->start(GetAVRDudeExecPath(), type);
-    avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
+        avrdude->setWorkingDirectory(QFileInfo(FLASHHex).absolutePath());  //Ustawia katalog roboczy, dzięki czemu można skrócić ścieżki do plików HEX
+        avrdude->start(GetAVRDudeExecPath(), type);
+        avrdude->setReadChannel(QProcess::StandardError);  //Czytamy z stderr
 
     while(!avrdude->waitForFinished(100))  //Czekaj aż programowanie się zakończy
     {
@@ -279,14 +279,21 @@ bool AVRDudeExecutor::ReadMemory(QStringList type)
 
     ret=avrdude->exitCode();   //Sprawdź czy program zakończył się pomyślnie
 
-    if(ret && (ShowOutput==1))   //Jeśli błąd i użytkownik wybrał opcję wyświetlania błędów AVRDude
+    if(ret)
     {
-        Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyświetlania
-        Output.show();              //Warunkowo wyświetl okienko wyjścia AVRDude
-        Output.raise();
-    }
+        progress.setLabelText(tr("Operacja zakończyła się błędem"));
+        if(ShowOutput==1)   //Jeśli błąd i użytkownik wybrał opcję wyświetlania błędów AVRDude
+        {
+            Output.setModal(true);      //Okno modalne - blokujemy inne widgety na czas jego wyświetlania
+            Output.show();              //Warunkowo wyświetl okienko wyjścia AVRDude
+            Output.raise();
+            AnalyzeOutput(Output.ui->AVRDudeOutputTxt->toPlainText());  //Wystąpił błąd AVRDude - sprawdź co było przyczyną
+        }
+    } else progress.setLabelText(tr("Operacja przebiegła pomyślnie"));
 
-    progress.setValue(99);
+    progress.setAutoClose(false); //Zapobiega autozamykaniu dialogu po osiągnięciu maksimum
+    progress.setAutoReset(false);
+    progress.setValue(100);
     progress.setCancelButtonText(tr("&Ok"));  //Operacja zakończona, trzeba zmienić Cancel na Ok
     while(!progress.wasCanceled()) QApplication::processEvents();           //Zaczekaj aż użytkownik zamknie dialog
 
