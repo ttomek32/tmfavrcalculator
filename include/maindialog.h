@@ -14,6 +14,7 @@ class MainDialog : public QDialog
 
 protected:
     AVRDudeConfParser *AVRDudeConf;     //Parser pliku konfiguracyjnego AVRDude
+    QString LastSelFuseByte;            //Nazwa ostatnio wybranego pola edycji fusebitów
     
 public:
     explicit MainDialog(QWidget *parent = 0);
@@ -45,6 +46,7 @@ private slots:
     void AVRDudeSetPath();            //Ustaw œcie¿kê do programu AVRDude
     void OpenFLASHFileDlg();          //Ustaw œcie¿kê do pliku z FLASH
     void OpenEEPROMFileDlg();         //Ustaw œcie¿kê do pliku z EEPROM
+
     //Z okienka SetUp
     void SetupShowSimplifiedView(int);     //Checkbox pokazuj¹cy tylko widok uproszczony
     void SetupShowAVDDudeWindow(int);      //Combobox - poka¿ okno AVRDude tylko jeœli wyst¹pi³ b³¹d
@@ -60,6 +62,10 @@ private slots:
     void ReadEEPROM();                     //Odczytaj pamiêæ EEPROM i zapisz do pliku
     void WriteEEPROM();                    //Zapisz pamiêæ EEPROM
     void VerifyEEPROM();                   //Porównaj EEPROM MCU z plikiem
+
+    //Z okienka fusebity
+    void FuseByteChanged();                //W jednym z pól edycyjnych zmieni³a siê wartoœæ
+    void BitChBoxChg(int);                 //Stan checkboxa zwi¹zanego z fusebitami uleg³ zmianie
 
     //Inne
     void SavePathToFLASHFile(QString);     //Zapisz w rejestrze œcie¿kê do pliku FLASH

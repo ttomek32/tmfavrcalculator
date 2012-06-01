@@ -25,6 +25,8 @@ MainDialog::MainDialog(QWidget *parent) :
      move(appsettings.value("pos", QPoint(0, 0)).toPoint());
      appsettings.endGroup();
 
+     LastSelFuseByte=QString("Fuse0");   //Nazwa domyœlnie wybranego fusebajtu
+
     ui->setupUi(this);
 
     QString path;
@@ -49,10 +51,6 @@ MainDialog::MainDialog(QWidget *parent) :
 
      checkbox=appsettings.value("AVRDudeShowWindowOnError").toInt();
      ui->ShowAVRDudeWindow->setCurrentIndex(checkbox);
-     /*if(checkbox==Qt::Checked)
-     {
-         emit SetAVRDudeWindowOnError(true);
-     };*/
 
      checkbox=appsettings.value("AVRDudeShowCMDLine").toInt();
      if(checkbox==Qt::Checked)
@@ -93,6 +91,8 @@ MainDialog::MainDialog(QWidget *parent) :
     }
 
      appsettings.endGroup();
+
+     BitChBoxChg(1); //***Uaktualnienie checkboxów***
 }
 
 void MainDialog::ProgrammBtn()
@@ -489,6 +489,49 @@ void MainDialog::VerifyEEPROM()
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetEEPROMFilePath(), GetEEPROMFilePath(), this);
         AVRDude.MemoryOp(sl, "Weryfikujê pamiêæ EEPROM"); //Weryfikuj pamiêæ
     } else QMessageBox::information(this, tr("Plik"), tr("Plik %1 nie istnieje.").arg(Filename), QMessageBox::Ok, QMessageBox::Ok);
+}
+
+void MainDialog::FuseByteChanged()
+{
+    int FuseIndex=0;
+    QList<QLineEdit*> le = findChildren<QLineEdit*>(QRegExp("Fuse*"));  //ZnajdŸ wszystkie obiekty QLineEdit zawieraj¹ce fusebajty
+    while((FuseIndex<le.size()) && (le.at(FuseIndex)->hasFocus()==false)) FuseIndex++;
+    if(FuseIndex<le.size())
+    {
+        ui->Fuse_b0->blockSignals(true); ui->Fuse_b1->blockSignals(true); ui->Fuse_b2->blockSignals(true); ui->Fuse_b3->blockSignals(true);
+        ui->Fuse_b4->blockSignals(true); ui->Fuse_b5->blockSignals(true); ui->Fuse_b6->blockSignals(true); ui->Fuse_b7->blockSignals(true);
+        bool ok;
+        int val=le.at(FuseIndex)->text().left(2).toInt(&ok,16);
+        if(ok==false) val=0xff;
+        if(val & 1) ui->Fuse_b0->setChecked(Qt::Checked); else ui->Fuse_b0->setChecked(Qt::Unchecked);
+        if(val & 2) ui->Fuse_b1->setChecked(Qt::Checked); else ui->Fuse_b1->setChecked(Qt::Unchecked);
+        if(val & 4) ui->Fuse_b2->setChecked(Qt::Checked); else ui->Fuse_b2->setChecked(Qt::Unchecked);
+        if(val & 8) ui->Fuse_b3->setChecked(Qt::Checked); else ui->Fuse_b3->setChecked(Qt::Unchecked);
+        if(val & 16) ui->Fuse_b4->setChecked(Qt::Checked); else ui->Fuse_b4->setChecked(Qt::Unchecked);
+        if(val & 32) ui->Fuse_b5->setChecked(Qt::Checked); else ui->Fuse_b5->setChecked(Qt::Unchecked);
+        if(val & 64) ui->Fuse_b6->setChecked(Qt::Checked); else ui->Fuse_b6->setChecked(Qt::Unchecked);
+        if(val & 128) ui->Fuse_b7->setChecked(Qt::Checked); else ui->Fuse_b7->setChecked(Qt::Unchecked);
+        LastSelFuseByte=le.at(FuseIndex)->objectName();  //Nazwa obiektu
+        ui->Fuse_b0->blockSignals(false); ui->Fuse_b1->blockSignals(false); ui->Fuse_b2->blockSignals(false); ui->Fuse_b3->blockSignals(false);
+        ui->Fuse_b4->blockSignals(false); ui->Fuse_b5->blockSignals(false); ui->Fuse_b6->blockSignals(false); ui->Fuse_b7->blockSignals(false);
+    }
+}
+
+void MainDialog::BitChBoxChg(int state)
+{
+    int byte=0;
+    if(ui->Fuse_b0->checkState()==Qt::Checked) byte|=1;   //Konwersja postaci bitowej na dec
+    if(ui->Fuse_b1->checkState()==Qt::Checked) byte|=2;
+    if(ui->Fuse_b2->checkState()==Qt::Checked) byte|=4;
+    if(ui->Fuse_b3->checkState()==Qt::Checked) byte|=8;
+    if(ui->Fuse_b4->checkState()==Qt::Checked) byte|=16;
+    if(ui->Fuse_b5->checkState()==Qt::Checked) byte|=32;
+    if(ui->Fuse_b6->checkState()==Qt::Checked) byte|=64;
+    if(ui->Fuse_b7->checkState()==Qt::Checked) byte|=128;
+
+    QString txt=QString("%1h").arg(byte, 2, 16, QChar('0'));
+    QList<QLineEdit*> le = findChildren<QLineEdit*>(LastSelFuseByte);  //ZnajdŸ ostatnio wybrany obiekt QLineEdit zawieraj¹cy fusebajty
+    if(le.size()) le.at(0)->setText(txt); //**** UWAGA!! Tekst musi byæ zgodny z formatem ustawionym w Designerze, inaczej nic nie zostanie wstawione ****
 }
 
 void MainDialog::VerifyFLASHChBox(int state)
