@@ -67,6 +67,9 @@ MainDialog::MainDialog(QWidget *parent) :
      ui->EraseBox->setCheckState((Qt::CheckState)appsettings.value("EraseFLASH", Qt::Checked).toInt());     //Odczytaj stan checkboxa kasujÄ…cego pamiÄ™Ä‡
      ui->EraseBox->blockSignals(false);
 
+     QList<QLineEdit*> tle = findChildren<QLineEdit*>(LastSelFuseByte);  //Zapisz oryginaln¹ paletê aktywnego okna edycji fusebitów
+     editpal=tle.at(0)->palette();
+
     try
     {
         AVRDudeConf = new AVRDudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
@@ -500,6 +503,15 @@ void MainDialog::FuseByteChanged()
     {
         ui->Fuse_b0->blockSignals(true); ui->Fuse_b1->blockSignals(true); ui->Fuse_b2->blockSignals(true); ui->Fuse_b3->blockSignals(true);
         ui->Fuse_b4->blockSignals(true); ui->Fuse_b5->blockSignals(true); ui->Fuse_b6->blockSignals(true); ui->Fuse_b7->blockSignals(true);
+
+        QList<QLineEdit*> tle = findChildren<QLineEdit*>(LastSelFuseByte);
+        tle.at(0)->setPalette(editpal);              //Odtwórz zapisany kolor dla deaktywowanego okienka
+
+        QPalette pal=le.at(FuseIndex)->palette();    //Pobierz kolor widgetu
+        editpal=pal;                                 //Zapisz oryginalny kolor
+        pal.setColor(QPalette::Text, pal.color(QPalette::Highlight));
+        le.at(FuseIndex)->setPalette(pal);
+
         bool ok;
         int val=le.at(FuseIndex)->text().left(2).toInt(&ok,16);
         if(ok==false) val=0xff;

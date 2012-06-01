@@ -2,6 +2,7 @@
 #define MAINDIALOG_H
 
 #include <QDialog>
+#include <QPalette>
 #include <AVRDudeConfParser.h>
 
 namespace Ui {
@@ -15,6 +16,7 @@ class MainDialog : public QDialog
 protected:
     AVRDudeConfParser *AVRDudeConf;     //Parser pliku konfiguracyjnego AVRDude
     QString LastSelFuseByte;            //Nazwa ostatnio wybranego pola edycji fusebitów
+    QPalette editpal;                   //Paleta kolorów okienek edycji fusebitów
     
 public:
     explicit MainDialog(QWidget *parent = 0);
