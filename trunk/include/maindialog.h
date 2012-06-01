@@ -68,6 +68,10 @@ private slots:
     //Z okienka fusebity
     void FuseByteChanged();                //W jednym z pól edycyjnych zmieni³a siê wartoœæ
     void BitChBoxChg(int);                 //Stan checkboxa zwi¹zanego z fusebitami uleg³ zmianie
+    void ReadFuse();                       //Odczytaj pamiêæ FLASH i zapisz do pliku
+    void WriteFuse();                      //Zapisz pamiêæ FLASH
+    void VerifyFuse();                     //Porównaj FLASH MCU z plikiem
+    void DefaultFuse();                    //Ustaw domyœlne fusebity (bez programowania)
 
     //Inne
     void SavePathToFLASHFile(QString);     //Zapisz w rejestrze œcie¿kê do pliku FLASH

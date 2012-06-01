@@ -2242,6 +2242,70 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>FuseReadBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>ReadFuse()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>88</x>
+     <y>388</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FuseVerifyBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>VerifyFuse()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>229</x>
+     <y>388</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FuseWriteBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>WriteFuse()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>369</x>
+     <y>388</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FuseDefaultBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>DefaultFuse()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>510</x>
+     <y>388</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -2276,5 +2340,9 @@ p, li { white-space: pre-wrap; }
   <slot>WriteEEPROM()</slot>
   <slot>FuseByteChanged()</slot>
   <slot>BitChBoxChg(int)</slot>
+  <slot>ReadFuse()</slot>
+  <slot>WriteFuse()</slot>
+  <slot>VerifyFuse()</slot>
+  <slot>DefaultFuse()</slot>
  </slots>
 </ui>
