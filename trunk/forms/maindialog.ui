@@ -21,7 +21,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -692,11 +692,14 @@ p, li { white-space: pre-wrap; }
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_21">
             <item>
-             <layout class="QGridLayout" name="gridLayout_15">
+             <layout class="QGridLayout" name="FuseWidgets">
               <item row="1" column="4">
                <widget class="QLineEdit" name="Fuse5">
                 <property name="inputMask">
                  <string>HH\h; </string>
+                </property>
+                <property name="text">
+                 <string>ffh</string>
                 </property>
                 <property name="maxLength">
                  <number>3</number>
@@ -708,6 +711,9 @@ p, li { white-space: pre-wrap; }
                 <property name="inputMask">
                  <string>HH\h; </string>
                 </property>
+                <property name="text">
+                 <string>ffh</string>
+                </property>
                 <property name="maxLength">
                  <number>3</number>
                 </property>
@@ -717,6 +723,9 @@ p, li { white-space: pre-wrap; }
                <widget class="QLineEdit" name="Fuse2">
                 <property name="inputMask">
                  <string>HH\h; </string>
+                </property>
+                <property name="text">
+                 <string>ffh</string>
                 </property>
                 <property name="maxLength">
                  <number>3</number>
@@ -728,17 +737,13 @@ p, li { white-space: pre-wrap; }
                 <property name="inputMask">
                  <string>HH\h; </string>
                 </property>
+                <property name="text">
+                 <string>ffh</string>
+                </property>
                </widget>
               </item>
               <item row="1" column="5">
                <widget class="QCheckBox" name="Fuse_b7">
-                <property name="text">
-                 <string/>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="6">
-               <widget class="QCheckBox" name="Fuse_b6">
                 <property name="text">
                  <string/>
                 </property>
@@ -922,13 +927,20 @@ p, li { white-space: pre-wrap; }
                  <string comment="HH">HH\h; </string>
                 </property>
                 <property name="text">
-                 <string>h</string>
+                 <string>ffh</string>
                 </property>
                 <property name="maxLength">
                  <number>3</number>
                 </property>
                 <property name="frame">
                  <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="6">
+               <widget class="QCheckBox" name="Fuse_b6">
+                <property name="text">
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -1274,6 +1286,62 @@ p, li { white-space: pre-wrap; }
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>FusebitTable</tabstop>
+  <tabstop>Fuse0</tabstop>
+  <tabstop>Fuse1</tabstop>
+  <tabstop>Fuse2</tabstop>
+  <tabstop>Fuse4</tabstop>
+  <tabstop>Fuse5</tabstop>
+  <tabstop>Fuse_b7</tabstop>
+  <tabstop>Fuse_b6</tabstop>
+  <tabstop>OscFreqCB</tabstop>
+  <tabstop>LowPowerOscCBox</tabstop>
+  <tabstop>Fuse_b5</tabstop>
+  <tabstop>AutoEEPBtn</tabstop>
+  <tabstop>Fuse_b4</tabstop>
+  <tabstop>EEPROMFile</tabstop>
+  <tabstop>EEPROMOpenBtn</tabstop>
+  <tabstop>EEPROMReadBtn</tabstop>
+  <tabstop>Fuse_b3</tabstop>
+  <tabstop>EEPROMWriteBtn</tabstop>
+  <tabstop>Fuse_b2</tabstop>
+  <tabstop>Fuse_b1</tabstop>
+  <tabstop>Fuse_b0</tabstop>
+  <tabstop>FuseReadBtn</tabstop>
+  <tabstop>FuseVerifyBtn</tabstop>
+  <tabstop>FuseWriteBtn</tabstop>
+  <tabstop>FuseDefaultBtn</tabstop>
+  <tabstop>AVRDudeCMDLine</tabstop>
+  <tabstop>Tabs</tabstop>
+  <tabstop>FLASHReadBtn</tabstop>
+  <tabstop>FLASHVerifyBtn</tabstop>
+  <tabstop>FLASHProgrammBtn</tabstop>
+  <tabstop>EraseBox</tabstop>
+  <tabstop>AVRTypeCB</tabstop>
+  <tabstop>ConnectionTestBtn</tabstop>
+  <tabstop>ProtocolCB</tabstop>
+  <tabstop>PortCB</tabstop>
+  <tabstop>FLASHFileSimp</tabstop>
+  <tabstop>FLASHFileSimpOpenBtn</tabstop>
+  <tabstop>OscillatorTypeCB</tabstop>
+  <tabstop>SimpProgrammBtn</tabstop>
+  <tabstop>EaseEEPRONBtn</tabstop>
+  <tabstop>EEPROMVerifyBtn</tabstop>
+  <tabstop>FLASHFile</tabstop>
+  <tabstop>FLASHOpenFile</tabstop>
+  <tabstop>ProgrammerCB</tabstop>
+  <tabstop>LockbitTable</tabstop>
+  <tabstop>LockbitReadBtn</tabstop>
+  <tabstop>LockbitVerifyBtn</tabstop>
+  <tabstop>LockbitWriteBtn</tabstop>
+  <tabstop>AVRDudePath</tabstop>
+  <tabstop>AVRDudePathSeBtn</tabstop>
+  <tabstop>SetUpOnlySimplifierView</tabstop>
+  <tabstop>ShowAVRDudeWindow</tabstop>
+  <tabstop>AVRDudeShowCMDLine</tabstop>
+  <tabstop>VerifyBox</tabstop>
+ </tabstops>
  <resources>
   <include location="../Resources.qrc"/>
  </resources>
@@ -1966,6 +2034,214 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>Fuse0</sender>
+   <signal>cursorPositionChanged(int,int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>FuseByteChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>67</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse1</sender>
+   <signal>cursorPositionChanged(int,int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>FuseByteChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse2</sender>
+   <signal>cursorPositionChanged(int,int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>FuseByteChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse4</sender>
+   <signal>cursorPositionChanged(int,int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>FuseByteChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse5</sender>
+   <signal>cursorPositionChanged(int,int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>FuseByteChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>378</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b0</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>560</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b1</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>541</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b2</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>522</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b3</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>503</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b4</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>484</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b5</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>465</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b6</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>446</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Fuse_b7</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>BitChBoxChg(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>427</x>
+     <y>347</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -1998,5 +2274,7 @@ p, li { white-space: pre-wrap; }
   <slot>ReadEEPROM()</slot>
   <slot>VerifyEEPROM()</slot>
   <slot>WriteEEPROM()</slot>
+  <slot>FuseByteChanged()</slot>
+  <slot>BitChBoxChg(int)</slot>
  </slots>
 </ui>
