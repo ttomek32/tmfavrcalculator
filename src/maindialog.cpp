@@ -546,6 +546,26 @@ void MainDialog::BitChBoxChg(int state)
     if(le.size()) le.at(0)->setText(txt); //**** UWAGA!! Tekst musi byæ zgodny z formatem ustawionym w Designerze, inaczej nic nie zostanie wstawione ****
 }
 
+void MainDialog::ReadFuse()
+{
+
+}
+
+void MainDialog::WriteFuse()
+{
+
+}
+
+void MainDialog::VerifyFuse()
+{
+
+}
+
+void MainDialog::DefaultFuse()
+{
+
+}
+
 void MainDialog::VerifyFLASHChBox(int state)
 {
     QSettings appsettings;
