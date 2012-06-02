@@ -19,7 +19,8 @@ SOURCES += \
     src/Part.cpp \
     src/Programmer.cpp \
     src/simppgmdlg.cpp \
-    src/AVRDudeErrorWindow.cpp
+    src/AVRDudeErrorWindow.cpp \
+    src/ELFProcessor.cpp
 
 HEADERS  += \
     include/maindialog.h \
@@ -31,7 +32,8 @@ HEADERS  += \
     include/AVRDudeConfParser.h \
     include/ConfigParseException.h \
     include/simppgmdlg.h \
-    include/AVRDudeErrorWindow.h
+    include/AVRDudeErrorWindow.h \
+    include/ELFProcessor.h
 
 FORMS    += \
     forms/maindialog.ui \
