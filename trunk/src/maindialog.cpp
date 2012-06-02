@@ -31,8 +31,11 @@ MainDialog::MainDialog(QWidget *parent) :
 
     QString path;
      appsettings.beginGroup("MainWindow");
-     QString ADpath=appsettings.value("AVRDudePath").toString();   //Odczytaj Å›cieÅ¼kÄ™ do AVRDude (jeÅ›li jest)
+     QString ADpath=appsettings.value("AVRDudePath").toString();   //Odczytaj œcie¿kê do AVRDude (jeœli jest)
      emit SetAVRDudePath(ADpath);                          //UzupeÅ‚nij pole edycji Å›cieÅ¼ki do AVRDude
+
+     ADpath=appsettings.value("AVRBinutilsPath").toString();   //Odczytaj œcie¿kê do binutils (jeœlii jest)
+     emit SetBinutilsPath(ADpath);
 
      path=appsettings.value("FLASHFilePath").toString(); //Odczytaj ostatnio uÅ¼yty plik FLASH
      emit SetFLASHFile(path);                            //UzupeÅ‚nij pola wyboru pliku FLASH we wszystkich zakÅ‚adkach
@@ -164,6 +167,50 @@ void MainDialog::AVRDudeSetPath()
         }
      }
 
+    appsettings.endGroup();  //Zapisz zmiany
+}
+
+void MainDialog::SavePathToAVRDude(QString path)
+{
+    QSettings appsettings;                               //Zapisz œcie¿kê do binutils
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("AVRDudePath", path);
+     appsettings.endGroup();  //Zapisz zmiany
+}
+
+void MainDialog::SavePathToAVRBinutils(QString path)
+{
+    QSettings appsettings;                               //Zapisz œcie¿kê do binutils
+     appsettings.beginGroup("MainWindow");
+
+     appsettings.setValue("AVRBinutilsPath", path);
+     appsettings.endGroup();  //Zapisz zmiany
+}
+
+void MainDialog::AVRBinutilsSetPath()
+{
+    QString path;
+
+    QSettings appsettings;                               //Odczytaj œciê¿kê do binutils (jeœli jest)
+     appsettings.beginGroup("MainWindow");
+     path=appsettings.value("AVRBinutilsPath").toString();
+     emit SetBinutilsPath(path);                          //UzupeÅ‚nij pole edycji Å›cieÅ¼ki do AVRDude
+
+    QFileDialog dialog(this);
+    dialog.setFileMode(QFileDialog::DirectoryOnly);
+    dialog.setDirectory(path);
+    QStringList fileNames;
+    if (dialog.exec())    //Wyœwietl dialog wyboru œcie¿ki
+     {
+        fileNames = dialog.selectedFiles();
+        if(fileNames.isEmpty()==false)
+        {
+            path=fileNames.at(0);        //Odczytaj œcie¿kê
+            appsettings.setValue("AVRBinutilsPath", path);
+            emit SetBinutilsPath(path);
+        }
+     }
     appsettings.endGroup();  //Zapisz zmiany
 }
 
@@ -337,16 +384,7 @@ void MainDialog::SavePathToFLASHFile(QString file)
      appsettings.endGroup();  //Zapisz zmiany
 }
 
- void MainDialog::SavePathToAVRDude(QString path)
- {
-     QSettings appsettings;                               //Zapisz Å›cieÅ¼kÄ™ do AVRDude
-      appsettings.beginGroup("MainWindow");
-
-      appsettings.setValue("AVRDudePath", path);
-      appsettings.endGroup();  //Zapisz zmiany
- }
-
- void MainDialog::ProgrammerChanged(QString text)
+void MainDialog::ProgrammerChanged(QString text)
  {
      QSettings appsettings;                               //Zapisz wybrany typ programatora
       appsettings.beginGroup("MainWindow");
