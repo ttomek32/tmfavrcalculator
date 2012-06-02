@@ -21,7 +21,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>2</number>
+      <number>5</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -1028,19 +1028,40 @@ p, li { white-space: pre-wrap; }
       </attribute>
       <layout class="QGridLayout" name="gridLayout_11">
        <item row="0" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_16">
-         <item>
+        <layout class="QGridLayout" name="gridLayout_14">
+         <item row="0" column="0">
           <widget class="QLabel" name="AVRDudePathLBL">
            <property name="text">
             <string>Ścieżka do AVR Dude:</string>
            </property>
           </widget>
          </item>
-         <item>
+         <item row="0" column="1">
           <widget class="QLineEdit" name="AVRDudePath"/>
          </item>
-         <item>
+         <item row="0" column="2">
           <widget class="QPushButton" name="AVRDudePathSeBtn">
+           <property name="text">
+            <string>Ustaw</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>Ścieżka do narzędzi:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="AVRBinPath">
+           <property name="toolTip">
+            <string>Ścieżka do narzędzi typu avr-objcopy. Bez jej ustawienia niemożliwe jest posługiwanie się plikami elf.</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="AVRBinPathSetBtn">
            <property name="text">
             <string>Ustaw</string>
            </property>
@@ -1335,8 +1356,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>LockbitReadBtn</tabstop>
   <tabstop>LockbitVerifyBtn</tabstop>
   <tabstop>LockbitWriteBtn</tabstop>
-  <tabstop>AVRDudePath</tabstop>
-  <tabstop>AVRDudePathSeBtn</tabstop>
   <tabstop>SetUpOnlySimplifierView</tabstop>
   <tabstop>ShowAVRDudeWindow</tabstop>
   <tabstop>AVRDudeShowCMDLine</tabstop>
@@ -2306,6 +2325,54 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>AVRBinPath</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>SavePathToAVRBinutils(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>314</x>
+     <y>120</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>AVRBinPathSetBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainDialog</receiver>
+   <slot>AVRBinutilsSetPath()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>540</x>
+     <y>121</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetBinutilsPath(QString)</signal>
+   <receiver>AVRBinPath</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>314</x>
+     <y>120</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -2314,6 +2381,7 @@ p, li { white-space: pre-wrap; }
   <signal>SetAVRDudeWindowOnError(bool)</signal>
   <signal>SetAVRDudeCMDLine(bool)</signal>
   <signal>SetEEPROMFile(QString)</signal>
+  <signal>SetBinutilsPath(QString)</signal>
   <slot>AVRDudeSetPath()</slot>
   <slot>OpenFLASHFileDlg()</slot>
   <slot>SetupShowSimplifiedView(int)</slot>
@@ -2344,5 +2412,7 @@ p, li { white-space: pre-wrap; }
   <slot>WriteFuse()</slot>
   <slot>VerifyFuse()</slot>
   <slot>DefaultFuse()</slot>
+  <slot>SavePathToAVRBinutils(QString)</slot>
+  <slot>AVRBinutilsSetPath()</slot>
  </slots>
 </ui>

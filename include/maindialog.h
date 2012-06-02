@@ -31,6 +31,7 @@ protected:
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude
+ void SetBinutilsPath(QString);       //Ustaw œcie¿kê w zak³adce SetUp do binutils
  void SetFLASHFile(QString);          //Ustaw œcie¿kê do pliku FLASH we zak³adkach
  void SetEEPROMFile(QString);         //Ustaw œcie¿kê do pliku EEPROM we wszystkich zak³adkach
  void SetSimplifierViewChBox(bool);   //Ustaw checkbox widoku uproszczonego w zak³adce Setup
@@ -53,9 +54,11 @@ private slots:
     void SetupShowSimplifiedView(int);     //Checkbox pokazuj¹cy tylko widok uproszczony
     void SetupShowAVDDudeWindow(int);      //Combobox - poka¿ okno AVRDude tylko jeœli wyst¹pi³ b³¹d
     void SetupShowAVRDudeCmd(int);         //Poka¿ wygenerowane polecenie AVRDude
+    void SavePathToAVRBinutils(QString);   //Zapisz œcie¿kê do narzêdzi binutils
+    void AVRBinutilsSetPath();             //Otwórz okno wyboru œcie¿ki do binutls
+    void SavePathToAVRDude(QString);       //Zapisz œcie¿kê do AVRDude
 
     //Programownaie
-    void SavePathToAVRDude(QString);       //Zapisz œcie¿kê do AVRDude
     void EraseFLASHChBox(int);             //Przycisk kasowania CPU
     void VerifyFLASHChBox(int);            //Przycisk weryfikacji pamiêci
     void ReadFLASH();                      //Odczytaj pamiêæ FLASH i zapisz do pliku
