@@ -22,8 +22,6 @@ Part::Part(
 {
     m_ID = id;
     m_Description = description;
-
-
     m_Signature = signature.remove(" 0x"); //Combine signature bytes to form 24-bit hex signature
     m_HasJTAG = hasJTAG;
     m_HasDebugWire = hasDebugwire;
@@ -47,6 +45,30 @@ QString Part::GetDescription()
 QString Part::GetSignature()
 {
     return m_Signature;
+}
+
+// Gets the lock bits.
+QVector<Bit> Part::GetLockBits()
+{
+    return m_LockBits;
+}
+
+// Gets the fuse bits.
+QVector<Bit> Part::GetFuseBits()
+{
+    return m_FuseBits;
+}
+
+// Sets the lock bits.
+void Part::SetLockBits(QVector<Bit> lockbits)
+{
+    m_LockBits = lockbits;
+}
+
+// Sets the fuse bits.
+void Part::SetFuseBits(QVector<Bit> fusebits)
+{
+    m_FuseBits = fusebits;
 }
 
 // Determines whether part is programmable via JTAG.

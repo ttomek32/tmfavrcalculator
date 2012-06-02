@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include "Bit.h"
+
 class Part
 {
 public:
@@ -35,6 +37,18 @@ public:
     // Gets the parts signature.
     QString GetSignature();
 
+    // Gets the lock bits.
+    QVector<Bit> GetLockBits();
+
+    // Gets the fuse bits.
+    QVector<Bit> GetFuseBits();
+
+    // Sets the lock bits.
+    void SetLockBits(QVector<Bit> lockbits);
+
+    // Sets the fuse bits.
+    void SetFuseBits(QVector<Bit> fusebits);
+
     // Determines whether part is programmable via JTAG.
     bool HasJTAG();
 
@@ -55,6 +69,9 @@ private:
     bool m_HasDebugWire;
     bool m_HasPDI;
     bool m_HasTPI;
+
+    QVector<Bit> m_LockBits;
+    QVector<Bit> m_FuseBits;
 };
 
 #endif // PART_H
