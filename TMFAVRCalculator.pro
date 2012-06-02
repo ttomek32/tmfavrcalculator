@@ -61,4 +61,5 @@ RESOURCES += \
     Resources.qrc
 
 QMAKE_CXXFLAGS += -Wall \
-    -Werror
+    -Werror \
+    -Os
