@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>images/logo.png</file>
         <file>images/icon.ico</file>
+        <file>TmfAvrCalculator_SP_05_anim.gif</file>
     </qresource>
 </RCC>
