@@ -59,3 +59,6 @@ DESTDIR = output
 
 RESOURCES += \
     Resources.qrc
+
+QMAKE_CXXFLAGS += -Wall \
+    -Werror
