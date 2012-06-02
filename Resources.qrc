@@ -1,7 +1,8 @@
 <RCC>
     <qresource prefix="/">
-        <file>images/logo.png</file>
-        <file>images/icon.ico</file>
+        <file>resources/images/icon.ico</file>
+        <file>resources/images/logo.png</file>
+        <file>resources/xquery/AVRStudioFilter.xq</file>
         <file>TmfAvrCalculator_SP_05_anim.gif</file>
     </qresource>
 </RCC>

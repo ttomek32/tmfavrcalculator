@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml xmlpatterns
 
 TARGET = TMFAVRCalculator
 TEMPLATE = app
@@ -20,7 +20,11 @@ SOURCES += \
     src/Programmer.cpp \
     src/simppgmdlg.cpp \
     src/AVRDudeErrorWindow.cpp \
-    src/ELFProcessor.cpp
+    src/ELFProcessor.cpp \
+    src/Value.cpp \
+    src/Bit.cpp \
+    src/AVRStudioXMLParser.cpp \
+    src/AVRFactory.cpp
 
 HEADERS  += \
     include/maindialog.h \
@@ -33,7 +37,11 @@ HEADERS  += \
     include/ConfigParseException.h \
     include/simppgmdlg.h \
     include/AVRDudeErrorWindow.h \
-    include/ELFProcessor.h
+    include/ELFProcessor.h \
+    include/Value.h \
+    include/Bit.h \
+    include/AVRStudioXMLParser.h \
+    include/AVRFactory.h
 
 FORMS    += \
     forms/maindialog.ui \
