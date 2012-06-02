@@ -225,7 +225,7 @@ void MainDialog::OpenFLASHFileDlg()
 
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::AnyFile);
-    dialog.setNameFilter(tr("IntelHex (*.hex)"));
+    dialog.setNameFilter(GetSupportedFileExtensions());
     dialog.setDirectory(path);
     QStringList fileNames;
     if (dialog.exec())    //WyÅ›wietl dialog wyboru Å›cieÅ¼ki
@@ -330,7 +330,6 @@ void MainDialog::TestConnection()
         QMessageBox::information(this, tr("AVRDude - bÅ‚Ä…d"),
                                  tr("Nie znaleziono sygnatury urzÄ…dzenia !\nByÄ‡ moÅ¼e nie jest podÅ‚Ä…czone lub wystÄ…piÅ‚ problem z poÅ‚Ä…czeniem."), QMessageBox::Ok, QMessageBox::Ok);
     }
-
 }
 
 void MainDialog::HideAdvancedTabs(bool hide)
@@ -532,6 +531,15 @@ void MainDialog::VerifyEEPROM()
     } else QMessageBox::information(this, tr("Plik"), tr("Plik %1 nie istnieje.").arg(Filename), QMessageBox::Ok, QMessageBox::Ok);
 }
 
+void MainDialog::DisableEEPROMIfElf(QString file)
+{
+    QString ext=QFileInfo(file).suffix();
+    if(ext.compare("elf")==0)   //Jeœli plik elf to blokujemy wszystko co jest zwi¹zane z EEPROM
+    {
+        ui->EEPROMBox->setEnabled(false);
+    } else ui->EEPROMBox->setEnabled(true);
+}
+
 void MainDialog::FuseByteChanged()
 {
     int FuseIndex=0;
@@ -666,6 +674,25 @@ QString MainDialog::GetFLASHFilePath()
 QString MainDialog::GetEEPROMFilePath()
 {
     return ui->EEPROMFile->text();
+}
+
+QString MainDialog::GetBinutilsPath()
+{
+    QString path;
+     QSettings appsettings;
+     appsettings.beginGroup("MainWindow");
+     path=appsettings.value("AVRBinutilsPath", "").toString();   //Odczytaj œcie¿kê do binutils
+     appsettings.endGroup();
+
+     if((QFileInfo(path, AVROBJCOPY).exists()==false) || (QFileInfo(path, AVROBJDUMP).exists()==false)) path="";  //Zwróæ pust¹ œcie¿kê jeœli któryœ z wymaganych plików nie istnieje
+
+    return path;
+}
+
+QString MainDialog::GetSupportedFileExtensions()
+{
+    if(GetBinutilsPath().size()) return tr("IntelHex (*.hex);;Executable and Linkable Format (*.elf)"); //SprawdŸ czy s¹ dostêpne narzêdzia binutils
+    return tr("IntelHex (*.hex)");
 }
 
 MainDialog::~MainDialog()

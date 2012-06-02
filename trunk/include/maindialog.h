@@ -5,6 +5,17 @@
 #include <QPalette>
 #include <AVRDudeConfParser.h>
 
+//Pliki s¹ zale¿ne czy kompilujemy w Windows czy Linux
+#ifdef Q_OS_UNIX
+#define AVROBJCOPY  "avr-objcopy"
+#define AVROBJDUMP  "avr-objdump"
+#endif
+
+#ifdef Q_OS_WIN
+#define AVROBJCOPY  "avr-objcopy.exe"
+#define AVROBJDUMP  "avr-objdump.exe"
+#endif
+
 namespace Ui {
 class MainDialog;
 }
@@ -82,6 +93,7 @@ private slots:
 
     void ShowAVRDudeCmdLineParams();       //Wyœwietla na dole w okienku liniê parametrów AVRDude
     void EnablePgmButtons();               //Sprawdza czy mo¿na odblokowaæ przyciski programowania (read, verify, write) we wszystkich zak³adkach, jeœli tak, to je odblokowuje
+    void DisableEEPROMIfElf(QString);      //Disable EEPROM dialogs if using elf file
 
 private:
     Ui::MainDialog *ui;
@@ -93,7 +105,10 @@ private:
     QString GetPerformEraseChipAsAVRDudeParam(); //Zwróæ parametr - kasowanie chipu w zale¿noœci od ustawienia checkboxa
     QString GetFLASHFilePath();             //Zwróæ œcie¿kê + nazwê pliku z zawartoœci¹ FLASH
     QString GetEEPROMFilePath();            //Zwróæ œcie¿kê + nazwê pliku z zawartoœci¹ EEPROM
+    QString GetBinutilsPath();              //Zwróæ œcie¿kê do binutils lub pusty ³añcuch jeœli jej nie ma lub nie ma plików avr-objcopy i avr-objdump
     void AVRDudeCmdLineParams();            //Wyœwietla na dole w okienku liniê parametrów AVRDude
+
+    QString GetSupportedFileExtensions();   //Zwraca listê wspieranych rozszerzeñ plików do dialogów open file
 };
 
 #endif // MAINDIALOG_H

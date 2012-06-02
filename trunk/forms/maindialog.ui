@@ -21,7 +21,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>5</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -2373,6 +2373,22 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>MainDialog</sender>
+   <signal>SetFLASHFile(QString)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>DisableEEPROMIfElf(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -2414,5 +2430,6 @@ p, li { white-space: pre-wrap; }
   <slot>DefaultFuse()</slot>
   <slot>SavePathToAVRBinutils(QString)</slot>
   <slot>AVRBinutilsSetPath()</slot>
+  <slot>DisableEEPROMIfElf(QString)</slot>
  </slots>
 </ui>

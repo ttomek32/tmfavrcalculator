@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     QTextCodec::setCodecForTr (QTextCodec::codecForName("UTF-8")); //Ustaw kodowanie dla ca≥ej aplikacji. èrÛd≥a muszπ byÊ napisane w UTF-8
 
-    Delay::sleep(3);
+    //Delay::sleep(3);
 
     MainDialog w;
     w.show();
