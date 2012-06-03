@@ -12,6 +12,31 @@ QMap<QString, QString*> Bit::GetMappingMap()
     return map;
 }
 
+QString Bit::GetName()
+{
+    return m_Name;
+}
+
+QString Bit::GetCaption()
+{
+    return m_Caption;
+}
+
+QString Bit::GetMask()
+{
+    return m_Mask;
+}
+
+QString Bit::GetOffset()
+{
+    return m_Offset;
+}
+
+QVector<Value> Bit::GetValues()
+{
+    return m_Values;
+}
+
 void Bit::SetValues(QVector<Value> values)
 {
     m_Values = values;
