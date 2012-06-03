@@ -76,7 +76,7 @@ MainDialog::MainDialog(QWidget *parent) :
      QFileInfo fi(ADpath, "avrdude.conf");
      if(fi.exists())
      {
-         AVR= new AVRFactory(fi.filePath(), "");   //Tymczasowo
+         AVR= new AVRFactory(fi.filePath(), "../XML/");   //Tymczasowo
 
          ui->ProgrammerCB->blockSignals(true);
          FillProgrammerCB();                           //Typy obsługiwanych programatorów
