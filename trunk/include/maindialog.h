@@ -98,6 +98,9 @@ private slots:
     void EnablePgmButtons();               //Sprawdza czy mo¿na odblokowaæ przyciski programowania (read, verify, write) we wszystkich zak³adkach, jeœli tak, to je odblokowuje
     void DisableEEPROMIfElf(QString);      //Disable EEPROM dialogs if using elf file
 
+    void FuseBitChangedByUser();           //U¿ytkownik zmieni³ ustawienia fusebitów w widoku tabeli
+    void LockBitChangedByUser();           //Lockbit zosta³ zmieniony przez u¿ytkownika w widoku tabeli.
+
 private:
     Ui::MainDialog *ui;
 
