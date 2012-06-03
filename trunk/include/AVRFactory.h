@@ -17,6 +17,13 @@ public:
 
     // Gets all parts.
     QVector<Part> GetParts();
+
+    //Returns Part record with Description field equal to Desc
+    Part GetPartByDescription (QString Desc);
+
+    //Returns Part record with Signature field equal to sig
+    Part GetPartBySignature (QString sig);
+
 private:
     QVector<Programmer> m_Programmers;
     QVector<Part> m_Parts;

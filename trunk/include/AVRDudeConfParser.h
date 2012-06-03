@@ -29,12 +29,6 @@ public:
     // Gets all parts specified in config file.
     QVector<Part> GetParts();
 
-    //Returns Part record with Description field equal to Desc
-    Part GetPartByDescription (QString Desc);
-
-    //Returns Part record with Signature field equal to sig
-    Part GetPartBySignature (QString sig);
-
 private:
     void Parse(QFile *file);
     void ProcessProperties(QVector<QString> *section);
