@@ -4,6 +4,8 @@
 #include <QDir>
 #include <QFile>
 #include <QProcess>
+#include <QCheckBox>
+#include <QComboBox>
 
 #include "qextserialenumerator.h"   //Klasa obsÅ‚ugujÄ…ca porty szeregowe
 
@@ -96,7 +98,7 @@ MainDialog::MainDialog(QWidget *parent) :
          prg=appsettings.value("MCU").toString();
          ui->AVRTypeCB->blockSignals(false);
          ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
-         MCUChanged(prg);  //Ustaw sygnaturÄ™
+         MCUChanged(prg);  //Ustaw sygnaturê
 
      } else
      {
@@ -111,12 +113,60 @@ MainDialog::MainDialog(QWidget *parent) :
 
 void MainDialog::UpdateFuseBitsWidget()
 {
+    for (int i=ui->FusebitTable->rowCount()-1; i >= 0; --i) ui->FusebitTable->removeRow(i);  //Skasuj wszystkie rzêdy
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> fuses=mcu.GetFuseBits();
+    for(int i=0; i<fuses.size(); i++)
+    {
+        ui->FusebitTable->setRowCount(ui->FusebitTable->rowCount()+1);
+        if(fuses[i].m_Values.size()==0)
+        { //Wstawiamy checkboxy
+            QCheckBox *cb=new QCheckBox;
+            cb->setText(fuses[i].m_Name);    //Nazwa skrócona fusebitu
+            ui->FusebitTable->setCellWidget(i, 0, cb);
 
+        } else
+        { //Pole wielokrotnego wyboru - comboboxy
+            QComboBox *cb=new QComboBox;
+            ui->FusebitTable->setCellWidget(i, 0, cb);
+            for(int ind=0; ind<fuses[i].m_Values.size(); ind++)
+            {
+                cb->addItem(fuses[i].m_Values[ind].m_Name);
+            }
+        }
+        QLabel *lab=new QLabel;
+        lab->setText(fuses[i].m_Caption);           //Opis szczegó³owy fusebitu
+        ui->FusebitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
+    }
 }
 
 void MainDialog::UpdateLockBitsWidget()
 {
+    for (int i=ui->LockbitTable->rowCount()-1; i >= 0; --i) ui->LockbitTable->removeRow(i);  //Skasuj wszystkie rzêdy
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> locks=mcu.GetLockBits();
+    for(int i=0; i<locks.size(); i++)
+    {
+        ui->LockbitTable->setRowCount(ui->LockbitTable->rowCount()+1);
+        if(locks[i].m_Values.size()==0)
+        { //Wstawiamy checkboxy
+            QCheckBox *cb=new QCheckBox;
+            cb->setText(locks[i].m_Name);    //Nazwa skrócona fusebitu
+            ui->LockbitTable->setCellWidget(i, 0, cb);
 
+        } else
+        { //Pole wielokrotnego wyboru - comboboxy
+            QComboBox *cb=new QComboBox;
+            ui->LockbitTable->setCellWidget(i, 0, cb);
+            for(int ind=0; ind<locks[i].m_Values.size(); ind++)
+            {
+                cb->addItem(locks[i].m_Values[ind].m_Name);
+            }
+        }
+        QLabel *lab=new QLabel;
+        lab->setText(locks[i].m_Caption);           //Opis szczegó³owy fusebitu
+        ui->LockbitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
+    }
 }
 
 void MainDialog::ProgrammBtn()
