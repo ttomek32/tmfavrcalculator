@@ -43,28 +43,6 @@ QVector<Part> AVRDudeConfParser::GetParts()
     return m_Parts;
 }
 
-Part AVRDudeConfParser::GetPartByDescription (QString Desc)
-{
-    QVector<Part> Parts=GetParts();
-    for(int i=0; i<Parts.size(); i++)
-    {
-        if(Desc.compare(Parts[i].GetDescription(), Qt::CaseInsensitive)==0) return Parts[i];
-
-    }
-    return Part();  //Return empty Part object - given Desc has not been found
-}
-
-Part AVRDudeConfParser::GetPartBySignature(QString sig)
-{
-    QVector<Part> Parts=GetParts();
-    for(int i=0; i<Parts.size(); i++)
-    {
-        if(sig.compare(Parts[i].GetSignature(), Qt::CaseInsensitive)==0) return Parts[i];
-
-    }
-    return Part();  //Return empty Part object - given Desc has not been found
-}
-
 void AVRDudeConfParser::Parse(QFile *file)
 {
     QTextStream in(file);

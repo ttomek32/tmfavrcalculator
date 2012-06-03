@@ -16,7 +16,7 @@
 
 MainDialog::MainDialog(QWidget *parent) :
     QDialog(parent),
-    AVRDudeConf(NULL),
+    //AVRDudeConf(NULL),
     ui(new Ui::MainDialog)
 {
     QSettings appsettings;
@@ -73,32 +73,50 @@ MainDialog::MainDialog(QWidget *parent) :
      QList<QLineEdit*> tle = findChildren<QLineEdit*>(LastSelFuseByte);  //Zapisz oryginalnπ paletÍ aktywnego okna edycji fusebitÛw
      editpal=tle.at(0)->palette();
 
-    try
-    {
-        AVRDudeConf = new AVRDudeConfParser(ADpath+"/avrdude.conf");    //Parser pliku konfiguracyjnego AVRDude
+     QFileInfo fi(ADpath, "avrdude.conf");
+     if(fi.exists())
+     {
+         AVR= new AVRFactory(fi.filePath(), "");   //Tymczasowo
 
-        FillProgrammerCB();                           //Typy obs≈Çugiwanych programator√≥w
-        QString prg=appsettings.value("Programmer").toString();
-        ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
+         ui->ProgrammerCB->blockSignals(true);
+         FillProgrammerCB();                           //Typy obs≈Çugiwanych programator√≥w
+         ui->ProgrammerCB->blockSignals(false);
+         QString prg=appsettings.value("Programmer").toString();
+         ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
 
-        FillPortCB();    //Typy dostƒôpnych port√≥w
-        prg=appsettings.value("Port").toString();
-        ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
+         ui->PortCB->blockSignals(true);
+         FillPortCB();    //Typy dostÍpnych portÛw
+         ui->PortCB->blockSignals(false);
+         prg=appsettings.value("Port").toString();
+         ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
 
-        FillMCUType();  //Typy dostƒôpnych procesor√≥w
-        ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
-        prg=appsettings.value("MCU").toString();
-        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
-        MCUChanged(prg);  //Ustaw sygnaturƒô
-    }
-    catch (ConfigParseException &ex)
-    {
-         QMessageBox(QMessageBox::Critical, appsettings.value("windowTitle").toString(), QString("Something fucked up!\n\nCo siƒô sta≈Ço - niebawem.")).exec();
-    }
+         ui->AVRTypeCB->blockSignals(true);
+         FillMCUType();  //Typy dostÍpnych procesorÛw
+         ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
+         prg=appsettings.value("MCU").toString();
+         ui->AVRTypeCB->blockSignals(false);
+         ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
+         MCUChanged(prg);  //Ustaw sygnaturƒô
+
+     } else
+     {
+             AVR=NULL; //Problem
+             QMessageBox(QMessageBox::Critical, appsettings.value("windowTitle").toString(), QString("Nie da siÍ otworzyÊ pliku konfiguracyjnego AVRDude.conf.")).exec();
+     }
 
      appsettings.endGroup();
 
-     BitChBoxChg(1); //***Uaktualnienie checkboxÛw***
+     BitChBoxChg(1); // ***Uaktualnienie checkboxÛw***
+}
+
+void MainDialog::UpdateFuseBitsWidget()
+{
+
+}
+
+void MainDialog::UpdateLockBitsWidget()
+{
+
 }
 
 void MainDialog::ProgrammBtn()
@@ -172,7 +190,7 @@ void MainDialog::AVRDudeSetPath()
 
 void MainDialog::SavePathToAVRDude(QString path)
 {
-    QSettings appsettings;                               //Zapisz úcieøkÍ do binutils
+    QSettings appsettings;                               //Zapisz úcieøkÍ do AVRDude
      appsettings.beginGroup("MainWindow");
 
      appsettings.setValue("AVRDudePath", path);
@@ -275,9 +293,9 @@ void MainDialog::OpenEEPROMFileDlg()
 void MainDialog::FillProgrammerCB()
 {
     ui->ProgrammerCB->clear();   //Skasuj poprzednie pozycje
-    if(AVRDudeConf)
+    if(AVR)
     {
-        QVector<Programmer> pgm=AVRDudeConf->GetProgrammers();  //Lista programator√≥w obs≈Çugiwanych przez AVRDude
+        QVector<Programmer> pgm=AVR->GetProgrammers();  //Lista programator√≥w obs≈Çugiwanych przez AVRDude
 
         for (int i = 0; i < pgm.size(); ++i)
         {
@@ -301,14 +319,10 @@ void MainDialog::FillPortCB()
 void MainDialog::FillMCUType()
 {
     ui->AVRTypeCB->clear();   //Skasuj poprzednie pozycje
-    if(AVRDudeConf)
+    if(AVR)
     {
-        QVector<Part> pgm=AVRDudeConf->GetParts();  //Lista programator√≥w obs≈Çugiwanych przez AVRDude
-
-        for (int i = 0; i < pgm.size(); ++i)
-        {
-            ui->AVRTypeCB->addItem(pgm[i].GetDescription());         //Wype≈Çnij combo z tympami obs≈Çugiwanych procesor√≥w
-        }
+        QVector<Part> pgm=AVR->GetParts();  //Lista programator√≥w obs≈Çugiwanych przez AVRDude
+        for (int i = 0; i < pgm.size(); ++i) ui->AVRTypeCB->addItem(pgm[i].GetDescription());         //Wype≈Çnij combo z tympami obs≈Çugiwanych procesor√≥w
     }
 }
 
@@ -320,7 +334,7 @@ void MainDialog::TestConnection()
     if(err==AVRDudeExecutor::Err_Ok)
     {
         ui->AVRSignatureValueLBL->setText(MCUSig);   //Wy≈õwietl znalezionƒÖ sygnaturƒô
-        QString MCU=AVRDudeConf->GetPartBySignature(MCUSig).GetDescription();
+        QString MCU=AVR->GetPartBySignature(MCUSig).GetDescription();
         ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(MCU));  //Znajd≈∫ MCU na podstawie sygnatury
         MCUChanged(MCU);
         ui->ConnectionOk->setText(tr("Po≈ÇƒÖczenie ok"));
@@ -403,15 +417,18 @@ void MainDialog::PortChanged(QString text)
 
 void MainDialog::MCUChanged(QString text)
 {
-    QString sig=AVRDudeConf->GetPartByDescription(text).GetSignature();  //Znajd≈∫ opis wybranego MCU
+    QString sig=AVR->GetPartByDescription(text).GetSignature();  //Znajdü opis wybranego MCU
     ui->AVRSignatureValueLBL->setText(sig);
-    ui->StatusLBL->setText(tr("Procesor: ").append(text));   //Uaktualnij liniƒô stanu wskazujƒÖcƒÖ na typ procesora
+    ui->StatusLBL->setText(tr("Procesor: ").append(text));   //Uaktualnij liniÍ stanu wskazujπcπ na typ procesora
 
     QSettings appsettings;                               //Zapisz wybrany mikrokontroler
      appsettings.beginGroup("MainWindow");
 
      appsettings.setValue("MCU", text);
      appsettings.endGroup();  //Zapisz zmiany
+
+     UpdateFuseBitsWidget();     //Uaktualnij zak≥adkÍ fusebitÛw
+     UpdateLockBitsWidget();     //Uaktualnij zak≥adkÍ lockbitÛw
 }
 
 void MainDialog::EraseFLASHChBox(int state)
@@ -625,7 +642,7 @@ void MainDialog::VerifyFLASHChBox(int state)
 
 QString MainDialog::GetMCUAsAVRDudeParam()
 {
-    QString str=AVRDudeConf->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID();
+    QString str=AVR->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID();
     return str;
 }
 
@@ -704,5 +721,5 @@ MainDialog::~MainDialog()
      appsettings.endGroup();
 
     delete ui;
-    delete AVRDudeConf;        //Parser AVRDude ju≈º nam siƒô nie przyda :)
+    delete AVR;
 }

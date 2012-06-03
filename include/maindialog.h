@@ -3,7 +3,7 @@
 
 #include <QDialog>
 #include <QPalette>
-#include <AVRDudeConfParser.h>
+#include "AVRFactory.h"
 
 //Pliki s¹ zale¿ne czy kompilujemy w Windows czy Linux
 #ifdef Q_OS_UNIX
@@ -25,7 +25,7 @@ class MainDialog : public QDialog
     Q_OBJECT
 
 protected:
-    AVRDudeConfParser *AVRDudeConf;     //Parser pliku konfiguracyjnego AVRDude
+    AVRFactory *AVR;                    //Komplet informacji o programatorach i wspieranych mikrokontrolerach
     QString LastSelFuseByte;            //Nazwa ostatnio wybranego pola edycji fusebitów
     QPalette editpal;                   //Paleta kolorów okienek edycji fusebitów
     
@@ -39,6 +39,9 @@ protected:
     void FillProgrammerCB();          //Wype³nij listê dostêpnych programatorów
     void FillPortCB();                //Wype³nij listê portów
     void FillMCUType();               //Wype³nij listê mikrokontrolerów
+
+    void UpdateFuseBitsWidget();     //Uaktualnij zak³adkê fusebitów
+    void UpdateLockBitsWidget();     //Uaktualnij zak³adkê lockbitów
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude
