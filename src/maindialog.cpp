@@ -124,6 +124,7 @@ void MainDialog::UpdateFuseBitsWidget()
             QCheckBox *cb=new QCheckBox;
             cb->setText(fuses[i].m_Name);    //Nazwa skrócona fusebitu
             ui->FusebitTable->setCellWidget(i, 0, cb);
+            connect(cb, SIGNAL(clicked()), this, SLOT(FuseBitChangedByUser()));
 
         } else
         { //Pole wielokrotnego wyboru - comboboxy
@@ -133,6 +134,7 @@ void MainDialog::UpdateFuseBitsWidget()
             {
                 cb->addItem(fuses[i].m_Values[ind].m_Name);
             }
+            connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(FuseBitChangedByUser()));
         }
         QLabel *lab=new QLabel;
         lab->setText(fuses[i].m_Caption);           //Opis szczegó³owy fusebitu
@@ -153,6 +155,7 @@ void MainDialog::UpdateLockBitsWidget()
             QCheckBox *cb=new QCheckBox;
             cb->setText(locks[i].m_Name);    //Nazwa skrócona fusebitu
             ui->LockbitTable->setCellWidget(i, 0, cb);
+            connect(cb, SIGNAL(clicked()), this, SLOT(LockBitChangedByUser()));
 
         } else
         { //Pole wielokrotnego wyboru - comboboxy
@@ -162,11 +165,23 @@ void MainDialog::UpdateLockBitsWidget()
             {
                 cb->addItem(locks[i].m_Values[ind].m_Name);
             }
+            connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(LockBitChangedByUser()));
         }
         QLabel *lab=new QLabel;
         lab->setText(locks[i].m_Caption);           //Opis szczegó³owy fusebitu
         ui->LockbitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
     }
+}
+
+void MainDialog::FuseBitChangedByUser()
+{
+    //QMessageBox::information(this, tr("Plik"), tr("Fuse"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+}
+
+void MainDialog::LockBitChangedByUser()
+{
+    //QMessageBox::information(this, tr("Plik"), tr("Lock"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
 }
 
 void MainDialog::ProgrammBtn()
