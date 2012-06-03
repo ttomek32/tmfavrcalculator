@@ -119,10 +119,10 @@ void MainDialog::UpdateFuseBitsWidget()
     for(int i=0; i<fuses.size(); i++)
     {
         ui->FusebitTable->setRowCount(ui->FusebitTable->rowCount()+1);
-        if(fuses[i].m_Values.size()==0)
+        if(fuses[i].GetValues().size()==0)
         { //Wstawiamy checkboxy
             QCheckBox *cb=new QCheckBox;
-            cb->setText(fuses[i].m_Name);    //Nazwa skrócona fusebitu
+            cb->setText(fuses[i].GetName());    //Nazwa skrócona fusebitu
             ui->FusebitTable->setCellWidget(i, 0, cb);
             connect(cb, SIGNAL(clicked()), this, SLOT(FuseBitChangedByUser()));
 
@@ -130,14 +130,14 @@ void MainDialog::UpdateFuseBitsWidget()
         { //Pole wielokrotnego wyboru - comboboxy
             QComboBox *cb=new QComboBox;
             ui->FusebitTable->setCellWidget(i, 0, cb);
-            for(int ind=0; ind<fuses[i].m_Values.size(); ind++)
+            for(int ind=0; ind<fuses[i].GetValues().size(); ind++)
             {
-                cb->addItem(fuses[i].m_Values[ind].m_Name);
+                cb->addItem(fuses[i].GetValues()[ind].GetName());
             }
             connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(FuseBitChangedByUser()));
         }
         QLabel *lab=new QLabel;
-        lab->setText(fuses[i].m_Caption);           //Opis szczegó³owy fusebitu
+        lab->setText(fuses[i].GetCaption());           //Opis szczegó³owy fusebitu
         ui->FusebitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
     }
 }
@@ -150,10 +150,10 @@ void MainDialog::UpdateLockBitsWidget()
     for(int i=0; i<locks.size(); i++)
     {
         ui->LockbitTable->setRowCount(ui->LockbitTable->rowCount()+1);
-        if(locks[i].m_Values.size()==0)
+        if(locks[i].GetValues().size()==0)
         { //Wstawiamy checkboxy
             QCheckBox *cb=new QCheckBox;
-            cb->setText(locks[i].m_Name);    //Nazwa skrócona fusebitu
+            cb->setText(locks[i].GetName());    //Nazwa skrócona fusebitu
             ui->LockbitTable->setCellWidget(i, 0, cb);
             connect(cb, SIGNAL(clicked()), this, SLOT(LockBitChangedByUser()));
 
@@ -161,14 +161,14 @@ void MainDialog::UpdateLockBitsWidget()
         { //Pole wielokrotnego wyboru - comboboxy
             QComboBox *cb=new QComboBox;
             ui->LockbitTable->setCellWidget(i, 0, cb);
-            for(int ind=0; ind<locks[i].m_Values.size(); ind++)
+            for(int ind=0; ind<locks[i].GetValues().size(); ind++)
             {
-                cb->addItem(locks[i].m_Values[ind].m_Name);
+                cb->addItem(locks[i].GetValues()[ind].GetName());
             }
             connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(LockBitChangedByUser()));
         }
         QLabel *lab=new QLabel;
-        lab->setText(locks[i].m_Caption);           //Opis szczegó³owy fusebitu
+        lab->setText(locks[i].GetCaption());           //Opis szczegó³owy fusebitu
         ui->LockbitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
     }
 }

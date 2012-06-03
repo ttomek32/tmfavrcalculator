@@ -8,10 +8,12 @@
 
 class Value{
 public:
-    Value();
-
     QMap<QString, QString*> GetMappingMap();
-//private:
+
+    QString GetName();
+    QString GetCaption();
+    QString GetValue();
+private:
     QString m_Caption;
     QString m_Name;
     QString m_Value;

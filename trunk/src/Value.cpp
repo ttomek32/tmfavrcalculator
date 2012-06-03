@@ -1,10 +1,5 @@
 #include "Value.h"
 
-Value::Value()
-{
-
-}
-
 QMap<QString, QString*> Value::GetMappingMap()
 {
     QMap<QString, QString*> map;
@@ -14,4 +9,19 @@ QMap<QString, QString*> Value::GetMappingMap()
     map["value"] = &m_Value;
 
     return map;
+}
+
+QString Value::GetName()
+{
+    return m_Name;
+}
+
+QString Value::GetCaption()
+{
+    return m_Caption;
+}
+
+QString Value::GetValue()
+{
+    return m_Value;
 }

@@ -8,11 +8,16 @@
 class Bit
 {
 public:
-    virtual ~Bit() {}
+    QMap<QString, QString*> GetMappingMap();
 
-    virtual QMap<QString, QString*> GetMappingMap();
-    virtual void SetValues(QVector<Value> values);
-//private:
+    QString GetName();
+    QString GetCaption();
+    QString GetMask();
+    QString GetOffset();
+
+    QVector<Value> GetValues();
+    void SetValues(QVector<Value> values);
+private:
     QString m_Caption;
     QString m_Mask;
     QString m_Name;
