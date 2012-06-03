@@ -12,7 +12,7 @@ public:
 
     virtual QMap<QString, QString*> GetMappingMap();
     virtual void SetValues(QVector<Value> values);
-private:
+//private:
     QString m_Caption;
     QString m_Mask;
     QString m_Name;

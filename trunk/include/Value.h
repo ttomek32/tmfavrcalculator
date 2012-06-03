@@ -11,7 +11,7 @@ public:
     Value();
 
     QMap<QString, QString*> GetMappingMap();
-private:
+//private:
     QString m_Caption;
     QString m_Name;
     QString m_Value;
