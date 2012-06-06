@@ -659,6 +659,7 @@ void MainDialog::FuseByteChanged()
 
 void MainDialog::BitChBoxChg(int state)
 {
+    state = Tomek wywal tego warninga :)
     int byte=0;
     if(ui->Fuse_b0->checkState()==Qt::Checked) byte|=1;   //Konwersja postaci bitowej na dec
     if(ui->Fuse_b1->checkState()==Qt::Checked) byte|=2;
