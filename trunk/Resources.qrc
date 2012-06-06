@@ -4,5 +4,6 @@
         <file>resources/images/logo.png</file>
         <file>resources/xquery/AVRStudioFilter.xq</file>
         <file>TmfAvrCalculator_SP_05_anim.gif</file>
+        <file>jcmikr.jpg</file>
     </qresource>
 </RCC>
