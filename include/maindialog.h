@@ -90,6 +90,13 @@ private slots:
     void VerifyFuse();                     //Porównaj FLASH MCU z plikiem
     void DefaultFuse();                    //Ustaw domyœlne fusebity (bez programowania)
 
+    //Z okienka lockbity
+    void ReadLock();                       //Odczytaj pamiêæ Lock i zapisz do pliku
+    void WriteLock();                      //Zapisz pamiêæ Lock
+    void VerifyLock();                     //Porównaj Lock MCU z plikiem
+    void LockBitChBoxChg();                //U¿ytkownik zmieni³ stan checkboxów zwi¹zanych z lockbitami
+    void LockByteChanged();                //U¿ytkownik zmieni³ pole okreœlaj¹ce wartoœæ hex lickbitów
+
     //Inne
     void SavePathToFLASHFile(QString);     //Zapisz w rejestrze œcie¿kê do pliku FLASH
     void SavePathToEEPROMFile(QString);    //Zapisz w rejestrze œcie¿kê do pliku EEPROM

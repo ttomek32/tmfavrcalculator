@@ -184,6 +184,31 @@ void MainDialog::LockBitChangedByUser()
 
 }
 
+void MainDialog::ReadLock()
+{
+
+}
+
+void MainDialog::WriteLock()
+{
+
+}
+
+void MainDialog::VerifyLock()
+{
+
+}
+
+void MainDialog::LockBitChBoxChg()
+{
+
+}
+
+void MainDialog::LockByteChanged()
+{
+
+}
+
 void MainDialog::ProgrammBtn()
 {
     SimpPgmDialog dlg(this);
@@ -657,9 +682,8 @@ void MainDialog::FuseByteChanged()
     }
 }
 
-void MainDialog::BitChBoxChg(int state)
+void MainDialog::BitChBoxChg(int)
 {
-    state = Tomek wywal tego warninga :)
     int byte=0;
     if(ui->Fuse_b0->checkState()==Qt::Checked) byte|=1;   //Konwersja postaci bitowej na dec
     if(ui->Fuse_b1->checkState()==Qt::Checked) byte|=2;
