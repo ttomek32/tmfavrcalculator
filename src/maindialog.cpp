@@ -6,6 +6,8 @@
 #include <QProcess>
 #include <QCheckBox>
 #include <QComboBox>
+#include <QVariant>
+#include <QMap>
 
 #include "qextserialenumerator.h"   //Klasa obsÅ‚ugujÄ…ca porty szeregowe
 
@@ -180,8 +182,29 @@ void MainDialog::FuseBitChangedByUser()
 
 void MainDialog::LockBitChangedByUser()
 {
-    //QMessageBox::information(this, tr("Plik"), tr("Lock"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-
+    bool ok;
+    uint8_t lock=0;
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> locks=mcu.GetLockBits();
+    for(int i=0; i<ui->LockbitTable->rowCount(); i++)   //Scan all rows and set lockbits appropiately
+    {
+        QComboBox *tb=dynamic_cast<QComboBox*>(ui->LockbitTable->cellWidget(i, 0)); //Get combobox at indicated row
+        if(tb)  //Jeœli tb jest rzeczywiœcie potomkiem klasy QComboBox
+        {
+            QString str=tb->currentText();   //Pobierz wybrane ustwienie
+            uint8_t mask=locks[i].GetMask().toUInt(&ok, 0); //Get bitmask of subsequent fields
+            uint8_t offs=0;
+            while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
+            for(int ind=0; ind<locks[i].GetValues().size(); ind++)
+             {
+                if(locks[i].GetValues()[ind].GetName().compare(str)==0)
+                 {
+                     lock|=(locks[i].GetValues()[ind].GetValue().toUInt(&ok,0) << offs);
+                 }
+             }
+        }
+    }
+    ui->Lock_byte->setText(QString("%1h").arg(lock, 2, 16, QChar('0')));  //Ustaw nowe lockbity
 }
 
 void MainDialog::ReadLock()
@@ -201,7 +224,18 @@ void MainDialog::VerifyLock()
 
 void MainDialog::LockBitChBoxChg()
 {
+    int byte=0;
+    if(ui->lock_b0->checkState()==Qt::Checked) byte|=1;   //Konwersja postaci bitowej na dec
+    if(ui->lock_b1->checkState()==Qt::Checked) byte|=2;
+    if(ui->lock_b2->checkState()==Qt::Checked) byte|=4;
+    if(ui->lock_b3->checkState()==Qt::Checked) byte|=8;
+    if(ui->lock_b4->checkState()==Qt::Checked) byte|=16;
+    if(ui->lock_b5->checkState()==Qt::Checked) byte|=32;
+    if(ui->lock_b6->checkState()==Qt::Checked) byte|=64;
+    if(ui->lock_b7->checkState()==Qt::Checked) byte|=128;
 
+    QString txt=QString("%1h").arg(byte, 2, 16, QChar('0'));
+    ui->Lock_byte->setText(txt); //**** UWAGA!! Tekst musi byæ zgodny z formatem ustawionym w Designerze, inaczej nic nie zostanie wstawione ****
 }
 
 void MainDialog::LockByteChanged()
