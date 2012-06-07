@@ -205,6 +205,7 @@ void MainDialog::LockBitChangedByUser()
         }
     }
     ui->Lock_byte->setText(QString("%1h").arg(lock, 2, 16, QChar('0')));  //Ustaw nowe lockbity
+    LockByteChanged();  //Update checkboxes
 }
 
 void MainDialog::ReadLock()
@@ -240,7 +241,22 @@ void MainDialog::LockBitChBoxChg()
 
 void MainDialog::LockByteChanged()
 {
+    ui->lock_b0->blockSignals(true); ui->lock_b1->blockSignals(true); ui->lock_b2->blockSignals(true); ui->lock_b3->blockSignals(true);
+    ui->lock_b4->blockSignals(true); ui->lock_b5->blockSignals(true); ui->lock_b6->blockSignals(true); ui->lock_b7->blockSignals(true);
 
+    bool ok;
+    int val=ui->Lock_byte->text().left(2).toInt(&ok,16);
+    if(ok==false) val=0xff;
+    if(val & 1) ui->lock_b0->setChecked(Qt::Checked); else ui->Fuse_b0->setChecked(Qt::Unchecked);
+    if(val & 2) ui->lock_b1->setChecked(Qt::Checked); else ui->lock_b1->setChecked(Qt::Unchecked);
+    if(val & 4) ui->lock_b2->setChecked(Qt::Checked); else ui->lock_b2->setChecked(Qt::Unchecked);
+    if(val & 8) ui->lock_b3->setChecked(Qt::Checked); else ui->lock_b3->setChecked(Qt::Unchecked);
+    if(val & 16) ui->lock_b4->setChecked(Qt::Checked); else ui->lock_b4->setChecked(Qt::Unchecked);
+    if(val & 32) ui->lock_b5->setChecked(Qt::Checked); else ui->lock_b5->setChecked(Qt::Unchecked);
+    if(val & 64) ui->lock_b6->setChecked(Qt::Checked); else ui->lock_b6->setChecked(Qt::Unchecked);
+    if(val & 128) ui->lock_b7->setChecked(Qt::Checked); else ui->lock_b7->setChecked(Qt::Unchecked);
+    ui->lock_b0->blockSignals(false); ui->lock_b1->blockSignals(false); ui->lock_b2->blockSignals(false); ui->lock_b3->blockSignals(false);
+    ui->lock_b4->blockSignals(false); ui->lock_b5->blockSignals(false); ui->lock_b6->blockSignals(false); ui->lock_b7->blockSignals(false);
 }
 
 void MainDialog::ProgrammBtn()
