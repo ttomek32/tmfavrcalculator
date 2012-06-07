@@ -40,8 +40,10 @@ protected:
     void FillPortCB();                //Wype³nij listê portów
     void FillMCUType();               //Wype³nij listê mikrokontrolerów
 
-    void UpdateFuseBitsWidget();     //Uaktualnij zak³adkê fusebitów
-    void UpdateLockBitsWidget();     //Uaktualnij zak³adkê lockbitów
+    void UpdateFuseBitsWidget();      //Uaktualnij zak³adkê fusebitów po zmianie MCU
+    void UpdateLockBitsWidget();      //Uaktualnij zak³adkê lockbitów po zmianie MCU
+    void UpdateLockBitTable(uint8_t val); //Uaktualnij obiekt QTableWidget wyœwietlaj¹cy ustawienia lockbitów
+    void UpdateLockByteCheckboxes(uint8_t val); //Uaktualnij checkboxy lockbitów
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude

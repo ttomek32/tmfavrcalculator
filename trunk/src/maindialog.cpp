@@ -196,16 +196,12 @@ void MainDialog::LockBitChangedByUser()
             uint8_t offs=0;
             while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
             for(int ind=0; ind<locks[i].GetValues().size(); ind++)
-             {
                 if(locks[i].GetValues()[ind].GetName().compare(str)==0)
-                 {
-                     lock|=(locks[i].GetValues()[ind].GetValue().toUInt(&ok,0) << offs);
-                 }
-             }
+                       lock|=(locks[i].GetValues()[ind].GetValue().toUInt(&ok,0) << offs);
         }
     }
     ui->Lock_byte->setText(QString("%1h").arg(lock, 2, 16, QChar('0')));  //Ustaw nowe lockbity
-    LockByteChanged();  //Update checkboxes
+    UpdateLockByteCheckboxes(lock);  //Update lockbits checkboxes
 }
 
 void MainDialog::ReadLock()
@@ -225,7 +221,7 @@ void MainDialog::VerifyLock()
 
 void MainDialog::LockBitChBoxChg()
 {
-    int byte=0;
+    uint8_t byte=0;
     if(ui->lock_b0->checkState()==Qt::Checked) byte|=1;   //Konwersja postaci bitowej na dec
     if(ui->lock_b1->checkState()==Qt::Checked) byte|=2;
     if(ui->lock_b2->checkState()==Qt::Checked) byte|=4;
@@ -237,17 +233,24 @@ void MainDialog::LockBitChBoxChg()
 
     QString txt=QString("%1h").arg(byte, 2, 16, QChar('0'));
     ui->Lock_byte->setText(txt); //**** UWAGA!! Tekst musi byæ zgodny z formatem ustawionym w Designerze, inaczej nic nie zostanie wstawione ****
+    UpdateLockBitTable(byte);
 }
 
 void MainDialog::LockByteChanged()
 {
+    bool ok;
+    uint8_t val=ui->Lock_byte->text().left(2).toInt(&ok,16);
+    if(ok==false) val=0xff;
+    UpdateLockByteCheckboxes(val);
+    UpdateLockBitTable(val);
+}
+
+void MainDialog::UpdateLockByteCheckboxes(uint8_t val)
+{
     ui->lock_b0->blockSignals(true); ui->lock_b1->blockSignals(true); ui->lock_b2->blockSignals(true); ui->lock_b3->blockSignals(true);
     ui->lock_b4->blockSignals(true); ui->lock_b5->blockSignals(true); ui->lock_b6->blockSignals(true); ui->lock_b7->blockSignals(true);
 
-    bool ok;
-    int val=ui->Lock_byte->text().left(2).toInt(&ok,16);
-    if(ok==false) val=0xff;
-    if(val & 1) ui->lock_b0->setChecked(Qt::Checked); else ui->Fuse_b0->setChecked(Qt::Unchecked);
+    if(val & 1) ui->lock_b0->setChecked(Qt::Checked); else ui->lock_b0->setChecked(Qt::Unchecked);
     if(val & 2) ui->lock_b1->setChecked(Qt::Checked); else ui->lock_b1->setChecked(Qt::Unchecked);
     if(val & 4) ui->lock_b2->setChecked(Qt::Checked); else ui->lock_b2->setChecked(Qt::Unchecked);
     if(val & 8) ui->lock_b3->setChecked(Qt::Checked); else ui->lock_b3->setChecked(Qt::Unchecked);
@@ -257,6 +260,40 @@ void MainDialog::LockByteChanged()
     if(val & 128) ui->lock_b7->setChecked(Qt::Checked); else ui->lock_b7->setChecked(Qt::Unchecked);
     ui->lock_b0->blockSignals(false); ui->lock_b1->blockSignals(false); ui->lock_b2->blockSignals(false); ui->lock_b3->blockSignals(false);
     ui->lock_b4->blockSignals(false); ui->lock_b5->blockSignals(false); ui->lock_b6->blockSignals(false); ui->lock_b7->blockSignals(false);
+}
+
+void MainDialog::UpdateLockBitTable(uint8_t val)
+{
+    bool ok;
+    for (int i=ui->LockbitTable->rowCount()-1; i >= 0; --i) //Block all signals from table
+    {
+        QWidget *tb=dynamic_cast<QWidget*>(ui->LockbitTable->cellWidget(i, 0));
+        if(tb) tb->blockSignals(true);
+    }
+    //Here we can safe modify table widgets, without emitting unnecessary signals
+    uint8_t lock;
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> locks=mcu.GetLockBits();
+    for(int i=0; i<ui->LockbitTable->rowCount(); i++)   //Scan all rows and set lockbits appropiately
+    {
+        QComboBox *tb=dynamic_cast<QComboBox*>(ui->LockbitTable->cellWidget(i, 0)); //Get combobox at indicated row
+        if(tb)  //Jeœli tb jest rzeczywiœcie potomkiem klasy QComboBox
+        {
+            uint8_t mask=locks[i].GetMask().toUInt(&ok, 0); //Get bitmask of subsequent fields
+            uint8_t offs=0;
+            while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
+            lock=(val & mask) >> offs;
+            for(int ind=0; ind<locks[i].GetValues().size(); ind++)
+                if(locks[i].GetValues()[ind].GetValue().toUInt(&ok, 0)==lock)
+                    tb->setCurrentIndex(ind);  //Set combobox according to lockbit value
+        }
+    }
+
+    for (int i=ui->LockbitTable->rowCount()-1; i >= 0; --i) //Enable all signals from table widgets
+    {
+        QWidget *tb=dynamic_cast<QWidget*>(ui->LockbitTable->cellWidget(i, 0));
+        if(tb) tb->blockSignals(false);
+    }
 }
 
 void MainDialog::ProgrammBtn()
