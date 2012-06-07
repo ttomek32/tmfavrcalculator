@@ -51,7 +51,7 @@ signals:
  void SetFLASHFile(QString);          //Ustaw œcie¿kê do pliku FLASH we zak³adkach
  void SetEEPROMFile(QString);         //Ustaw œcie¿kê do pliku EEPROM we wszystkich zak³adkach
  void SetSimplifierViewChBox(bool);   //Ustaw checkbox widoku uproszczonego w zak³adce Setup
- void SetAVRDudeWindowOnError(bool);  //Ustaw checkbox wyœwietlania okna AVRD Dude w przypadku b³êdu
+ void SetAVRDudeWindowOnError(bool);  //Ustaw checkbox wyœwietlania okna AVRDude w przypadku b³êdu
  void SetAVRDudeCMDLine(bool);        //Ustaw checkbox wyœwietlania linii polecenia AVR Dude
 
 private slots:
@@ -122,6 +122,8 @@ private:
     QString GetEEPROMFilePath();            //Zwróæ œcie¿kê + nazwê pliku z zawartoœci¹ EEPROM
     QString GetBinutilsPath();              //Zwróæ œcie¿kê do binutils lub pusty ³añcuch jeœli jej nie ma lub nie ma plików avr-objcopy i avr-objdump
     void AVRDudeCmdLineParams();            //Wyœwietla na dole w okienku liniê parametrów AVRDude
+    void GetLockBitsAVRDudeCmdParams(QStringList *); //Zwróæ listê parametrów AVRDude dla odczytu bie¿¹cej konfiguracji lockbitów
+    void SetLockBitsAVRDudeCmdParams(QStringList *); //Zwróæ listê parametrów AVRDude dla zapisu bie¿¹cej konfiguracji lockbitów
 
     QString GetSupportedFileExtensions();   //Zwraca listê wspieranych rozszerzeñ plików do dialogów open file
 };

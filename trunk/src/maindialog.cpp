@@ -202,6 +202,7 @@ void MainDialog::LockBitChangedByUser()
     }
     ui->Lock_byte->setText(QString("%1h").arg(lock, 2, 16, QChar('0')));  //Ustaw nowe lockbity
     UpdateLockByteCheckboxes(lock);  //Update lockbits checkboxes
+    ShowAVRDudeCmdLineParams();
 }
 
 void MainDialog::ReadLock()
@@ -234,6 +235,7 @@ void MainDialog::LockBitChBoxChg()
     QString txt=QString("%1h").arg(byte, 2, 16, QChar('0'));
     ui->Lock_byte->setText(txt); //**** UWAGA!! Tekst musi byæ zgodny z formatem ustawionym w Designerze, inaczej nic nie zostanie wstawione ****
     UpdateLockBitTable(byte);
+    ShowAVRDudeCmdLineParams();
 }
 
 void MainDialog::LockByteChanged()
@@ -243,6 +245,7 @@ void MainDialog::LockByteChanged()
     if(ok==false) val=0xff;
     UpdateLockByteCheckboxes(val);
     UpdateLockBitTable(val);
+    ShowAVRDudeCmdLineParams();
 }
 
 void MainDialog::UpdateLockByteCheckboxes(uint8_t val)
@@ -294,6 +297,19 @@ void MainDialog::UpdateLockBitTable(uint8_t val)
         QWidget *tb=dynamic_cast<QWidget*>(ui->LockbitTable->cellWidget(i, 0));
         if(tb) tb->blockSignals(false);
     }
+}
+
+void MainDialog::GetLockBitsAVRDudeCmdParams(QStringList *params)
+{
+    *params << "-Ulock:r:-:h"; //Odczytaj lockbity, wyœwielt wartoœæ na ekranie w postaci hex
+}
+
+void MainDialog::SetLockBitsAVRDudeCmdParams(QStringList *params)
+{
+    bool ok;
+    uint8_t lock=ui->Lock_byte->text().left(2).toInt(&ok,16);  //Read lockbits value
+    if(ok==false) lock=0xff;
+    *params << QString("-Ulock:w:0x%1:m").arg(lock, 2, 16, QChar('0'));  //Generate aVRDude command
 }
 
 void MainDialog::ProgrammBtn()
@@ -855,6 +871,9 @@ void MainDialog::AVRDudeCmdLineParams()
     str.append(" -P ").append(GetPortAsAVRDudeParam());
     str.append(GetPerformEraseChipAsAVRDudeParam());
     QStringList *sl=AVRDudeExecutor::GetAVRDudeCmdMemProgramm(GetFLASHFilePath(), GetEEPROMFilePath(), ui->VerifyBox->checkState());
+
+    SetLockBitsAVRDudeCmdParams(sl);  //Add lockbits command
+
     for(int index=0; index<sl->size(); index++) str.append(" ").append(sl->at(index));
     delete sl;
     ui->AVRDudeCMDLine->setText(str);
