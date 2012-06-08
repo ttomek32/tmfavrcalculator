@@ -207,7 +207,20 @@ void MainDialog::LockBitChangedByUser()
 
 void MainDialog::ReadLock()
 {
+    uint8_t lock;
+    QStringList sl;
+    sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+    sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+    sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+    GetLockBitsAVRDudeCmdParams(&sl);
 
+    AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), QString(""), QString(""), this);
+    if(AVRDude.ReadByte(&sl, lock))
+    {
+        //Uaktualnij lockbity
+        ui->Lock_byte->setText(QString("%1h").arg(lock, 2, 16, QChar('0')));
+        LockByteChanged();
+    }
 }
 
 void MainDialog::WriteLock()
@@ -874,7 +887,8 @@ void MainDialog::AVRDudeCmdLineParams()
 
     SetLockBitsAVRDudeCmdParams(sl);  //Add lockbits command
 
-    for(int index=0; index<sl->size(); index++) str.append(" ").append(sl->at(index));
+    //for(int index=0; index<sl->size(); index++) str.append(" ").append(sl->at(index));
+    str.append(sl->join(QString(" ")));
     delete sl;
     ui->AVRDudeCMDLine->setText(str);
 }
