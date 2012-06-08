@@ -21,7 +21,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="Tabs">
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="SimplifiedProgrammingTab">
       <attribute name="title">
@@ -2784,6 +2784,22 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>AVRTypeCB</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainDialog</receiver>
+   <slot>EnableFuseBytes()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>434</x>
+     <y>145</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>300</x>
+     <y>314</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>SetAVRDudePath(QString)</signal>
@@ -2831,5 +2847,6 @@ p, li { white-space: pre-wrap; }
   <slot>VerifyLock()</slot>
   <slot>LockBitChBoxChg()</slot>
   <slot>LockByteChanged()</slot>
+  <slot>EnableFuseBytes()</slot>
  </slots>
 </ui>

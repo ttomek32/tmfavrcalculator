@@ -91,6 +91,7 @@ private slots:
     void WriteFuse();                      //Zapisz pamiêæ FLASH
     void VerifyFuse();                     //Porównaj FLASH MCU z plikiem
     void DefaultFuse();                    //Ustaw domyœlne fusebity (bez programowania)
+    void EnableFuseBytes();                //Sprawdza które fusebajty s¹ dostêpne i blokuje niedostêpne
 
     //Z okienka lockbity
     void ReadLock();                       //Odczytaj pamiêæ Lock i zapisz do pliku
@@ -124,7 +125,8 @@ private:
     void AVRDudeCmdLineParams();            //Wyœwietla na dole w okienku liniê parametrów AVRDude
     void GetLockBitsAVRDudeCmdParams(QStringList *); //Zwróæ listê parametrów AVRDude dla odczytu bie¿¹cej konfiguracji lockbitów
     void SetLockBitsAVRDudeCmdParams(QStringList *); //Zwróæ listê parametrów AVRDude dla zapisu bie¿¹cej konfiguracji lockbitów
-
+    void GetFuseBitsAVRDudeCmdParams(QStringList *); //Zwróæ listê parametrów AVRDude dla odczytu bie¿¹cej konfiguracji fusebitów
+    void SetFuseBitsAVRDudeCmdParams(QStringList *); //Zwróæ listê parametrów AVRDude dla zapisu bie¿¹cej konfiguracji fusebitów
     QString GetSupportedFileExtensions();   //Zwraca listê wspieranych rozszerzeñ plików do dialogów open file
 };
 
