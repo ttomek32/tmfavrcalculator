@@ -353,6 +353,38 @@ void MainDialog::SetLockBitsAVRDudeCmdParams(QStringList *params)
     *params << QString("-Ulock:w:0x%1:m").arg(lock, 2, 16, QChar('0'));  //Generate aVRDude command
 }
 
+void MainDialog::GetFuseBitsAVRDudeCmdParams(QStringList *params)
+{
+
+}
+
+void MainDialog::SetFuseBitsAVRDudeCmdParams(QStringList *params)
+{
+
+}
+
+void MainDialog::EnableFuseBytes()
+{
+    uint8_t fuseoffset=0;
+
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> fuses=mcu.GetFuseBits();
+    for(int i=0; i<fuses.size(); i++)   //Scan all fusebytes
+    {
+        uint8_t offs=fuses[i].GetOffset().mid(2,2).toUInt(); //Convert offset from string to uint
+        if(offs>fuseoffset) fuseoffset=offs;  //Check how many fusebytes we have
+    }
+
+    switch(fuseoffset)
+    {
+    case 0:     ui->Fuse0->setEnabled(true); ui->Fuse1->setEnabled(false); ui->Fuse2->setEnabled(false); ui->Fuse4->setEnabled(false); ui->Fuse5->setEnabled(false); break;
+    case 1:     ui->Fuse0->setEnabled(true); ui->Fuse1->setEnabled(true); ui->Fuse2->setEnabled(false); ui->Fuse4->setEnabled(false); ui->Fuse5->setEnabled(false); break;
+    case 2:     ui->Fuse0->setEnabled(true); ui->Fuse1->setEnabled(true); ui->Fuse2->setEnabled(true); ui->Fuse4->setEnabled(false); ui->Fuse5->setEnabled(false); break;
+    case 3:     ui->Fuse0->setEnabled(true); ui->Fuse1->setEnabled(true); ui->Fuse2->setEnabled(true); ui->Fuse4->setEnabled(true); ui->Fuse5->setEnabled(false); break;
+    case 4:     ui->Fuse0->setEnabled(true); ui->Fuse1->setEnabled(true); ui->Fuse2->setEnabled(true); ui->Fuse4->setEnabled(true); ui->Fuse5->setEnabled(true); break;
+    };
+}
+
 void MainDialog::ProgrammBtn()
 {
     SimpPgmDialog dlg(this);
