@@ -183,7 +183,7 @@ void MainDialog::FuseBitChangedByUser()
 void MainDialog::LockBitChangedByUser()
 {
     bool ok;
-    uint8_t lock=0;
+    uint8_t lock=0xff;//0;   //Unused lockbits are always unprogrammed
     Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
     QVector<Bit> locks=mcu.GetLockBits();
     for(int i=0; i<ui->LockbitTable->rowCount(); i++)   //Scan all rows and set lockbits appropiately
@@ -193,6 +193,7 @@ void MainDialog::LockBitChangedByUser()
         {
             QString str=tb->currentText();   //Pobierz wybrane ustwienie
             uint8_t mask=locks[i].GetMask().toUInt(&ok, 0); //Get bitmask of subsequent fields
+            lock&=~mask; //Erase masked bits
             uint8_t offs=0;
             while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
             for(int ind=0; ind<locks[i].GetValues().size(); ind++)
@@ -225,7 +226,20 @@ void MainDialog::ReadLock()
 
 void MainDialog::WriteLock()
 {
-
+    uint8_t lock;
+    QStringList sl;
+    sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+    sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+    sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+    SetLockBitsAVRDudeCmdParams(&sl);
+    //Przed ustawieniem nowych lockbitów powinno siê odczytaæ state i sprawdziæ czy nowe nie s¹ mniej restrykcyjne
+    //Jeœli s¹ mniej restrykcyjne to trzeba naj[ierw skasowaæ chip (opcja AVRDude -e.
+    //Kiedyœ siê to dorobi :)
+    AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), QString(""), QString(""), this);
+    if(AVRDude.ReadByte(&sl, lock)==false)
+    {
+        QMessageBox::critical(this, tr("Lockbity"), tr("Nie uda³o siê zapisaæ nowych wartoœci lockbitów.\n Najczêstsz¹ przyczyn¹ jest ustawienie mniej restrykcyjnego poziomu dostêpu do pamiêci. Wymaga to wczeœniejszego skasowania chipu."), QMessageBox::Ok, QMessageBox::Ok);
+    } else QMessageBox::information(this, tr("Lockbity"), tr("Wartoœci lockbitów zosta³y zapisane poprawnie."), QMessageBox::Ok, QMessageBox::Ok);
 }
 
 void MainDialog::VerifyLock()
@@ -244,7 +258,6 @@ void MainDialog::VerifyLock()
         QString str=ui->Lock_byte->text().left(2);
         if(str.toUInt(&ok, 16)==lock) QMessageBox::information(this, tr("Weryfikacja lockbitów"), tr("Ok. Zaprogramowane lockbity odpowiadaj¹ ustawionym."), QMessageBox::Ok, QMessageBox::Ok);
         else QMessageBox::critical(this, tr("Weryfikacja lockbitów"), tr("Weryfikacja lockbitów przebieg³a niepomyœlnie!\n ¯¹dane lockbity to:%1h, a odczytane: %2h.").arg(str).arg(lock, 2, 16, QChar(' ')), QMessageBox::Ok, QMessageBox::Ok);
-
     }
 }
 
