@@ -230,7 +230,22 @@ void MainDialog::WriteLock()
 
 void MainDialog::VerifyLock()
 {
+    uint8_t lock;
+    QStringList sl;
+    sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
+    sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
+    sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+    GetLockBitsAVRDudeCmdParams(&sl);
 
+    AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), QString(""), QString(""), this);
+    if(AVRDude.ReadByte(&sl, lock))
+    {
+        bool ok;
+        QString str=ui->Lock_byte->text().left(2);
+        if(str.toUInt(&ok, 16)==lock) QMessageBox::information(this, tr("Weryfikacja lockbitów"), tr("Ok. Zaprogramowane lockbity odpowiadaj¹ ustawionym."), QMessageBox::Ok, QMessageBox::Ok);
+        else QMessageBox::critical(this, tr("Weryfikacja lockbitów"), tr("Weryfikacja lockbitów przebieg³a niepomyœlnie!\n ¯¹dane lockbity to:%1h, a odczytane: %2h.").arg(str).arg(lock, 2, 16, QChar(' ')), QMessageBox::Ok, QMessageBox::Ok);
+
+    }
 }
 
 void MainDialog::LockBitChBoxChg()
@@ -887,7 +902,6 @@ void MainDialog::AVRDudeCmdLineParams()
 
     SetLockBitsAVRDudeCmdParams(sl);  //Add lockbits command
 
-    //for(int index=0; index<sl->size(); index++) str.append(" ").append(sl->at(index));
     str.append(sl->join(QString(" ")));
     delete sl;
     ui->AVRDudeCMDLine->setText(str);
