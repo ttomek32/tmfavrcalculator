@@ -36,6 +36,7 @@ public:
 
     bool MemoryOp(QStringList type, QString desc); //Odczytaj pamiêæ o typie okreœlonym przez type (parametr wywo³ania odczytu pamiêci i zapisz wynik do podanego w parametrach pliku
                                                //type musi zawieraæ kompletn¹ liniê wywo³ania AVRDude, desc - opis wyœwietlany na progresie
+    bool ReadByte(QStringList *cmd, uint8_t &byte); //Odczytaj jeden bajt lockbitów/sygnatury. Zwraca false w przypadku b³êdów. cmd zawiera realizowane polecenia w postaci komend AVRDude
 
     void SetMCUType(QString aMCUType);         //Zmieñ typ MCU
     void SetExecErr(Errors err) {LastError=err;};    //Typ ostatniego b³êdu
