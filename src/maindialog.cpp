@@ -177,7 +177,28 @@ void MainDialog::UpdateLockBitsWidget()
 
 void MainDialog::FuseBitChangedByUser()
 {
-    //QMessageBox::information(this, tr("Plik"), tr("Fuse"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+ /*   bool ok;
+    uint8_t lock=0xff;//0;   //Unused lockbits are always unprogrammed
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> locks=mcu.GetLockBits();
+    for(int i=0; i<ui->LockbitTable->rowCount(); i++)   //Scan all rows and set lockbits appropiately
+    {
+        QComboBox *tb=dynamic_cast<QComboBox*>(ui->LockbitTable->cellWidget(i, 0)); //Get combobox at indicated row
+        if(tb)  //Jeœli tb jest rzeczywiœcie potomkiem klasy QComboBox
+        {
+            QString str=tb->currentText();   //Pobierz wybrane ustwienie
+            uint8_t mask=locks[i].GetMask().toUInt(&ok, 0); //Get bitmask of subsequent fields
+            lock&=~mask; //Erase masked bits
+            uint8_t offs=0;
+            while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
+            for(int ind=0; ind<locks[i].GetValues().size(); ind++)
+                if(locks[i].GetValues()[ind].GetName().compare(str)==0)
+                       lock|=(locks[i].GetValues()[ind].GetValue().toUInt(&ok,0) << offs);
+        }
+    }
+    ui->Lock_byte->setText(QString("%1h").arg(lock, 2, 16, QChar('0')));  //Ustaw nowe lockbity
+    UpdateLockByteCheckboxes(lock);  //Update lockbits checkboxes
+    ShowAVRDudeCmdLineParams();*/
 }
 
 void MainDialog::LockBitChangedByUser()
@@ -363,10 +384,9 @@ void MainDialog::SetFuseBitsAVRDudeCmdParams(QStringList *params)
 
 }
 
-void MainDialog::EnableFuseBytes()
+uint8_t MainDialog::HowManyFuseBytes()
 {
     uint8_t fuseoffset=0;
-
     Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
     QVector<Bit> fuses=mcu.GetFuseBits();
     for(int i=0; i<fuses.size(); i++)   //Scan all fusebytes
@@ -374,7 +394,12 @@ void MainDialog::EnableFuseBytes()
         uint8_t offs=fuses[i].GetOffset().mid(2,2).toUInt(); //Convert offset from string to uint
         if(offs>fuseoffset) fuseoffset=offs;  //Check how many fusebytes we have
     }
+    return fuseoffset;
+}
 
+void MainDialog::EnableFuseBytes()
+{
+    uint8_t fuseoffset=HowManyFuseBytes();
     switch(fuseoffset)
     {
     case 0:     ui->Fuse0->setEnabled(true); ui->Fuse1->setEnabled(false); ui->Fuse2->setEnabled(false); ui->Fuse4->setEnabled(false); ui->Fuse5->setEnabled(false); break;
@@ -945,6 +970,7 @@ void MainDialog::AVRDudeCmdLineParams()
     str.append(GetPerformEraseChipAsAVRDudeParam());
     QStringList *sl=AVRDudeExecutor::GetAVRDudeCmdMemProgramm(GetFLASHFilePath(), GetEEPROMFilePath(), ui->VerifyBox->checkState());
 
+    SetFuseBitsAVRDudeCmdParams(sl);  //Add fusebits command
     SetLockBitsAVRDudeCmdParams(sl);  //Add lockbits command
 
     str.append(sl->join(QString(" ")));
