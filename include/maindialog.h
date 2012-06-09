@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QPalette>
+#include <QTableWidget>
 #include "AVRFactory.h"
 
 //Pliki s¹ zale¿ne czy kompilujemy w Windows czy Linux
@@ -41,10 +42,13 @@ protected:
     void FillMCUType();               //Wype³nij listê mikrokontrolerów
 
     uint8_t HowManyFuseBytes();       //Zwraca liczbê fusebajtów w wybranym mikrokontrolerze
+    void GetFuseBytesFromEditLines(uint8_t fuses[5]);  //Pobiera wartoœæ fusebajtów z pól QLineEdit i umieszcza je w 5-elementowej tablicy
     void UpdateFuseBitsWidget();      //Uaktualnij zak³adkê fusebitów po zmianie MCU
+    void UpdateFusekBitTable();       //Uaktualnij obiekt QTableWidget zawartoœci¹ fusebitów pobran¹ z ich QLineEdit
     void UpdateLockBitsWidget();      //Uaktualnij zak³adkê lockbitów po zmianie MCU
     void UpdateLockBitTable(uint8_t val); //Uaktualnij obiekt QTableWidget wyœwietlaj¹cy ustawienia lockbitów
     void UpdateLockByteCheckboxes(uint8_t val); //Uaktualnij checkboxy lockbitów
+    void BlockSignalsFromTable(QTableWidget*, bool);  //Blokuje lub odblokowuje sygna³y z widgetów z tabeli fuse lub lockbitów
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude
