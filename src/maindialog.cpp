@@ -19,9 +19,7 @@
 #include "ConfigParseException.h"
 
 MainDialog::MainDialog(QWidget *parent) :
-    QDialog(parent),
-    //AVRDudeConf(NULL),
-    ui(new Ui::MainDialog)
+    QDialog(parent), ui(new Ui::MainDialog)
 {
     QSettings appsettings;
      appsettings.beginGroup("MainWindow");
@@ -29,7 +27,7 @@ MainDialog::MainDialog(QWidget *parent) :
      move(appsettings.value("pos", QPoint(0, 0)).toPoint());
      appsettings.endGroup();
 
-     LastSelFuseByte=QString("Fuse0");   //Nazwa domyœlnie wybranego fusebajtu
+    LastSelFuseByte=QString("Fuse0");   //Nazwa domyœlnie wybranego fusebajtu
 
     ui->setupUi(this);
 
@@ -173,6 +171,7 @@ void MainDialog::UpdateLockBitsWidget()
         lab->setText(locks[i].GetCaption());           //Opis szczegó³owy fusebitu
         ui->LockbitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
     }
+    LockByteChanged();
 }
 
 void MainDialog::FuseBitChangedByUser()
