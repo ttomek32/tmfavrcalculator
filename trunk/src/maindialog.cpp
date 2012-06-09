@@ -108,7 +108,7 @@ MainDialog::MainDialog(QWidget *parent) :
 
      appsettings.endGroup();
 
-     BitChBoxChg(1); // ***Uaktualnienie checkboxÛw***
+     //BitChBoxChg(1); // ***Uaktualnienie checkboxÛw***
 }
 
 void MainDialog::UpdateFuseBitsWidget()
@@ -137,9 +137,10 @@ void MainDialog::UpdateFuseBitsWidget()
             connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(FuseBitChangedByUser()));
         }
         QLabel *lab=new QLabel;
-        lab->setText(fuses[i].GetCaption());           //Opis szczegÛ≥owy fusebitu
+        lab->setText(fuses[i].GetCaption());        //Opis szczegÛ≥owy fusebitu
         ui->FusebitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegÛ≥owy fusebitu
     }
+    FuseByteChanged();   //Uaktualnij stan tabeli na podstawie bajtowej wartoúci fusebitÛw
 }
 
 void MainDialog::UpdateLockBitsWidget()
@@ -168,10 +169,10 @@ void MainDialog::UpdateLockBitsWidget()
             connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(LockBitChangedByUser()));
         }
         QLabel *lab=new QLabel;
-        lab->setText(locks[i].GetCaption());           //Opis szczegÛ≥owy fusebitu
+        lab->setText(locks[i].GetCaption());        //Opis szczegÛ≥owy fusebitu
         ui->LockbitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegÛ≥owy fusebitu
     }
-    LockByteChanged();
+    LockByteChanged();   //Uaktualnij stan tabeli na podstawie bajtowej wartoúci lockbitÛw
 }
 
 void MainDialog::FuseBitChangedByUser()
@@ -326,14 +327,19 @@ void MainDialog::UpdateLockByteCheckboxes(uint8_t val)
     ui->lock_b4->blockSignals(false); ui->lock_b5->blockSignals(false); ui->lock_b6->blockSignals(false); ui->lock_b7->blockSignals(false);
 }
 
+void MainDialog::BlockSignalsFromTable(QTableWidget *tbl, bool en)
+{
+    for (int i=tbl->rowCount()-1; i >= 0; --i) //Block all signals from table
+    {
+        QWidget *tb=dynamic_cast<QWidget*>(tbl->cellWidget(i, 0));
+        if(tb) tb->blockSignals(en);
+    }
+}
+
 void MainDialog::UpdateLockBitTable(uint8_t val)
 {
     bool ok;
-    for (int i=ui->LockbitTable->rowCount()-1; i >= 0; --i) //Block all signals from table
-    {
-        QWidget *tb=dynamic_cast<QWidget*>(ui->LockbitTable->cellWidget(i, 0));
-        if(tb) tb->blockSignals(true);
-    }
+    BlockSignalsFromTable(ui->LockbitTable, true);
     //Here we can safe modify table widgets, without emitting unnecessary signals
     uint8_t lock;
     Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
@@ -353,11 +359,46 @@ void MainDialog::UpdateLockBitTable(uint8_t val)
         }
     }
 
-    for (int i=ui->LockbitTable->rowCount()-1; i >= 0; --i) //Enable all signals from table widgets
+    BlockSignalsFromTable(ui->LockbitTable, false);
+}
+
+void MainDialog::GetFuseBytesFromEditLines(uint8_t fuses[5])
+{
+    bool ok;
+    fuses[0]=ui->Fuse0->text().left(2).toInt(&ok,16);
+    fuses[1]=ui->Fuse1->text().left(2).toInt(&ok,16);
+    fuses[2]=ui->Fuse2->text().left(2).toInt(&ok,16);
+    fuses[3]=ui->Fuse4->text().left(2).toInt(&ok,16);
+    fuses[4]=ui->Fuse5->text().left(2).toInt(&ok,16);
+}
+
+void MainDialog::UpdateFusekBitTable()
+{
+    bool ok;
+    BlockSignalsFromTable(ui->FusebitTable, true);
+    //Here we can safe modify table widgets, without emitting unnecessary signals
+    uint8_t fuse[5];
+    GetFuseBytesFromEditLines(fuse);   //Pobierz fusebajty z linii edycji
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> fuses=mcu.GetFuseBits();
+    for(int i=0; i<ui->FusebitTable->rowCount(); i++)   //Scan all rows and set lockbits appropiately
     {
-        QWidget *tb=dynamic_cast<QWidget*>(ui->LockbitTable->cellWidget(i, 0));
-        if(tb) tb->blockSignals(false);
+        uint8_t mask=fuses[i].GetMask().toUInt(&ok, 0);      //Get bitmask of subsequent fields
+        uint8_t foffset=fuses[i].GetOffset().toUInt(&ok, 0); //Get fusebyte offset
+        QWidget *tb=ui->FusebitTable->cellWidget(i, 0);      //Get wiget at indicated row
+        if(dynamic_cast<QComboBox*>(tb))  //Uzupe≥nij comboboxy
+        {
+            uint8_t offs=0;
+            while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
+            uint8_t ff=(fuse[foffset] & mask) >> offs;
+            for(int ind=0; ind<fuses[i].GetValues().size(); ind++)
+                if(fuses[i].GetValues()[ind].GetValue().toUInt(&ok, 0)==ff)
+                      ((QComboBox*)tb)->setCurrentIndex(ind);  //Set combobox according to lockbit value
+        } else
+            if(dynamic_cast<QCheckBox*>(tb))   //Uzupe≥nij checkboxy
+            { if(fuse[foffset] & mask) ((QCheckBox*)tb)->setChecked(Qt::Unchecked); else ((QCheckBox*)tb)->setChecked(Qt::Checked); };
     }
+    BlockSignalsFromTable(ui->FusebitTable, false);
 }
 
 void MainDialog::GetLockBitsAVRDudeCmdParams(QStringList *params)
@@ -394,6 +435,83 @@ uint8_t MainDialog::HowManyFuseBytes()
         if(offs>fuseoffset) fuseoffset=offs;  //Check how many fusebytes we have
     }
     return fuseoffset;
+}
+
+void MainDialog::FuseByteChanged()
+{
+    int FuseIndex=0;
+    QList<QLineEdit*> le = findChildren<QLineEdit*>(QRegExp("Fuse*"));  //Znajdü wszystkie obiekty QLineEdit zawierajπce fusebajty
+    while((FuseIndex<le.size()) && (le.at(FuseIndex)->hasFocus()==false)) FuseIndex++;
+    if(FuseIndex<le.size())
+    {
+        ui->Fuse_b0->blockSignals(true); ui->Fuse_b1->blockSignals(true); ui->Fuse_b2->blockSignals(true); ui->Fuse_b3->blockSignals(true);
+        ui->Fuse_b4->blockSignals(true); ui->Fuse_b5->blockSignals(true); ui->Fuse_b6->blockSignals(true); ui->Fuse_b7->blockSignals(true);
+
+        QList<QLineEdit*> tle = findChildren<QLineEdit*>(LastSelFuseByte);
+        tle.at(0)->setPalette(editpal);              //OdtwÛrz zapisany kolor dla deaktywowanego okienka
+
+        QPalette pal=le.at(FuseIndex)->palette();    //Pobierz kolor widgetu
+        editpal=pal;                                 //Zapisz oryginalny kolor
+        pal.setColor(QPalette::Text, pal.color(QPalette::Highlight));
+        le.at(FuseIndex)->setPalette(pal);
+
+        bool ok;
+        int val=le.at(FuseIndex)->text().left(2).toInt(&ok,16);
+        if(ok==false) val=0xff;
+        if(val & 1) ui->Fuse_b0->setChecked(Qt::Checked); else ui->Fuse_b0->setChecked(Qt::Unchecked);
+        if(val & 2) ui->Fuse_b1->setChecked(Qt::Checked); else ui->Fuse_b1->setChecked(Qt::Unchecked);
+        if(val & 4) ui->Fuse_b2->setChecked(Qt::Checked); else ui->Fuse_b2->setChecked(Qt::Unchecked);
+        if(val & 8) ui->Fuse_b3->setChecked(Qt::Checked); else ui->Fuse_b3->setChecked(Qt::Unchecked);
+        if(val & 16) ui->Fuse_b4->setChecked(Qt::Checked); else ui->Fuse_b4->setChecked(Qt::Unchecked);
+        if(val & 32) ui->Fuse_b5->setChecked(Qt::Checked); else ui->Fuse_b5->setChecked(Qt::Unchecked);
+        if(val & 64) ui->Fuse_b6->setChecked(Qt::Checked); else ui->Fuse_b6->setChecked(Qt::Unchecked);
+        if(val & 128) ui->Fuse_b7->setChecked(Qt::Checked); else ui->Fuse_b7->setChecked(Qt::Unchecked);
+        LastSelFuseByte=le.at(FuseIndex)->objectName();  //Nazwa obiektu
+        ui->Fuse_b0->blockSignals(false); ui->Fuse_b1->blockSignals(false); ui->Fuse_b2->blockSignals(false); ui->Fuse_b3->blockSignals(false);
+        ui->Fuse_b4->blockSignals(false); ui->Fuse_b5->blockSignals(false); ui->Fuse_b6->blockSignals(false); ui->Fuse_b7->blockSignals(false);
+    }
+    //UpdateLockByteCheckboxes(val);
+    UpdateFusekBitTable();
+    ShowAVRDudeCmdLineParams();
+}
+
+void MainDialog::BitChBoxChg(int)
+{
+    int byte=0;
+    if(ui->Fuse_b0->checkState()==Qt::Checked) byte|=1;   //Konwersja postaci bitowej na dec
+    if(ui->Fuse_b1->checkState()==Qt::Checked) byte|=2;
+    if(ui->Fuse_b2->checkState()==Qt::Checked) byte|=4;
+    if(ui->Fuse_b3->checkState()==Qt::Checked) byte|=8;
+    if(ui->Fuse_b4->checkState()==Qt::Checked) byte|=16;
+    if(ui->Fuse_b5->checkState()==Qt::Checked) byte|=32;
+    if(ui->Fuse_b6->checkState()==Qt::Checked) byte|=64;
+    if(ui->Fuse_b7->checkState()==Qt::Checked) byte|=128;
+
+    QString txt=QString("%1h").arg(byte, 2, 16, QChar('0'));
+    QList<QLineEdit*> le = findChildren<QLineEdit*>(LastSelFuseByte);  //Znajdü ostatnio wybrany obiekt QLineEdit zawierajπcy fusebajty
+    if(le.size()) le.at(0)->setText(txt); //**** UWAGA!! Tekst musi byÊ zgodny z formatem ustawionym w Designerze, inaczej nic nie zostanie wstawione ****
+    UpdateFusekBitTable();
+    ShowAVRDudeCmdLineParams();
+}
+
+void MainDialog::ReadFuse()
+{
+
+}
+
+void MainDialog::WriteFuse()
+{
+
+}
+
+void MainDialog::VerifyFuse()
+{
+
+}
+
+void MainDialog::DefaultFuse()
+{
+
 }
 
 void MainDialog::EnableFuseBytes()
@@ -845,78 +963,6 @@ void MainDialog::DisableEEPROMIfElf(QString file)
     {
         ui->EEPROMBox->setEnabled(false);
     } else ui->EEPROMBox->setEnabled(true);
-}
-
-void MainDialog::FuseByteChanged()
-{
-    int FuseIndex=0;
-    QList<QLineEdit*> le = findChildren<QLineEdit*>(QRegExp("Fuse*"));  //Znajdü wszystkie obiekty QLineEdit zawierajπce fusebajty
-    while((FuseIndex<le.size()) && (le.at(FuseIndex)->hasFocus()==false)) FuseIndex++;
-    if(FuseIndex<le.size())
-    {
-        ui->Fuse_b0->blockSignals(true); ui->Fuse_b1->blockSignals(true); ui->Fuse_b2->blockSignals(true); ui->Fuse_b3->blockSignals(true);
-        ui->Fuse_b4->blockSignals(true); ui->Fuse_b5->blockSignals(true); ui->Fuse_b6->blockSignals(true); ui->Fuse_b7->blockSignals(true);
-
-        QList<QLineEdit*> tle = findChildren<QLineEdit*>(LastSelFuseByte);
-        tle.at(0)->setPalette(editpal);              //OdtwÛrz zapisany kolor dla deaktywowanego okienka
-
-        QPalette pal=le.at(FuseIndex)->palette();    //Pobierz kolor widgetu
-        editpal=pal;                                 //Zapisz oryginalny kolor
-        pal.setColor(QPalette::Text, pal.color(QPalette::Highlight));
-        le.at(FuseIndex)->setPalette(pal);
-
-        bool ok;
-        int val=le.at(FuseIndex)->text().left(2).toInt(&ok,16);
-        if(ok==false) val=0xff;
-        if(val & 1) ui->Fuse_b0->setChecked(Qt::Checked); else ui->Fuse_b0->setChecked(Qt::Unchecked);
-        if(val & 2) ui->Fuse_b1->setChecked(Qt::Checked); else ui->Fuse_b1->setChecked(Qt::Unchecked);
-        if(val & 4) ui->Fuse_b2->setChecked(Qt::Checked); else ui->Fuse_b2->setChecked(Qt::Unchecked);
-        if(val & 8) ui->Fuse_b3->setChecked(Qt::Checked); else ui->Fuse_b3->setChecked(Qt::Unchecked);
-        if(val & 16) ui->Fuse_b4->setChecked(Qt::Checked); else ui->Fuse_b4->setChecked(Qt::Unchecked);
-        if(val & 32) ui->Fuse_b5->setChecked(Qt::Checked); else ui->Fuse_b5->setChecked(Qt::Unchecked);
-        if(val & 64) ui->Fuse_b6->setChecked(Qt::Checked); else ui->Fuse_b6->setChecked(Qt::Unchecked);
-        if(val & 128) ui->Fuse_b7->setChecked(Qt::Checked); else ui->Fuse_b7->setChecked(Qt::Unchecked);
-        LastSelFuseByte=le.at(FuseIndex)->objectName();  //Nazwa obiektu
-        ui->Fuse_b0->blockSignals(false); ui->Fuse_b1->blockSignals(false); ui->Fuse_b2->blockSignals(false); ui->Fuse_b3->blockSignals(false);
-        ui->Fuse_b4->blockSignals(false); ui->Fuse_b5->blockSignals(false); ui->Fuse_b6->blockSignals(false); ui->Fuse_b7->blockSignals(false);
-    }
-}
-
-void MainDialog::BitChBoxChg(int)
-{
-    int byte=0;
-    if(ui->Fuse_b0->checkState()==Qt::Checked) byte|=1;   //Konwersja postaci bitowej na dec
-    if(ui->Fuse_b1->checkState()==Qt::Checked) byte|=2;
-    if(ui->Fuse_b2->checkState()==Qt::Checked) byte|=4;
-    if(ui->Fuse_b3->checkState()==Qt::Checked) byte|=8;
-    if(ui->Fuse_b4->checkState()==Qt::Checked) byte|=16;
-    if(ui->Fuse_b5->checkState()==Qt::Checked) byte|=32;
-    if(ui->Fuse_b6->checkState()==Qt::Checked) byte|=64;
-    if(ui->Fuse_b7->checkState()==Qt::Checked) byte|=128;
-
-    QString txt=QString("%1h").arg(byte, 2, 16, QChar('0'));
-    QList<QLineEdit*> le = findChildren<QLineEdit*>(LastSelFuseByte);  //Znajdü ostatnio wybrany obiekt QLineEdit zawierajπcy fusebajty
-    if(le.size()) le.at(0)->setText(txt); //**** UWAGA!! Tekst musi byÊ zgodny z formatem ustawionym w Designerze, inaczej nic nie zostanie wstawione ****
-}
-
-void MainDialog::ReadFuse()
-{
-
-}
-
-void MainDialog::WriteFuse()
-{
-
-}
-
-void MainDialog::VerifyFuse()
-{
-
-}
-
-void MainDialog::DefaultFuse()
-{
-
 }
 
 void MainDialog::VerifyFLASHChBox(int state)
