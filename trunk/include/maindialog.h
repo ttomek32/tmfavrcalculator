@@ -50,6 +50,8 @@ protected:
     void UpdateLockBitTable(uint8_t val); //Uaktualnij obiekt QTableWidget wyœwietlaj¹cy ustawienia lockbitów
     void UpdateLockByteCheckboxes(uint8_t val); //Uaktualnij checkboxy lockbitów
     void BlockSignalsFromTable(QTableWidget*, bool);  //Blokuje lub odblokowuje sygna³y z widgetów z tabeli fuse lub lockbitów
+    void FillTableWidget(QVector<Bit> &desc, QTableWidget *tbl, const char *slot);  //Wype³nia wskazan¹ tabelê tbl fuse lub lockbitami podanymi jako opis desc. slot zawiera slot z którym
+                                                                                    //s¹ po³¹czone wstawiane QWidgety.
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude

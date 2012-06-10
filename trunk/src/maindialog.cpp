@@ -112,66 +112,47 @@ MainDialog::MainDialog(QWidget *parent) :
 
 void MainDialog::UpdateFuseBitsWidget()
 {
-    for (int i=ui->FusebitTable->rowCount()-1; i >= 0; --i) ui->FusebitTable->removeRow(i);  //Skasuj wszystkie rzêdy
     Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
     QVector<Bit> fuses=mcu.GetFuseBits();
-    for(int i=0; i<fuses.size(); i++)
-    {
-        ui->FusebitTable->setRowCount(ui->FusebitTable->rowCount()+1);
-        if(fuses[i].GetValues().size()==0)
-        { //Wstawiamy checkboxy
-            QCheckBox *cb=new QCheckBox;
-            cb->setText(fuses[i].GetName());    //Nazwa skrócona fusebitu
-            ui->FusebitTable->setCellWidget(i, 0, cb);
-            connect(cb, SIGNAL(clicked()), this, SLOT(FuseBitChangedByUser()));
-
-        } else
-        { //Pole wielokrotnego wyboru - comboboxy
-            QComboBox *cb=new QComboBox;
-            ui->FusebitTable->setCellWidget(i, 0, cb);
-            for(int ind=0; ind<fuses[i].GetValues().size(); ind++)
-            {
-                cb->addItem(fuses[i].GetValues()[ind].GetName());
-            }
-            connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(FuseBitChangedByUser()));
-        }
-        QLabel *lab=new QLabel;
-        lab->setText(fuses[i].GetCaption());        //Opis szczegó³owy fusebitu
-        ui->FusebitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
-    }
+    FillTableWidget(fuses, ui->FusebitTable, SLOT(FuseBitChangedByUser()));
     FuseByteChanged();   //Uaktualnij stan tabeli na podstawie bajtowej wartoœci fusebitów
 }
 
 void MainDialog::UpdateLockBitsWidget()
 {
-    for (int i=ui->LockbitTable->rowCount()-1; i >= 0; --i) ui->LockbitTable->removeRow(i);  //Skasuj wszystkie rzêdy
     Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
     QVector<Bit> locks=mcu.GetLockBits();
-    for(int i=0; i<locks.size(); i++)
+    FillTableWidget(locks, ui->LockbitTable, SLOT(LockBitChangedByUser()));
+    LockByteChanged();   //Uaktualnij stan tabeli na podstawie bajtowej wartoœci lockbitów
+}
+
+void MainDialog::FillTableWidget(QVector<Bit> &desc, QTableWidget *tbl, const char* slot)
+{
+    for (int i=tbl->rowCount()-1; i >= 0; --i) tbl->removeRow(i);  //Skasuj wszystkie rzêdy
+    for(int i=0; i<desc.size(); i++)
     {
-        ui->LockbitTable->setRowCount(ui->LockbitTable->rowCount()+1);
-        if(locks[i].GetValues().size()==0)
+        tbl->setRowCount(tbl->rowCount()+1);
+        if(desc[i].GetValues().size()==0)
         { //Wstawiamy checkboxy
             QCheckBox *cb=new QCheckBox;
-            cb->setText(locks[i].GetName());    //Nazwa skrócona fusebitu
-            ui->LockbitTable->setCellWidget(i, 0, cb);
-            connect(cb, SIGNAL(clicked()), this, SLOT(LockBitChangedByUser()));
+            cb->setText(desc[i].GetName());    //Nazwa skrócona fuse/lock bitu
+            tbl->setCellWidget(i, 0, cb);
+            connect(cb, SIGNAL(clicked()), this, slot);
 
         } else
         { //Pole wielokrotnego wyboru - comboboxy
             QComboBox *cb=new QComboBox;
-            ui->LockbitTable->setCellWidget(i, 0, cb);
-            for(int ind=0; ind<locks[i].GetValues().size(); ind++)
+            tbl->setCellWidget(i, 0, cb);
+            for(int ind=0; ind<desc[i].GetValues().size(); ind++)
             {
-                cb->addItem(locks[i].GetValues()[ind].GetName());
+                cb->addItem(desc[i].GetValues()[ind].GetName());
             }
-            connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(LockBitChangedByUser()));
+            connect(cb, SIGNAL(currentIndexChanged(int)), this, slot);
         }
         QLabel *lab=new QLabel;
-        lab->setText(locks[i].GetCaption());        //Opis szczegó³owy fusebitu
-        ui->LockbitTable->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fusebitu
+        lab->setText(desc[i].GetCaption());        //Opis szczegó³owy fuse/lock bitu
+        tbl->setCellWidget(i,1,lab);   //Wstaw opis szczegó³owy fuse/lock bitu
     }
-    LockByteChanged();   //Uaktualnij stan tabeli na podstawie bajtowej wartoœci lockbitów
 }
 
 void MainDialog::FuseBitChangedByUser()
