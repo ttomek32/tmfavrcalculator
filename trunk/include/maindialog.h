@@ -42,6 +42,7 @@ protected:
     void FillMCUType();               //Wype³nij listê mikrokontrolerów
 
     uint8_t HowManyFuseBytes();       //Zwraca liczbê fusebajtów w wybranym mikrokontrolerze
+    void UpdateFuseByteCheckboxes();  //Uaktualnij checkboxy fusebitów na podstawie aktywnej wartoœci z QLineEdit
     void GetFuseBytesFromEditLines(uint8_t fuses[5]);  //Pobiera wartoœæ fusebajtów z pól QLineEdit i umieszcza je w 5-elementowej tablicy
     void UpdateFuseBitsWidget();      //Uaktualnij zak³adkê fusebitów po zmianie MCU
     void UpdateFusekBitTable();       //Uaktualnij obiekt QTableWidget zawartoœci¹ fusebitów pobran¹ z ich QLineEdit
