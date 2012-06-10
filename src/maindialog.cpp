@@ -1002,7 +1002,7 @@ QString MainDialog::GetProgrammerAsAVRDudeParam()
 
 QString MainDialog::GetPortAsAVRDudeParam()
 {
-    QString str=ui->PortCB->currentText();
+    QString str=ui->PortCB->currentText().toLower(); //Don't know why, but AVRDude works better with port specified in lowercase.
     return str;
 }
 
