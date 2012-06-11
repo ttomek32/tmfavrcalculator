@@ -842,9 +842,7 @@ void MainDialog::ReadFLASH()
         };
 
         QStringList sl;
-        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
-        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
-        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        ReturnBasicAVRDudeParams(sl);
         sl<<QString("-Uflash:r:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
         AVRDude.MemoryOp(sl, "Czytam pamiêæ FLASH"); //Odczytaj pamiêæ
@@ -857,9 +855,7 @@ void MainDialog::WriteFLASH()
     if(QFile(Filename).exists())
     {
         QStringList sl;
-        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
-        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
-        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        ReturnBasicAVRDudeParams(sl);
         sl<<GetPerformEraseChipAsAVRDudeParam();   //Czy kasowaæ chip?
         sl<<QString("-Uflash:w:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
@@ -873,9 +869,7 @@ void MainDialog::VerifyFLASH()
     if(QFile(Filename).exists())
     {
         QStringList sl;
-        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
-        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
-        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        ReturnBasicAVRDudeParams(sl);
         sl<<QString("-Uflash:v:%1:i").arg(QFileInfo(GetFLASHFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), QString(""), this);
         AVRDude.MemoryOp(sl, "Weryfikujê pamiêæ FLASH"); //Weryfikuj pamiêæ
@@ -895,9 +889,7 @@ void MainDialog::ReadEEPROM()
         };
 
         QStringList sl;
-        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
-        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
-        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        ReturnBasicAVRDudeParams(sl);
         sl<<QString("-Ueeprom:r:%1:i").arg(QFileInfo(GetEEPROMFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), GetEEPROMFilePath(), this);
         AVRDude.MemoryOp(sl, "Czytam pamiêæ EEPROM"); //Odczytaj pamiêæ
@@ -910,9 +902,7 @@ void MainDialog::WriteEEPROM()
     if(QFile(Filename).exists())
     {
         QStringList sl;
-        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
-        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
-        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        ReturnBasicAVRDudeParams(sl);
         sl<<GetPerformEraseChipAsAVRDudeParam();   //Czy kasowaæ chip?
         sl<<QString("-Ueeprom:w:%1:i").arg(QFileInfo(GetEEPROMFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetFLASHFilePath(), GetEEPROMFilePath(), this);
@@ -926,9 +916,7 @@ void MainDialog::VerifyEEPROM()
     if(QFile(Filename).exists())
     {
         QStringList sl;
-        sl<<"-c"; sl<<GetProgrammerAsAVRDudeParam();
-        sl<<"-p"; sl<<GetMCUAsAVRDudeParam();
-        sl<<"-P"; sl<<GetPortAsAVRDudeParam();
+        ReturnBasicAVRDudeParams(sl);
         sl<<QString("-Ueeprom:v:%1:i").arg(QFileInfo(GetEEPROMFilePath()).fileName());
         AVRDudeExecutor AVRDude(GetProgrammerAsAVRDudeParam(), GetPortAsAVRDudeParam(), GetMCUAsAVRDudeParam(), GetEEPROMFilePath(), GetEEPROMFilePath(), this);
         AVRDude.MemoryOp(sl, "Weryfikujê pamiêæ EEPROM"); //Weryfikuj pamiêæ
@@ -985,20 +973,25 @@ void MainDialog::ShowAVRDudeCmdLineParams()
     AVRDudeCmdLineParams();
 }
 
+void MainDialog::ReturnBasicAVRDudeParams(QStringList &sl)
+{
+    sl << "-p"; sl << GetMCUAsAVRDudeParam();
+    sl << "-c"; sl << GetProgrammerAsAVRDudeParam();
+    sl << "-P"; sl << GetPortAsAVRDudeParam();
+}
+
 void MainDialog::AVRDudeCmdLineParams()
 {
-    QString str="avrdude";
-    str.append(" -p ").append(GetMCUAsAVRDudeParam());
-    str.append(" -c ").append(GetProgrammerAsAVRDudeParam());
-    str.append(" -P ").append(GetPortAsAVRDudeParam());
-    str.append(GetPerformEraseChipAsAVRDudeParam());
-    QStringList *sl=AVRDudeExecutor::GetAVRDudeCmdMemProgramm(GetFLASHFilePath(), GetEEPROMFilePath(), ui->VerifyBox->checkState());
+    QString str="avrdude ";
+    QStringList sl;
+    ReturnBasicAVRDudeParams(sl);
+    sl << GetPerformEraseChipAsAVRDudeParam();
+    sl << *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(GetFLASHFilePath(), GetEEPROMFilePath(), ui->VerifyBox->checkState());
 
-    SetFuseBitsAVRDudeCmdParams(sl);  //Add fusebits command
-    SetLockBitsAVRDudeCmdParams(sl);  //Add lockbits command
+    SetFuseBitsAVRDudeCmdParams(&sl);  //Add fusebits command
+    SetLockBitsAVRDudeCmdParams(&sl);  //Add lockbits command
 
-    str.append(sl->join(QString(" ")));
-    delete sl;
+    str.append(sl.join(QString(" ")));
     ui->AVRDudeCMDLine->setText(str);
 }
 
