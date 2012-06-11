@@ -321,30 +321,36 @@ void MainDialog::BlockSignalsFromTable(QTableWidget *tbl, bool en)
     }
 }
 
-void MainDialog::UpdateLockBitTable(uint8_t val)
+void MainDialog::UpdateBitsTable(QTableWidget *tbl, QVector<Bit> &bits, uint8_t *value)
 {
     bool ok;
-    BlockSignalsFromTable(ui->LockbitTable, true);
+    BlockSignalsFromTable(ui->FusebitTable, true);
     //Here we can safe modify table widgets, without emitting unnecessary signals
-    uint8_t lock;
-    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
-    QVector<Bit> locks=mcu.GetLockBits();
-    for(int i=0; i<ui->LockbitTable->rowCount(); i++)   //Scan all rows and set lockbits appropiately
+    for(int i=0; i<tbl->rowCount(); i++)   //Scan all rows and set lockbits appropiately
     {
-        QComboBox *tb=dynamic_cast<QComboBox*>(ui->LockbitTable->cellWidget(i, 0)); //Get combobox at indicated row
-        if(tb)  //Jeœli tb jest rzeczywiœcie potomkiem klasy QComboBox
+        uint8_t mask=bits[i].GetMask().toUInt(&ok, 0);      //Get bitmask of subsequent fields
+        uint8_t foffset=bits[i].GetOffset().toUInt(&ok, 0); //Get fusebyte offset
+        QWidget *tb=tbl->cellWidget(i, 0);      //Get wiget at indicated row
+        if(dynamic_cast<QComboBox*>(tb))  //Uzupe³nij comboboxy
         {
-            uint8_t mask=locks[i].GetMask().toUInt(&ok, 0); //Get bitmask of subsequent fields
             uint8_t offs=0;
             while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
-            lock=(val & mask) >> offs;
-            for(int ind=0; ind<locks[i].GetValues().size(); ind++)
-                if(locks[i].GetValues()[ind].GetValue().toUInt(&ok, 0)==lock)
-                    tb->setCurrentIndex(ind);  //Set combobox according to lockbit value
-        }
+            uint8_t ff=(value[foffset] & mask) >> offs;
+            for(int ind=0; ind<bits[i].GetValues().size(); ind++)
+                if(bits[i].GetValues()[ind].GetValue().toUInt(&ok, 0)==ff)
+                      ((QComboBox*)tb)->setCurrentIndex(ind);  //Set combobox according to lockbit value
+        } else
+            if(dynamic_cast<QCheckBox*>(tb))   //Uzupe³nij checkboxy
+            { if(value[foffset] & mask) ((QCheckBox*)tb)->setChecked(Qt::Unchecked); else ((QCheckBox*)tb)->setChecked(Qt::Checked); };
     }
+    BlockSignalsFromTable(ui->FusebitTable, false);
+}
 
-    BlockSignalsFromTable(ui->LockbitTable, false);
+void MainDialog::UpdateLockBitTable(uint8_t val)
+{
+    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+    QVector<Bit> locks=mcu.GetLockBits();
+    UpdateBitsTable(ui->LockbitTable, locks, &val);
 }
 
 void MainDialog::GetFuseBytesFromEditLines(uint8_t fuses[5])
@@ -359,31 +365,11 @@ void MainDialog::GetFuseBytesFromEditLines(uint8_t fuses[5])
 
 void MainDialog::UpdateFusekBitTable()
 {
-    bool ok;
-    BlockSignalsFromTable(ui->FusebitTable, true);
-    //Here we can safe modify table widgets, without emitting unnecessary signals
     uint8_t fuse[5];
     GetFuseBytesFromEditLines(fuse);   //Pobierz fusebajty z linii edycji
     Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
     QVector<Bit> fuses=mcu.GetFuseBits();
-    for(int i=0; i<ui->FusebitTable->rowCount(); i++)   //Scan all rows and set lockbits appropiately
-    {
-        uint8_t mask=fuses[i].GetMask().toUInt(&ok, 0);      //Get bitmask of subsequent fields
-        uint8_t foffset=fuses[i].GetOffset().toUInt(&ok, 0); //Get fusebyte offset
-        QWidget *tb=ui->FusebitTable->cellWidget(i, 0);      //Get wiget at indicated row
-        if(dynamic_cast<QComboBox*>(tb))  //Uzupe³nij comboboxy
-        {
-            uint8_t offs=0;
-            while((mask & (1<<offs))==0) offs++;  //Calculate needed rotation of value field
-            uint8_t ff=(fuse[foffset] & mask) >> offs;
-            for(int ind=0; ind<fuses[i].GetValues().size(); ind++)
-                if(fuses[i].GetValues()[ind].GetValue().toUInt(&ok, 0)==ff)
-                      ((QComboBox*)tb)->setCurrentIndex(ind);  //Set combobox according to lockbit value
-        } else
-            if(dynamic_cast<QCheckBox*>(tb))   //Uzupe³nij checkboxy
-            { if(fuse[foffset] & mask) ((QCheckBox*)tb)->setChecked(Qt::Unchecked); else ((QCheckBox*)tb)->setChecked(Qt::Checked); };
-    }
-    BlockSignalsFromTable(ui->FusebitTable, false);
+    UpdateBitsTable(ui->FusebitTable, fuses, fuse);
 }
 
 void MainDialog::GetLockBitsAVRDudeCmdParams(QStringList *params)

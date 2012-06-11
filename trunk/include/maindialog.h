@@ -52,6 +52,7 @@ protected:
     void BlockSignalsFromTable(QTableWidget*, bool);  //Blokuje lub odblokowuje sygna³y z widgetów z tabeli fuse lub lockbitów
     void FillTableWidget(QVector<Bit> &desc, QTableWidget *tbl, const char *slot);  //Wype³nia wskazan¹ tabelê tbl fuse lub lockbitami podanymi jako opis desc. slot zawiera slot z którym
                                                                                     //s¹ po³¹czone wstawiane QWidgety.
+    void UpdateBitsTable(QTableWidget *tbl, QVector<Bit> &bits, uint8_t *value);  //Updates QTableWidget associated with fuse or lockbits based on binary value
 
 signals:
  void SetAVRDudePath(QString);        //Ustaw œcie¿kê w zak³adce SetUp do AVRDude
