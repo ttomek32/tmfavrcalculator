@@ -124,6 +124,7 @@ private:
     Ui::MainDialog *ui;
 
   //Funkcje zwracaj¹ce poszczególne elementy linii polecenia AVRDude
+    void ReturnBasicAVRDudeParams(QStringList &sl); //Returns basic AVRDude params - programmer, port & mcu
     QString GetMCUAsAVRDudeParam();         //Zwróæ typ MCU jako parametr
     QString GetProgrammerAsAVRDudeParam();  //Zwróæ typ programatora jako parametr
     QString GetPortAsAVRDudeParam();        //Zwróæ typ wybranego portu jako parametr
