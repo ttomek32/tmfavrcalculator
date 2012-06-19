@@ -24,7 +24,8 @@ SOURCES += \
     src/Value.cpp \
     src/Bit.cpp \
     src/AVRStudioXMLParser.cpp \
-    src/AVRFactory.cpp
+    src/AVRFactory.cpp \
+    src/ProgrammingInterface.cpp
 
 HEADERS  += \
     include/maindialog.h \
@@ -41,7 +42,8 @@ HEADERS  += \
     include/Value.h \
     include/Bit.h \
     include/AVRStudioXMLParser.h \
-    include/AVRFactory.h
+    include/AVRFactory.h \
+    include/ProgrammingInterface.h
 
 FORMS    += \
     forms/maindialog.ui \

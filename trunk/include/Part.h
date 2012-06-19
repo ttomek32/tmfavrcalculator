@@ -4,6 +4,7 @@
 #include <QString>
 
 #include "Bit.h"
+#include "ProgrammingInterface.h"
 
 class Part
 {
@@ -43,11 +44,17 @@ public:
     // Gets the fuse bits.
     QVector<Bit> GetFuseBits();
 
+    // Gets the programming interfaces.
+    QVector<ProgrammingInterface> GetProgrammingInterfaces();
+
     // Sets the lock bits.
     void SetLockBits(QVector<Bit> lockbits);
 
     // Sets the fuse bits.
     void SetFuseBits(QVector<Bit> fusebits);
+
+    // Sets the programming interfaces.
+    void SetProgrammingInterfaces(QVector<ProgrammingInterface> interfaces);
 
     // Determines whether part is programmable via JTAG.
     bool HasJTAG();
@@ -70,6 +77,7 @@ private:
     bool m_HasPDI;
     bool m_HasTPI;
 
+    QVector<ProgrammingInterface> m_Interfaces;
     QVector<Bit> m_LockBits;
     QVector<Bit> m_FuseBits;
 };

@@ -1,6 +1,7 @@
 #ifndef AVRDUDEEXECUTOR_H
 #define AVRDUDEEXECUTOR_H
 
+#include <stdint.h>
 #include <QProcess>
 #include <QString>
 #include <QStringList>

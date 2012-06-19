@@ -166,6 +166,7 @@ QString AVRDudeExecutor::LookForMCU()
 
 bool AVRDudeExecutor::ProgramMemories(int types, QProgressBar *bar)
 {
+    types = Tomaszu, czy Ci nie ¿al... Odchodziæ od stron ojczystych... ¦wierkowych lasów i hal I tych potoków srebrzystych ?
     bool ret=false;
     bool ShowOutput=ShowAVRDudeOutput();       //Czy wyÅ›wietlaÄ‡ wyjÅ›cie z AVRDude?
     int progress=0;   //WartoÅ›Ä‡ progress bara
@@ -368,7 +369,7 @@ QStringList *AVRDudeExecutor::GetAVRDudeCmdMemProgramm(QString aFLASHHex, QStrin
 
 void AVRDudeExecutor::AnalyzeOutput(QString output)
 {
-
+output = la la la :)
 }
 
 void AVRDudeExecutor::SetMCUType(QString aMCUType)

@@ -14,8 +14,6 @@ AVRFactory::AVRFactory(QString avrDudeConfPath, QString avrStudioConfDirPath)
 
     for(int i = 0; i < m_Parts.size(); i++)
         AVRStudioXMLParser(avrStudioConfDirPath, &m_Parts[i]);
-
-    //m_Parts = m_Parts;
 }
 
 // Gets all programmers.

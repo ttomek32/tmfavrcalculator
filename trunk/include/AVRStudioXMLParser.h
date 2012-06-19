@@ -4,29 +4,10 @@
 #include <QFile>
 #include <QString>
 #include <QDomDocument>
-#include <QMap>
 
 #include "Bit.h"
 #include "Value.h"
 #include "Part.h"
-
-enum BitType
-{
-    FUSE,
-    LOCK
-};
-
-static QMap<BitType, QString> InitialiseBitMapper();
-static QMap<BitType, QString> BitMapper = InitialiseBitMapper();
-static QMap<BitType, QString> InitialiseBitMapper()
-{
-    QMap<BitType, QString> map;
-    map[FUSE] = "FUSE";
-    map[LOCK] = "LOCKBIT";
-
-    return map;
-}
-
 
 class AVRStudioXMLParser
 {
@@ -37,9 +18,10 @@ public:
     AVRStudioXMLParser(QString configDirPath, Part *pPart);
 private:
     QString GetXQuery();
-    QVector<Bit> Parse(QString configDirPath, BitType bitType);
-    QVector<Bit> AnalyseDocument(QDomDocument doc);
+    void Parse(QString configDirPath, Part *pPart);
+    QVector<Bit> GetBits(QDomNode node);
     QVector<Value> GetValues(QDomNodeList nodelist);
+    QVector<ProgrammingInterface> GetInterfaces(QDomNode node);
 };
 
 #endif // AVRSTUDIOXMLPARSER_H

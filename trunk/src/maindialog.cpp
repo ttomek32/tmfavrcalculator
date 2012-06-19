@@ -387,12 +387,12 @@ void MainDialog::SetLockBitsAVRDudeCmdParams(QStringList *params)
 
 void MainDialog::GetFuseBitsAVRDudeCmdParams(QStringList *params)
 {
-
+params = :);
 }
 
 void MainDialog::SetFuseBitsAVRDudeCmdParams(QStringList *params)
 {
-
+params = :);
 }
 
 uint8_t MainDialog::HowManyFuseBytes()

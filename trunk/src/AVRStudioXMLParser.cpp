@@ -12,18 +12,14 @@ AVRStudioXMLParser::AVRStudioXMLParser(QString configDirPath, Part *pPart)
 {
     configDirPath.append(pPart->GetDescription())
                  .append(".xml");
-
-    pPart->SetFuseBits(Parse(configDirPath, FUSE));
-    pPart->SetLockBits(Parse(configDirPath, LOCK));
+    Parse(configDirPath, pPart);
 }
 
-QVector<Bit> AVRStudioXMLParser::Parse(QString configDirPath, BitType bitType)
+void AVRStudioXMLParser::Parse(QString configDirPath, Part *pPart)
 {
     QXmlQuery query;
     QString result;
-
     query.bindVariable("partName", QVariant(configDirPath));
-    query.bindVariable("moduleName", QVariant(BitMapper[bitType]));
     query.setQuery(GetXQuery());
     query.evaluateTo(&result);
 
@@ -33,39 +29,39 @@ QVector<Bit> AVRStudioXMLParser::Parse(QString configDirPath, BitType bitType)
     int col;
 
     QDomDocument doc;
-    if(doc.setContent(result, &errorMsg, &line, &col))
-       return AnalyseDocument(doc);
+    if(!doc.setContent(result, &errorMsg, &line, &col))
+        return;
 
-    return QVector<Bit>(0);
+    QDomNode root = doc.firstChild();
+    QDomNode fuses = root.firstChild();
+    QDomNode locks = fuses.nextSibling();
+    QDomNode interfaces = locks.nextSibling();
+
+    pPart->SetFuseBits(GetBits(fuses.firstChild()));
+    pPart->SetLockBits(GetBits(locks.firstChild()));
+    pPart->SetProgrammingInterfaces(GetInterfaces(interfaces.firstChild()));
 }
 
-QVector<Bit> AVRStudioXMLParser::AnalyseDocument(QDomDocument doc)
+QVector<Bit> AVRStudioXMLParser::GetBits(QDomNode node)
 {
-    QDomNode root = doc.firstChild();
-    QDomNode docNode = root.firstChild();
     QVector<Bit> bits(0);
 
-    while(!docNode.isNull())
+    while(!node.isNull())
     {
-        QDomElement e = docNode.toElement();
+        QDomNamedNodeMap attributes = node.attributes();
+        Bit bit;
 
-        if(!e.isNull())
+        for(int i = 0; i < attributes.size(); i++)
         {
-            QDomNamedNodeMap attributes = docNode.attributes();
-            Bit bit;
-
-            for(int i = 0; i < attributes.size(); i++)
-            {
-                QDomNode attribute = attributes.item(i);
-                if(bit.GetMappingMap()[attribute.nodeName()])
-                    *bit.GetMappingMap()[attribute.nodeName()] = attribute.nodeValue();
-            }
-
-            bit.SetValues(GetValues(docNode.childNodes()));
-            bits.append(bit);
+            QDomNode attribute = attributes.item(i);
+            if(bit.GetMappingMap()[attribute.nodeName()])
+                *bit.GetMappingMap()[attribute.nodeName()] = attribute.nodeValue();
         }
 
-        docNode = docNode.nextSibling();
+        bit.SetValues(GetValues(node.childNodes()));
+        bits.append(bit);
+
+        node = node.nextSibling();
     }
 
     return bits;
@@ -91,6 +87,29 @@ QVector<Value> AVRStudioXMLParser::GetValues(QDomNodeList nodelist)
     }
 
     return values;
+}
+
+QVector<ProgrammingInterface> AVRStudioXMLParser::GetInterfaces(QDomNode node)
+{
+    QVector<ProgrammingInterface> interfaces(0);
+
+    while(!node.isNull())
+    {
+        QDomNamedNodeMap attributes = node.attributes();
+        ProgrammingInterface interface;
+
+        for(int i = 0; i < attributes.size(); i++)
+        {
+            QDomNode attribute = attributes.item(i);
+            if(interface.GetMappingMap()[attribute.nodeName()])
+                *interface.GetMappingMap()[attribute.nodeName()] = attribute.nodeValue();
+        }
+
+        interfaces.append(interface);
+        node = node.nextSibling();
+    }
+
+    return interfaces;
 }
 
 QString AVRStudioXMLParser::GetXQuery()

@@ -1,6 +1,7 @@
 #ifndef MAINDIALOG_H
 #define MAINDIALOG_H
 
+#include <stdint.h>
 #include <QDialog>
 #include <QPalette>
 #include <QTableWidget>
