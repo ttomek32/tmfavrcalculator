@@ -59,6 +59,12 @@ QVector<Bit> Part::GetFuseBits()
     return m_FuseBits;
 }
 
+// Gets the programming interfaces.
+QVector<ProgrammingInterface> Part::GetProgrammingInterfaces()
+{
+    return m_Interfaces;
+}
+
 // Sets the lock bits.
 void Part::SetLockBits(QVector<Bit> lockbits)
 {
@@ -69,6 +75,12 @@ void Part::SetLockBits(QVector<Bit> lockbits)
 void Part::SetFuseBits(QVector<Bit> fusebits)
 {
     m_FuseBits = fusebits;
+}
+
+// Sets the programming interfaces.
+void Part::SetProgrammingInterfaces(QVector<ProgrammingInterface> interfaces)
+{
+    m_Interfaces = interfaces;
 }
 
 // Determines whether part is programmable via JTAG.
