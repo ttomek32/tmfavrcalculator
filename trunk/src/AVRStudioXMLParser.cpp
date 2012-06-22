@@ -10,7 +10,7 @@
 // param Part* pPart - pointer to the Part to which lockbits and fusebits should be applied.
 AVRStudioXMLParser::AVRStudioXMLParser(QString configDirPath, Part *pPart)
 {
-    configDirPath.append(pPart->GetDescription())
+    configDirPath.append(pPart->GetDescription().toLower())
                  .append(".xml");
     Parse(configDirPath, pPart);
 }
