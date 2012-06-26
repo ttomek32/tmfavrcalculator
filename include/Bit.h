@@ -14,6 +14,7 @@ public:
     QString GetCaption();
     QString GetMask();
     QString GetOffset();
+    QString GetRegisterName();
 
     QVector<Value> GetValues();
     void SetValues(QVector<Value> values);
@@ -22,6 +23,7 @@ private:
     QString m_Mask;
     QString m_Name;
     QString m_Offset;
+    QString m_RegisterName;
     QVector<Value> m_Values;
 };
 
