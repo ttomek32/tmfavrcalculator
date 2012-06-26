@@ -8,6 +8,7 @@ QMap<QString, QString*> Bit::GetMappingMap()
     map["name"] = &m_Name;
     map["mask"] = &m_Mask;
     map["offset"] = &m_Offset;
+    map["registername"] = &m_RegisterName;
 
     return map;
 }
@@ -30,6 +31,11 @@ QString Bit::GetMask()
 QString Bit::GetOffset()
 {
     return m_Offset;
+}
+
+QString Bit::GetRegisterName()
+{
+    return m_RegisterName;
 }
 
 QVector<Value> Bit::GetValues()
