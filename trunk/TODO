@@ -1,0 +1,2 @@
+1. Readme file :)
+2. Instead of constant rebuilding the xmls we can do our own configurations and read them directly. Code that builds xmls can be sepparated as the independent tool. This will decrease a little the loading time.
