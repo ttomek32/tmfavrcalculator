@@ -68,6 +68,7 @@ public:
     // Determines whether part is programmable via TPI.
     bool HasTPI();
 
+    QMap<int, QString> GetFusesNames();
 private:
     QString m_ID;
     QString m_Description;
