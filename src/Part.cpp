@@ -106,3 +106,36 @@ bool Part::HasTPI()
 {
     return m_HasTPI;
 }
+
+QMap<int, QString> Part::GetFusesNames()
+{
+    QMap<int, QString> fuses;
+    for(int i = 0; i < m_FuseBits.size(); i++)
+    {
+        Bit fusebit = m_FuseBits.at(i);
+        volatile unsigned int offset = fusebit.GetOffset().remove("0x").toUInt();
+
+        fuses[offset] = fusebit.GetRegisterName();
+    }
+
+    return fuses;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
