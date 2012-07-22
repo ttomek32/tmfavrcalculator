@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    QPixmap pixmap(":/resources/images/TmfAvrCalculator_SP_05_anim.gif");  //Przygotowane na ewentualny splash screen z reklamami
+    QPixmap pixmap(":/resources/images/SplashScreen_1.png");  //Przygotowane na ewentualny splash screen z reklamami
     QSplashScreen *splash = new QSplashScreen(pixmap, Qt::WindowStaysOnTopHint);
     splash->show();
     qApp->processEvents();
