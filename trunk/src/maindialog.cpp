@@ -32,7 +32,7 @@ MainDialog::MainDialog(QWidget *parent) :
     QString path;
      appsettings.beginGroup("MainWindow");
      QString ADpath=appsettings.value("AVRDudePath").toString();   //Odczytaj œcie¿kê do AVRDude (jeœli jest)
-     emit SetAVRDudePath(ADpath);                          //UzupeÅ‚nij pole edycji Å›cieÅ¼ki do AVRDude
+     emit SetAVRDudePath(ADpath);                          //Uzupe³nij pole edycji œcie¿ki do AVRDude
 
      ADpath=appsettings.value("AVRBinutilsPath").toString();   //Odczytaj œcie¿kê do binutils (jeœlii jest)
      emit SetBinutilsPath(ADpath);
@@ -73,13 +73,13 @@ MainDialog::MainDialog(QWidget *parent) :
      QList<QLineEdit*> tle = findChildren<QLineEdit*>(LastSelFuseByte);  //Zapisz oryginaln¹ paletê aktywnego okna edycji fusebitów
      editpal=tle.at(0)->palette();
 
-     QFileInfo fi(ADpath, "avrdude.conf");
+     QFileInfo fi(ADpath, "avrdudex.conf");
      if(fi.exists())
      {
          AVR= new AVRFactory(fi.filePath(), "../XML/");   //Tymczasowo
 
          ui->ProgrammerCB->blockSignals(true);
-         FillProgrammerCB();                           //Typy obsÅ‚ugiwanych programatorÃ³w
+         FillProgrammerCB();                           //Typy obs³ugiwanych programatorów
          ui->ProgrammerCB->blockSignals(false);
          QString prg=appsettings.value("Programmer").toString();
          ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
@@ -365,11 +365,14 @@ void MainDialog::GetFuseBytesFromEditLines(uint8_t fuses[5])
 
 void MainDialog::UpdateFusekBitTable()
 {
-    uint8_t fuse[5];
-    GetFuseBytesFromEditLines(fuse);   //Pobierz fusebajty z linii edycji
-    Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
-    QVector<Bit> fuses=mcu.GetFuseBits();
-    UpdateBitsTable(ui->FusebitTable, fuses, fuse);
+    if(AVR)    //Jeœli nie uda³o siê otworzyæ pliku konfiguracyjnego to nie ma co szukaæ informacji o MCU
+    {
+        uint8_t fuse[5];
+        GetFuseBytesFromEditLines(fuse);   //Pobierz fusebajty z linii edycji
+        Part mcu=AVR->GetPartByDescription(ui->AVRTypeCB->currentText());
+        QVector<Bit> fuses=mcu.GetFuseBits();
+        UpdateBitsTable(ui->FusebitTable, fuses, fuse);
+    }
 }
 
 void MainDialog::GetLockBitsAVRDudeCmdParams(QStringList *params)
@@ -387,12 +390,12 @@ void MainDialog::SetLockBitsAVRDudeCmdParams(QStringList *params)
 
 void MainDialog::GetFuseBitsAVRDudeCmdParams(QStringList *params)
 {
-params = :);
+//params = :);
 }
 
 void MainDialog::SetFuseBitsAVRDudeCmdParams(QStringList *params)
 {
-params = :);
+//params = :);
 }
 
 uint8_t MainDialog::HowManyFuseBytes()
@@ -945,7 +948,9 @@ void MainDialog::VerifyFLASHChBox(int state)
 
 QString MainDialog::GetMCUAsAVRDudeParam()
 {
-    QString str=AVR->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID();
+    QString str;
+
+    if(AVR) str=AVR->GetPartByDescription(ui->AVRTypeCB->currentText()).GetID();
     return str;
 }
 
