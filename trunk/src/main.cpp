@@ -1,15 +1,17 @@
 #include <QtGui/QApplication>
-#include <QSplashScreen>
 #include "maindialog.h"
 #include <QTextCodec>
 #include "delay.h"
+#include "splash.h"
+
+QSplashScreen *splash;  //Splash screen - dostêp do niego jest potrzebny w innych czêœciach aplikacji
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
     QPixmap pixmap(":/resources/images/SplashScreen_1.png");  //Przygotowane na ewentualny splash screen z reklamami
-    QSplashScreen *splash = new QSplashScreen(pixmap, Qt::WindowStaysOnTopHint);
+    splash = new QSplashScreen(pixmap, Qt::WindowStaysOnTopHint);
     splash->show();
     qApp->processEvents();
 
@@ -22,10 +24,8 @@ int main(int argc, char *argv[])
     //Delay::sleep(3);
 
     MainDialog w;
+    splash->finish(&w);
     w.show();
-
-
-    delete splash;
 
     return a.exec();
 }
