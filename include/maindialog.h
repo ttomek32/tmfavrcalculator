@@ -34,10 +34,13 @@ protected:
 public:
     explicit MainDialog(QWidget *parent = 0);
     void HideAdvancedTabs(bool);     //Ukryj zak³adki z opcjami zaawansowanymi
+    void DisableTabs(bool);          //Zablokuj zak³adki z wyj¹tkiem zak³adki ustawienia (true) lub odblokuj je (false
 
     ~MainDialog();
 
 protected:
+    bool ReLoadAVRDudeConf();         //Odczytaj plik AVRDude, zainicjuj AVRFactory i zwróæ true jeœli wszystko jest ok
+
     void FillProgrammerCB();          //Wype³nij listê dostêpnych programatorów
     void FillPortCB();                //Wype³nij listê portów
     void FillMCUType();               //Wype³nij listê mikrokontrolerów

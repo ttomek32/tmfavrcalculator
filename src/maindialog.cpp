@@ -18,9 +18,12 @@
 #include "simppgmdlg.h"
 #include "ConfigParseException.h"
 
+#include "splash.h"
+
 MainDialog::MainDialog(QWidget *parent) :
     QDialog(parent), ui(new Ui::MainDialog)
 {
+    AVR=NULL;
     QSettings appsettings;
      appsettings.beginGroup("MainWindow");
      resize(appsettings.value("size", QSize(640, 480)).toSize());   //restore main window size and position
@@ -46,9 +49,9 @@ MainDialog::MainDialog(QWidget *parent) :
      //Setup tab
      int checkbox;
      checkbox=appsettings.value("SimplifiedView").toInt();
-     if(checkbox==Qt::Checked)                           //Sprawd≈∫ czy wybrano widok uproszczony
+     if(checkbox==Qt::Checked)                           //Sprawdü czy wybrano widok uproszczony
      {
-         HideAdvancedTabs(true);                     //Ukryj zaawansowane zak≈Çadki
+         HideAdvancedTabs(true);                     //Ukryj zaawansowane zak≥adki
          emit SetSimplifierViewChBox(true);
      } else HideAdvancedTabs(false);
 
@@ -73,41 +76,61 @@ MainDialog::MainDialog(QWidget *parent) :
      QList<QLineEdit*> tle = findChildren<QLineEdit*>(LastSelFuseByte);  //Zapisz oryginalnπ paletÍ aktywnego okna edycji fusebitÛw
      editpal=tle.at(0)->palette();
 
-     QFileInfo fi(ADpath, "avrdudex.conf");
-     if(fi.exists())
-     {
-         AVR= new AVRFactory(fi.filePath(), "../XML/");   //Tymczasowo
-
-         ui->ProgrammerCB->blockSignals(true);
-         FillProgrammerCB();                           //Typy obs≥ugiwanych programatorÛw
-         ui->ProgrammerCB->blockSignals(false);
-         QString prg=appsettings.value("Programmer").toString();
-         ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
-
-         ui->PortCB->blockSignals(true);
-         FillPortCB();    //Typy dostÍpnych portÛw
-         ui->PortCB->blockSignals(false);
-         prg=appsettings.value("Port").toString();
-         ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
-
-         ui->AVRTypeCB->blockSignals(true);
-         FillMCUType();  //Typy dostÍpnych procesorÛw
-         ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
-         prg=appsettings.value("MCU").toString();
-         ui->AVRTypeCB->blockSignals(false);
-         ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
-         MCUChanged(prg);  //Ustaw sygnaturÍ
-
-     } else
-     {
-             AVR=NULL; //Problem
-             QMessageBox(QMessageBox::Critical, appsettings.value("windowTitle").toString(), QString("Nie da siÍ otworzyÊ pliku konfiguracyjnego AVRDude.conf.")).exec();
-     }
+     ReLoadAVRDudeConf();
 
      appsettings.endGroup();
 
      LastSelFuseByte=QString("Fuse0");   //Nazwa domyúlnie wybranego fusebajtu
      FuseByteChanged();
+}
+
+bool MainDialog::ReLoadAVRDudeConf()
+{
+    bool ret=true;
+    QSettings appsettings;
+
+    appsettings.beginGroup("MainWindow");
+
+    QString ADpath=appsettings.value("AVRDudePath").toString();   //Odczytaj úcieøkÍ do AVRDude (jeúli jest)
+    QFileInfo fi(ADpath, "avrdude.conf");
+    if(fi.exists())
+    {
+        if(AVR) delete AVR;
+        QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+        AVR= new AVRFactory(fi.filePath(), "../XML/");   //Tymczasowo
+        QApplication::restoreOverrideCursor();
+
+        DisableTabs(false);                           //åcieøka do AVRDude prawid≥owa, moøna odblokowaÊ zak≥adki
+        ui->ProgrammerCB->blockSignals(true);
+        FillProgrammerCB();                           //Typy obs≥ugiwanych programatorÛw
+        ui->ProgrammerCB->blockSignals(false);
+        QString prg=appsettings.value("Programmer").toString();
+        ui->ProgrammerCB->setCurrentIndex(ui->ProgrammerCB->findText(prg));
+
+        ui->PortCB->blockSignals(true);
+        FillPortCB();    //Typy dostÍpnych portÛw
+        ui->PortCB->blockSignals(false);
+        prg=appsettings.value("Port").toString();
+        ui->PortCB->setCurrentIndex(ui->PortCB->findText(prg));
+
+        ui->AVRTypeCB->blockSignals(true);
+        FillMCUType();  //Typy dostÍpnych procesorÛw
+        ui->AVRTypeCB->insertItem(0,tr("<Auto>"));
+        prg=appsettings.value("MCU").toString();
+        ui->AVRTypeCB->blockSignals(false);
+        ui->AVRTypeCB->setCurrentIndex(ui->AVRTypeCB->findText(prg));
+        MCUChanged(prg);  //Ustaw sygnaturÍ
+
+    } else
+    {
+        ret=false;
+        DisableTabs(true);           //Wy≥πcz wszystkie zak≥adki z wyjπtkiem SetUp
+        if(splash) splash->hide();   //Ukryj splash screen jeúli jest, øeby poniøszy komunikat nie by≥ pod nim
+        QMessageBox(QMessageBox::Critical, appsettings.value("windowTitle").toString(), QString("Nie da siÍ otworzyÊ pliku konfiguracyjnego AVRDude.conf.")).exec();
+    }
+
+    appsettings.endGroup();
+    return ret;
 }
 
 void MainDialog::UpdateFuseBitsWidget()
@@ -555,27 +578,28 @@ void MainDialog::AVRDudeSetPath()
 {
     QString path;
 
-    QSettings appsettings;                               //Odczytaj ≈õcie≈ºkƒô do AVRDude (je≈õli jest)
+    QSettings appsettings;                               //Odczytaj úcieøkÍ do AVRDude (jeúli jest)
      appsettings.beginGroup("MainWindow");
      path=appsettings.value("AVRDudePath").toString();
-     emit SetAVRDudePath(path);                          //Uzupe≈Çnij pole edycji ≈õcie≈ºki do AVRDude
+     emit SetAVRDudePath(path);                          //Uzupe≥nij pole edycji úcieøki do AVRDude
 
     QFileDialog dialog(this);
     dialog.setFileMode(QFileDialog::DirectoryOnly);
     dialog.setDirectory(path);
     QStringList fileNames;
-    if (dialog.exec())    //Wy≈õwietl dialog wyboru ≈õcie≈ºki
+    if (dialog.exec())    //Wyúwietl dialog wyboru úcieøki
      {
         fileNames = dialog.selectedFiles();
         if(fileNames.isEmpty()==false)
         {
-            path=fileNames.at(0);        //Odczytaj ≈õcie≈ºkƒô
+            path=fileNames.at(0);        //Odczytaj úcieøkÍ
             appsettings.setValue("AVRDudePath", path);
             emit SetAVRDudePath(path);
         }
      }
 
     appsettings.endGroup();  //Zapisz zmiany
+    ReLoadAVRDudeConf();                        //Prze≥aduj konfiguracjÍ AVRDude
 }
 
 void MainDialog::SavePathToAVRDude(QString path)
@@ -740,6 +764,12 @@ void MainDialog::HideAdvancedTabs(bool hide)
 {
     for(int i = 1; i < 4; i++)
         ui->Tabs->setTabEnabled(i, !hide);
+}
+
+void MainDialog::DisableTabs(bool dis)
+{
+    for(int i = 0; i < 4; i++)
+        ui->Tabs->setTabEnabled(i, !dis);
 }
 
 void MainDialog::SetupShowSimplifiedView(int state)

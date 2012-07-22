@@ -43,7 +43,8 @@ HEADERS  += \
     include/Bit.h \
     include/AVRStudioXMLParser.h \
     include/AVRFactory.h \
-    include/ProgrammingInterface.h
+    include/ProgrammingInterface.h \
+    include/splash.h
 
 FORMS    += \
     forms/maindialog.ui \
